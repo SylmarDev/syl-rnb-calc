@@ -62,6 +62,16 @@ export class Result {
     return displayMove(this.gen, this.attacker, this.defender, this.move, this.damage, notation);
   }
 
+  moveRate() {
+    
+  }
+
+  damageRolls() {
+    let returnVal: number[] = [];
+    typeof this.damage === 'number' ? returnVal = [this.damage] : returnVal = this.damage as number[];
+    return returnVal; // it'll be fineeeee
+  }
+
   recovery(notation = '%') {
     return getRecovery(this.gen, this.attacker, this.defender, this.move, this.damage, notation);
   }

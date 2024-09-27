@@ -14,11 +14,13 @@ var resultLocations = [[], []];
 for (var i = 0; i < 4; i++) {
 	resultLocations[0].push({
 		"move": "#resultMoveL" + (i + 1),
-		"damage": "#resultDamageL" + (i + 1)
+		"damage": "#resultDamageL" + (i + 1),
+		"moveRate": null
 	});
 	resultLocations[1].push({
 		"move": "#resultMoveR" + (i + 1),
-		"damage": "#resultDamageR" + (i + 1)
+		"damage": "#resultDamageR" + (i + 1),
+		"moveRate": "#resultMoveRateR" + (i + 1)
 	});
 }
 
@@ -71,7 +73,9 @@ function performCalculations() {
 			return secondMove.maxDamage - firstMove.maxDamage;
 		});
 		$(resultLocations[1][i].move + " + label").text(p2.moves[i].name.replace("Hidden Power", "HP"));
+		//console.log(result); // debug
 		$(resultLocations[1][i].damage).text(result.moveDesc(notation));
+		//$(resultLocations[1][i].moveRate).text(result.moveRate(notation)); // TODO: one day....
 
 		// BOTH
 		var bestMove;
@@ -86,6 +90,9 @@ function performCalculations() {
 			bestResult = $(resultLocations[fastestSide][bestMove].move);
 		}
 	}
+
+	console.log(calc.generateMoveDist(damageResults[1]));
+
 	if ($('.locked-move').length) {
 		bestResult = $('.locked-move');
 	} else {
@@ -97,7 +104,7 @@ function performCalculations() {
 	$("#resultHeaderR").text(p2.name + "'s Moves (select one to show detailed results)");
 }
 
-
+// calc colors
 function calculationsColors(p1info, p2) {
 	if (!p2) {
 		var p2info = $("#p2");
@@ -183,6 +190,7 @@ function calculationsColors(p1info, p2) {
 	return {speed: fastest, code: p1KO + p2KO};
 }
 
+// when different move selected, change strings
 $(".result-move").change(function () {
 	if (damageResults) {
 		var result = findDamageResult($(this));
@@ -241,6 +249,7 @@ function calculateAllMoves(gen, p1, p1field, p2, p2field) {
 		results[0][i] = calc.calculate(gen, p1, p2, p1.moves[i], p1field);
 		results[1][i] = calc.calculate(gen, p2, p1, p2.moves[i], p2field);
 	}
+	//console.log(results); // DEBUG
 	return results;
 }
 

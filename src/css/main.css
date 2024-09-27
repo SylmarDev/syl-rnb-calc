@@ -662,3 +662,7 @@ table.field {
     background: var(--fieldset-color);
     color: unset;
 }
+
+.resultDamageR{
+    margin-right: 1em;
+}

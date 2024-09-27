@@ -38,11 +38,6 @@
 
 <body class="dark-theme">
     <nav><div class="header"><div class="header-color"><div class="header-inner">
-        <ul class="nav">
-            <li><a class="button nav-first" href="/">Pok&eacute;dex</a></li>
-            <li><a class="button nav-last button cur" href="//calc.runandbun.com">Calculator</a></li>
-        </ul>
-        <div style="clear:both"></div>
     </div></div></div></nav>
 
 <div class="wrapper">
@@ -98,22 +93,26 @@
             <div>
                 <input class="result-move visually-hidden" type="radio" name="resultMove" id="resultMoveR1" aria-describedby="resultDamageR1" />
                 <label class="btn btn-xxxwide btn-top" for="resultMoveR1">Loading...</label>
-                <span id="resultDamageR1">??? - ???%</span>
+                <span id="resultDamageR1" class="resultDamageR">??? - ???%</span>
+                <span id="resultMoveRateR1" class="resultMoveRateR">??% (?)</span>
             </div>
             <div>
                 <input class="result-move visually-hidden" type="radio" name="resultMove" id="resultMoveR2" aria-describedby="resultDamageR2" />
                 <label class="btn btn-xxxwide btn-mid" for="resultMoveR2">Loading...</label>
-                <span id="resultDamageR2">??? - ???%</span>
+                <span id="resultDamageR2" class="resultDamageR">??? - ???%</span>
+                <span id="resultMoveRateR2" class="resultMoveRateR">??% (?)</span>
             </div>
             <div>
                 <input class="result-move visually-hidden" type="radio" name="resultMove" id="resultMoveR3" aria-describedby="resultDamageR3" />
                 <label class="btn btn-xxxwide btn-mid" for="resultMoveR3">Loading...</label>
-                <span id="resultDamageR3">??? - ???%</span>
+                <span id="resultDamageR3" class="resultDamageR">??? - ???%</span>
+                <span id="resultMoveRateR3" class="resultMoveRateR">??% (?)</span>
             </div>
             <div>
                 <input class="result-move visually-hidden" type="radio" name="resultMove" id="resultMoveR4" aria-describedby="resultDamageR4" />
                 <label class="btn btn-xxxwide btn-bottom" for="resultMoveR4">Loading...</label>
-                <span id="resultDamageR4">??? - ???%</span>
+                <span id="resultDamageR4" class="resultDamageR">??? - ???%</span>
+                <span id="resultMoveRateR4" class="resultMoveRateR">??% (?)</span>
             </div>
         </div>
     </div>
@@ -1641,7 +1640,7 @@
                 <hr>
                 <button type="button" id="previous-trainer"> Previous Trainer</button>
                 <button type="button" id="next-trainer"> Next Trainer</button>
-                <button type="button" id="reset-trainer">Reset</button>
+                <button type="button" id="reset-trainer" style="float: right">🚚</button>
             </fieldset>
         </div>
     </div>
@@ -1678,6 +1677,7 @@
     </script>
     <script type="text/javascript" src="./calc/util.js?"></script>
     <script type="text/javascript" src="./calc/stats.js?"></script>
+    <script type="text/javascript" src="./calc/ai.js?"></script>
     <script type="text/javascript" src="./calc/data/species.js?"></script>
 	<script type="text/javascript" src="./js/data/sets/gen9.js?"></script>
     <script type="text/javascript" src="./js/data/sets/gen8.js?"></script>
