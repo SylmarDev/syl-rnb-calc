@@ -1,4 +1,14 @@
 import { Result } from './result';
+import { Move } from './move';
+
+// move functions
+function isNamed(move: Move, ...names: string[]) {
+    return names.includes(move.name);
+}
+
+function isTrapping(move: Move) {
+    return isNamed(move, 'Whirlpool', 'Fire Spin', 'Sand Tomb', 'Magma Storm', 'Infestation', 'Wrap');
+}
 
 function computeDistribution(array: number[]): { [key: number]: number } {
     let sortedArray = array.sort((a, b) => a - b);
@@ -65,6 +75,39 @@ function splitKeyString(keyString: string, subString: string): string[] {
     return keyStrings;
 }
 
+// Function to add or update a probability
+function addOrUpdateProbability(probabilities: { [key: string]: number }, newKey: string, value: number) {
+    if (probabilities.hasOwnProperty(newKey)) {
+        probabilities[newKey] += value;
+    } else {
+        probabilities[newKey] = value;
+    }
+}
+
+function updateProbabilityWithVariance(probabilities: { [key: string]: number }, key: string, prob: number, factor: number, replacement: string[]) {
+    const newProb = prob * factor;
+
+    let newKey = key.replace(replacement[0], replacement[1]);
+    let keyChanged = false;
+    let newKeyValues = newKey.split("/");
+    for (let i = 0; i < newKeyValues.length; i++) {
+        let newKeyValue = newKeyValues[i];
+        const score = newKeyValue.split(":")[1];
+        if (score.includes('+')) {
+            const parts = score.split('+').map(Number);
+            const sum = parts.reduce((acc, val) => acc + val, 0);
+            newKeyValues[i] = newKeyValue.split(":")[0] + ":" + sum.toString();
+            keyChanged = true;
+        }
+    }
+
+    if (keyChanged) {
+        newKey = newKeyValues.join("/");
+    }
+
+    addOrUpdateProbability(probabilities, newKey, newProb);
+}
+
 function calculateHighestDamage(moves: any[]): { [key: number]: number } {
     let p1CurrentHealth = moves[0].defender.curHP();
     let arrays = moves.map(move => move.damageRolls().map((roll: number) => Math.min(p1CurrentHealth, roll)));
@@ -75,15 +118,6 @@ function calculateHighestDamage(moves: any[]): { [key: number]: number } {
 
     // calculate the probability distribution of which dict will have the highest key
     let probabilities: { [key: string]: number } = {};
-
-    // Function to add or update a probability
-    function addOrUpdateProbability(keyString: string, probabilityToAdd: number) {
-        if (probabilities.hasOwnProperty(keyString)) {
-            probabilities[keyString] += probabilityToAdd;
-        } else {
-            probabilities[keyString] = probabilityToAdd;
-        }
-    }
 
     // get all possible combinations of key choices
     // move distributions is a list of 4 dictionaries, each with an int key and number value
@@ -109,19 +143,48 @@ function calculateHighestDamage(moves: any[]): { [key: number]: number } {
            }
 
            let moveName = moves[i].move.name;
+           let moveBonus = 0;
 
+           // skip these moves entirely
+           if (moves[i].move.category === "Status" ||
+                isNamed(moves[i].move, "Explosion", "Final Gambit", "Rollout"))
+           {
+               keyString += `${moveName}:0`;
+               i++;
+               continue;
+           }
+           
+           // if damaging move kills
            if (key >= p1CurrentHealth) {
                if (aiFaster || moves[i].priority > 0) {
-                   keyString += `${moveName}:FK`; // +6
+                   moveBonus += 6;
                } else {
-                   keyString += `${moveName}:SK`; // +3
+                   moveBonus += 3;
                }
-           } else if (key === maximumKey) {
-               keyString += `${moveName}:HD`;
+
+               if (moves[i].attacker.ability === "Moxie" ||
+                    moves[i].attacker.ability === "Beast Boost" ||
+                    moves[i].attacker.ability === "Chilling Neigh" ||
+                    moves[i].attacker.ability === "Grim Neigh")
+               {
+                   moveBonus += 1;
+               }
+           }
+
+           // TODO: add the crit chance + super effective rule
+           
+           // moves that do not have damage rolled normally, still get the boosts for kills.
+           if (isTrapping(moves[i]) || isNamed(moves[i].move, "Relic Song", "Meteor Beam", "Future Sight")) {
+                keyString += `${moveName}:${moveBonus}`;
+                i++;
+                continue;
+           }
+
+           if (key === maximumKey) {
+               keyString += `${moveName}:HD+${moveBonus}`;
            } else {
                keyString += `${moveName}:0`;
            }
-
 
            i++;
         }
@@ -130,25 +193,31 @@ function calculateHighestDamage(moves: any[]): { [key: number]: number } {
         for (let probability of moveProbabilities) {
             probabilityOfChoice *= Number(probability);
         }
+        //console.log(probabilityOfChoice); // Debug
 
-        keyStrings = setKeyStrings(keyString, ["FK", "SK", "HD"]);
+        keyStrings = setKeyStrings(keyString, ["HD"]);
 
         for (let keyString of keyStrings) {
-            //console.log(keyString); // Debug
-            //console.log(probabilityOfChoice); // Debug
-
-            console.log(keyStrings);
-            
+            //console.log(keyStrings); // Debug
             const probabilityToAdd = probabilityOfChoice / keyStrings.length;
-
-            addOrUpdateProbability(keyString, probabilityToAdd);
+            addOrUpdateProbability(probabilities, keyString, probabilityToAdd);
         }
-        
-        // update probabilities with variance
     }
 
-    console.log(probabilities); // Debug
-    return {};
+    // update probabilities with variance
+    let probabilitiesWithVariance = {};
+    
+    for (const [key, prob] of Object.entries(probabilities)) {
+        if (key.includes("HD")) {
+            updateProbabilityWithVariance(probabilitiesWithVariance, key, prob, 0.8, ["HD", "6"]);
+            updateProbabilityWithVariance(probabilitiesWithVariance, key, prob, 0.2, ["HD", "8"]);
+        } else {
+            addOrUpdateProbability(probabilitiesWithVariance, key, prob);
+        }
+    }
+
+    console.log(probabilitiesWithVariance); // Debug
+    return probabilitiesWithVariance;
 }
 
 /**
@@ -157,7 +226,10 @@ function calculateHighestDamage(moves: any[]): { [key: number]: number } {
  * @returns {any} The move distribution.
  */
 export function generateMoveDist(moves: any[]): { [key: number]: number } {
+    // TODO: we need to take player moves as well
     let damagingMoveDist = calculateHighestDamage(moves);
+
+    // TODO: cont from here
 
     return {};
 }
