@@ -87,9 +87,10 @@ function addOrUpdateProbability(probabilities: { [key: string]: number }, newKey
 function updateProbabilityWithVariance(probabilities: { [key: string]: number }, key: string, prob: number, factor: number, replacement: string[]) {
     const newProb = prob * factor;
 
-    let newKey = key.replace(replacement[0], replacement[1]);
+    let newKey = key.replace(`${replacement[0]}/g`, replacement[1]);
     let keyChanged = false;
     let newKeyValues = newKey.split("/");
+    console.log(newKeyValues);
     for (let i = 0; i < newKeyValues.length; i++) {
         let newKeyValue = newKeyValues[i];
         const score = newKeyValue.split(":")[1];
@@ -206,6 +207,8 @@ function calculateHighestDamage(moves: any[]): { [key: number]: number } {
 
     // update probabilities with variance
     let probabilitiesWithVariance = {};
+
+    console.log(probabilities); // debug
     
     for (const [key, prob] of Object.entries(probabilities)) {
         if (key.includes("HD")) {
