@@ -91,13 +91,18 @@ function performCalculations() {
 		}
 	}
 
-	console.log(calc.generateMoveDist(damageResults[1]));
+	var moveRates = calc.generateMoveDist(damageResults[1]);
+
+	for (var i = 0; i < moveRates.length; i++) {
+		$("#resultMoveRateR" + (i + 1)).text((moveRates[i] * 100).toFixed(2) + "%");
+	}
 
 	if ($('.locked-move').length) {
 		bestResult = $('.locked-move');
 	} else {
 		stickyMoves.setSelectedMove(bestResult.prop("id"));
 	}
+
 	bestResult.prop("checked", true);
 	bestResult.change();
 	$("#resultHeaderL").text(p1.name + "'s Moves (select one to show detailed results)");

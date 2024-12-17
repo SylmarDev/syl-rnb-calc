@@ -87,10 +87,13 @@ function addOrUpdateProbability(probabilities: { [key: string]: number }, newKey
 function updateProbabilityWithVariance(probabilities: { [key: string]: number }, key: string, prob: number, factor: number, replacement: string[]) {
     const newProb = prob * factor;
 
-    let newKey = key.replace(`${replacement[0]}/g`, replacement[1]);
+    while (key.includes(`${replacement[0]}+`)) {
+        key = key.replace(`${replacement[0]}+`, `${replacement[1]}+`);
+    }
+    
     let keyChanged = false;
-    let newKeyValues = newKey.split("/");
-    console.log(newKeyValues);
+    let newKeyValues = key.split("/");
+    //console.log(newKeyValues);
     for (let i = 0; i < newKeyValues.length; i++) {
         let newKeyValue = newKeyValues[i];
         const score = newKeyValue.split(":")[1];
@@ -103,10 +106,10 @@ function updateProbabilityWithVariance(probabilities: { [key: string]: number },
     }
 
     if (keyChanged) {
-        newKey = newKeyValues.join("/");
+        key = newKeyValues.join("/");
     }
 
-    addOrUpdateProbability(probabilities, newKey, newProb);
+    addOrUpdateProbability(probabilities, key, newProb);
 }
 
 function calculateHighestDamage(moves: any[]): { [key: number]: number } {
@@ -208,7 +211,7 @@ function calculateHighestDamage(moves: any[]): { [key: number]: number } {
     // update probabilities with variance
     let probabilitiesWithVariance = {};
 
-    console.log(probabilities); // debug
+    //console.log(probabilities); // debug
     
     for (const [key, prob] of Object.entries(probabilities)) {
         if (key.includes("HD")) {
@@ -219,7 +222,7 @@ function calculateHighestDamage(moves: any[]): { [key: number]: number } {
         }
     }
 
-    console.log(probabilitiesWithVariance); // Debug
+    //console.log(probabilitiesWithVariance); // Debug
     return probabilitiesWithVariance;
 }
 
@@ -228,11 +231,42 @@ function calculateHighestDamage(moves: any[]): { [key: number]: number } {
  * @param {any[]} moves - The array of moves.
  * @returns {any} The move distribution.
  */
-export function generateMoveDist(moves: any[]): { [key: number]: number } {
+export function generateMoveDist(moves: any[]): number[] {
     // TODO: we need to take player moves as well
+    let finalDist: number[] = [];
+    moves.forEach((move, i) => {
+        finalDist[i] = 0.0;
+    });
+    
     let damagingMoveDist = calculateHighestDamage(moves);
 
     // TODO: cont from here
+    Object.entries(damagingMoveDist).forEach(([k,v]) => {
+        let moveArr = k.split('/');
 
-    return {};
+        let maxScore = 0;
+        let moves: number[] = [];
+
+        moveArr.forEach((moveScoreString, index) => {
+            let moveName = moveScoreString.split(':')[0];
+            let scoreString = moveScoreString.split(':')[1];
+            let score = Number(scoreString);
+
+            if (score > maxScore) {
+                maxScore = score;
+                moves = [];
+                moves.push(index);
+            }
+            else if (score === maxScore) {
+                moves.push(index);
+            }
+        });
+        
+        moves.forEach((move) => {
+            finalDist[move] += v / moves.length;
+        });
+    });
+
+    //console.log(finalDist);
+    return finalDist;
 }
