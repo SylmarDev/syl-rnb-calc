@@ -228,11 +228,17 @@ function calculateHighestDamage(moves: any[]): { [key: number]: number } {
 
 /**
  * Generates the move distribution.
- * @param {any[]} moves - The array of moves.
- * @returns {any} The move distribution.
+ * @param {any[]} damageResults - damageResults of current
+ * @param {string} fastestSide - 0 if player, 1 if AI. "tie" if tie
+ * @returns {number[]} The move distribution.
  */
-export function generateMoveDist(moves: any[]): number[] {
+export function generateMoveDist(damageResults: any[], fastestSide: string): number[] {
     // TODO: we need to take player moves as well
+    // set variables, parsed from move dist
+    const moves: any[] = damageResults[1];
+    console.log(fastestSide);
+    const aiFaster: boolean = fastestSide !== "0";
+
     let finalDist: number[] = [];
     moves.forEach((move, i) => {
         finalDist[i] = 0.0;
@@ -240,7 +246,26 @@ export function generateMoveDist(moves: any[]): number[] {
     
     let damagingMoveDist = calculateHighestDamage(moves);
 
+    console.log(damagingMoveDist);
+
     // TODO: cont from here
+    // flat bonsues
+    Object.entries(damagingMoveDist).forEach(([k, v]) => {
+        let moveArr = k.split('/');
+
+        moveArr.forEach((moveScoreString, index) => {
+            // Damaging Priority moves
+            // if AI is dead to player mon and slower, 
+            // all attacking moves with priority get an additional +11
+            // TODO: this needs to check if dead to player, maybe pass it in?
+            if (damageResults[1][index].move.priority > 0 && !aiFaster) {
+                console.error("unfinished!");
+            }
+        });
+    });
+
+    
+    // actually calculate score
     Object.entries(damagingMoveDist).forEach(([k,v]) => {
         let moveArr = k.split('/');
 
@@ -267,6 +292,6 @@ export function generateMoveDist(moves: any[]): number[] {
         });
     });
 
-    //console.log(finalDist);
+    console.log(finalDist);
     return finalDist;
 }

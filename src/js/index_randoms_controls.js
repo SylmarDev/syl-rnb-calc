@@ -91,7 +91,7 @@ function performCalculations() {
 		}
 	}
 
-	var moveRates = calc.generateMoveDist(damageResults[1]);
+	var moveRates = calc.generateMoveDist(damageResults, fastestSide);
 
 	for (var i = 0; i < moveRates.length; i++) {
 		$("#resultMoveRateR" + (i + 1)).text((moveRates[i] * 100).toFixed(2) + "%");
