@@ -236,7 +236,6 @@ export function generateMoveDist(damageResults: any[], fastestSide: string): num
     // TODO: we need to take player moves as well
     // set variables, parsed from move dist
     const moves: any[] = damageResults[1];
-    console.log(fastestSide);
     const aiFaster: boolean = fastestSide !== "0";
 
     let finalDist: number[] = [];
@@ -248,20 +247,31 @@ export function generateMoveDist(damageResults: any[], fastestSide: string): num
 
     console.log(damagingMoveDist);
 
+    // TODO: used in a lot of checks
+    const aiDeadToPlayer = true;
+
+    let postBoostsDamagingMoveDist: { [key: number]: number };
+
     // TODO: cont from here
     // flat bonsues
+    // k - "Move1:X/Move2:Y/Move3:Z/Move4:A"
+    // v - 0.003125 (probability of those scores)
     Object.entries(damagingMoveDist).forEach(([k, v]) => {
         let moveArr = k.split('/');
+        let newMoveArr: any = [];
 
         moveArr.forEach((moveScoreString, index) => {
             // Damaging Priority moves
             // if AI is dead to player mon and slower, 
             // all attacking moves with priority get an additional +11
             // TODO: this needs to check if dead to player, maybe pass it in?
-            if (damageResults[1][index].move.priority > 0 && !aiFaster) {
+            if (moves[index].move.priority > 0 && !aiFaster && aiDeadToPlayer) {
                 console.error("unfinished!");
             }
         });
+
+        // TODO: cont from here
+        // postBoostsDamagingMoveDist = 
     });
 
     
