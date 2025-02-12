@@ -248,9 +248,12 @@ export function generateMoveDist(damageResults: any[], fastestSide: string): num
     console.log(damagingMoveDist);
 
     // TODO: used in a lot of checks
+    // TODO: this needs to check if dead to player, maybe pass it in?
+    // If player has 1 move and 1 roll that kill AI at current health, this is true
+    console.log(damageResults[0]);
     const aiDeadToPlayer = true;
 
-    let postBoostsDamagingMoveDist: { [key: number]: number };
+    let postBoostsMoveDist: { [key: number]: number };
 
     // TODO: cont from here
     // flat bonsues
@@ -258,20 +261,42 @@ export function generateMoveDist(damageResults: any[], fastestSide: string): num
     // v - 0.003125 (probability of those scores)
     Object.entries(damagingMoveDist).forEach(([k, v]) => {
         let moveArr = k.split('/');
-        let newMoveArr: any = [];
+        let moveStringsToAdd: { move: string, score: number }[] = [];
+
+        // TODO: just had an epiphany, everything needs to be in this type format so its readable and not the disaster it is currently
+        let moveKVPs: { key: string, value: number }[] = [
+            {
+                key: k,
+                value: v
+            }
+        ];
 
         moveArr.forEach((moveScoreString, index) => {
+            // moveScoreString - "Move1:X" where X is the score of the move
+
             // Damaging Priority moves
             // if AI is dead to player mon and slower, 
             // all attacking moves with priority get an additional +11
-            // TODO: this needs to check if dead to player, maybe pass it in?
             if (moves[index].move.priority > 0 && !aiFaster && aiDeadToPlayer) {
-                console.error("unfinished!");
+                moveStringsToAdd[moveStringsToAdd.length] = {
+                    move: moveScoreString.split(':')[0],
+                    score: +moveScoreString.split(':')[1] + 11
+                }
             }
+
+            // Will-o-Wisp
+            // Starts at +6
+            // 37% of the time, the following conditions are checked
+            // If target has a physical attacking move +1
+            // If AI mon or partner has Hex +1
+
+
         });
 
-        // TODO: cont from here
-        // postBoostsDamagingMoveDist = 
+        // populate moveStringsToAdd to every score from that array to every instance of that move in moveKVPs
+        
+        // TODO: this is broken too
+        //postBoostsMoveDist.push(moveKVP.map(x => x.key, x.value))
     });
 
     
