@@ -309,8 +309,10 @@ export function generateMoveDist(damageResults: any[], fastestSide: string): num
                 });
 
                 let willOWispScore = 0;
-                if (moves.find(x => x.move.name === "Hex")) { willOWispScore++; }
-                if (damageResults[0].find((x: { move: { category: string; }; }) => x.move.category === "Physical")) { willOWispScore++; }
+                const hexIndex = moves.findIndex(x => x.move.name === "Hex"); // hehe inHEX more like
+                const physicalIndex = damageResults[0].findIndex((x: { move: { category: string; }; }) => x.move.category === "Physical");
+                if (hexIndex !== -1) { willOWispScore++; }
+                if (physicalIndex !== -1) { willOWispScore++; }
 
                 
                 moveStringsToAdd.push({
@@ -326,6 +328,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string): num
 
         // we'll need to reconstruct the key from moveStringsToAdd
         // we'll want rate of 1 to have its own subroutine
+        // we'll want to skip moveStringsToAdd where score is 0
 
         // ... array1.push(...array2); is the syntax for array1.Extend(array2); in C# lol
         postBoostsMoveDist.push(...moveKVPs);
