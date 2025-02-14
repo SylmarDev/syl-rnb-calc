@@ -1,6 +1,12 @@
 import { Result } from './result';
 import { Move } from './move';
 
+// interfaces
+interface KVP {
+    key: string,
+    value: number
+}
+
 // move functions
 function isNamed(move: Move, ...names: string[]) {
     return names.includes(move.name);
@@ -76,15 +82,16 @@ function splitKeyString(keyString: string, subString: string): string[] {
 }
 
 // Function to add or update a probability
-function addOrUpdateProbability(probabilities: { [key: string]: number }, newKey: string, value: number) {
-    if (probabilities.hasOwnProperty(newKey)) {
-        probabilities[newKey] += value;
+function addOrUpdateProbability(probabilities: KVP[], newKey: string, value: number) {
+    const index = probabilities.findIndex(x => x.key === newKey);
+    if (index !== -1) {
+        probabilities[index].value += value;
     } else {
-        probabilities[newKey] = value;
+        probabilities.push({key: newKey, value: value});
     }
 }
 
-function updateProbabilityWithVariance(probabilities: { [key: string]: number }, key: string, prob: number, factor: number, replacement: string[]) {
+function updateProbabilityWithVariance(probabilities: KVP[], key: string, prob: number, factor: number, replacement: string[]) {
     const newProb = prob * factor;
 
     while (key.includes(`${replacement[0]}+`)) {
@@ -112,7 +119,7 @@ function updateProbabilityWithVariance(probabilities: { [key: string]: number },
     addOrUpdateProbability(probabilities, key, newProb);
 }
 
-function calculateHighestDamage(moves: any[]): { [key: number]: number } {
+function calculateHighestDamage(moves: any[]): KVP[] {
     let p1CurrentHealth = moves[0].defender.curHP();
     let arrays = moves.map(move => move.damageRolls().map((roll: number) => Math.min(p1CurrentHealth, roll)));
     let aiFaster = moves[0].attacker.stats.spe >= moves[0].defender.stats.spe;
@@ -121,7 +128,7 @@ function calculateHighestDamage(moves: any[]): { [key: number]: number } {
     let moveDistributions = arrays.map(array => computeDistribution(array));
 
     // calculate the probability distribution of which dict will have the highest key
-    let probabilities: { [key: string]: number } = {};
+    let probabilities: KVP[] = [];
 
     // get all possible combinations of key choices
     // move distributions is a list of 4 dictionaries, each with an int key and number value
@@ -176,6 +183,8 @@ function calculateHighestDamage(moves: any[]): { [key: number]: number } {
            }
 
            // TODO: add the crit chance + super effective rule
+           // TODO: will have to get high crit ratio moves from a predefined list
+           // not sure how I'll get super effectives
            
            // moves that do not have damage rolled normally, still get the boosts for kills.
            if (isTrapping(moves[i]) || isNamed(moves[i].move, "Relic Song", "Meteor Beam", "Future Sight")) {
@@ -194,14 +203,14 @@ function calculateHighestDamage(moves: any[]): { [key: number]: number } {
         }
 
         let probabilityOfChoice = 1;
-        for (let probability of moveProbabilities) {
+        for (const probability of moveProbabilities) {
             probabilityOfChoice *= Number(probability);
         }
         //console.log(probabilityOfChoice); // Debug
 
         keyStrings = setKeyStrings(keyString, ["HD"]);
 
-        for (let keyString of keyStrings) {
+        for (const keyString of keyStrings) {
             //console.log(keyStrings); // Debug
             const probabilityToAdd = probabilityOfChoice / keyStrings.length;
             addOrUpdateProbability(probabilities, keyString, probabilityToAdd);
@@ -209,16 +218,16 @@ function calculateHighestDamage(moves: any[]): { [key: number]: number } {
     }
 
     // update probabilities with variance
-    let probabilitiesWithVariance = {};
+    let probabilitiesWithVariance: KVP[] = [];
 
     //console.log(probabilities); // debug
     
-    for (const [key, prob] of Object.entries(probabilities)) {
-        if (key.includes("HD")) {
-            updateProbabilityWithVariance(probabilitiesWithVariance, key, prob, 0.8, ["HD", "6"]);
-            updateProbabilityWithVariance(probabilitiesWithVariance, key, prob, 0.2, ["HD", "8"]);
+    for (const probability of probabilities) {
+        if (probability.key.includes("HD")) {
+            updateProbabilityWithVariance(probabilitiesWithVariance, probability.key, probability.value, 0.8, ["HD", "6"]);
+            updateProbabilityWithVariance(probabilitiesWithVariance, probability.key, probability.value, 0.2, ["HD", "8"]);
         } else {
-            addOrUpdateProbability(probabilitiesWithVariance, key, prob);
+            addOrUpdateProbability(probabilitiesWithVariance, probability.key, probability.value);
         }
     }
 
@@ -228,12 +237,11 @@ function calculateHighestDamage(moves: any[]): { [key: number]: number } {
 
 /**
  * Generates the move distribution.
- * @param {any[]} damageResults - damageResults of current
+ * @param {any[]} damageResults - damageResults of current calc state
  * @param {string} fastestSide - 0 if player, 1 if AI. "tie" if tie
  * @returns {number[]} The move distribution.
  */
 export function generateMoveDist(damageResults: any[], fastestSide: string): number[] {
-    // TODO: we need to take player moves as well
     // set variables, parsed from move dist
     const moves: any[] = damageResults[1];
     const aiFaster: boolean = fastestSide !== "0";
@@ -249,28 +257,30 @@ export function generateMoveDist(damageResults: any[], fastestSide: string): num
 
     // TODO: used in a lot of checks
     // TODO: this needs to check if dead to player, maybe pass it in?
-    // If player has 1 move and 1 roll that kill AI at current health, this is true
-    console.log(damageResults[0]);
+    // If player has 1 move and 1 roll that kill AI at their current health, this is true
+    //console.log(damageResults[0]); // DEBUG
     const aiDeadToPlayer = true;
 
-    let postBoostsMoveDist: { [key: number]: number };
+    let postBoostsMoveDist: KVP[] = [];
 
     // TODO: cont from here
     // flat bonsues
     // k - "Move1:X/Move2:Y/Move3:Z/Move4:A"
     // v - 0.003125 (probability of those scores)
-    Object.entries(damagingMoveDist).forEach(([k, v]) => {
-        let moveArr = k.split('/');
-        let moveStringsToAdd: { move: string, score: number }[] = [];
+    for (const damagingMoveDistKVP of damagingMoveDist) {
+        let moveArr = damagingMoveDistKVP.key.split('/');
+        let moveStringsToAdd: { move: string, score: number, rate: number }[] = [];
 
-        // TODO: just had an epiphany, everything needs to be in this type format so its readable and not the disaster it is currently
-        let moveKVPs: { key: string, value: number }[] = [
+        // this contains what needs to be added to the postDist from the damagingMoveDist
+        // starts with the current entry as a base
+        let moveKVPs: KVP[] = [
             {
-                key: k,
-                value: v
+                key: damagingMoveDistKVP.key,
+                value: damagingMoveDistKVP.value
             }
         ];
 
+        // iterate through each move
         moveArr.forEach((moveScoreString, index) => {
             // moveScoreString - "Move1:X" where X is the score of the move
 
@@ -278,10 +288,11 @@ export function generateMoveDist(damageResults: any[], fastestSide: string): num
             // if AI is dead to player mon and slower, 
             // all attacking moves with priority get an additional +11
             if (moves[index].move.priority > 0 && !aiFaster && aiDeadToPlayer) {
-                moveStringsToAdd[moveStringsToAdd.length] = {
+                moveStringsToAdd.push({
                     move: moveScoreString.split(':')[0],
-                    score: +moveScoreString.split(':')[1] + 11
-                }
+                    score: 11,
+                    rate: 1
+                });
             }
 
             // Will-o-Wisp
@@ -289,27 +300,48 @@ export function generateMoveDist(damageResults: any[], fastestSide: string): num
             // 37% of the time, the following conditions are checked
             // If target has a physical attacking move +1
             // If AI mon or partner has Hex +1
+            if (moves[index].move.name === "Will-o-Wisp") {
+                // starts at +6
+                moveStringsToAdd.push({
+                    move: moveScoreString.split(':')[0],
+                    score: 6,
+                    rate: 1
+                });
 
+                let willOWispScore = 0;
+                if (moves.find(x => x.move.name === "Hex")) { willOWispScore++; }
+                if (damageResults[0].find((x: { move: { category: string; }; }) => x.move.category === "Physical")) { willOWispScore++; }
 
+                
+                moveStringsToAdd.push({
+                    move: moveScoreString.split(':')[0],
+                    score: willOWispScore,
+                    rate: 0.37
+                });
+            }
         });
 
         // populate moveStringsToAdd to every score from that array to every instance of that move in moveKVPs
-        
-        // TODO: this is broken too
-        //postBoostsMoveDist.push(moveKVP.map(x => x.key, x.value))
-    });
+        // TODO: cont from here. Will have to make a similar sister function to updateProbabilityWithVariance(), so I'd start from there
+
+        // we'll need to reconstruct the key from moveStringsToAdd
+        // we'll want rate of 1 to have its own subroutine
+
+        // ... array1.push(...array2); is the syntax for array1.Extend(array2); in C# lol
+        postBoostsMoveDist.push(...moveKVPs);
+    }
 
     
-    // actually calculate score
-    Object.entries(damagingMoveDist).forEach(([k,v]) => {
-        let moveArr = k.split('/');
+    // actually measure score and calculate probability of each move
+    for (const dist of damagingMoveDist) {
+        let moveArr = dist.key.split('/');
 
         let maxScore = 0;
         let moves: number[] = [];
 
         moveArr.forEach((moveScoreString, index) => {
-            let moveName = moveScoreString.split(':')[0];
-            let scoreString = moveScoreString.split(':')[1];
+            // const moveName = moveScoreString.split(':')[0]; // unnessesary for now
+            const scoreString = moveScoreString.split(':')[1];
             let score = Number(scoreString);
 
             if (score > maxScore) {
@@ -323,9 +355,9 @@ export function generateMoveDist(damageResults: any[], fastestSide: string): num
         });
         
         moves.forEach((move) => {
-            finalDist[move] += v / moves.length;
+            finalDist[move] += dist.value / moves.length;
         });
-    });
+    }
 
     console.log(finalDist);
     return finalDist;
