@@ -119,6 +119,30 @@ function updateProbabilityWithVariance(probabilities: KVP[], key: string, prob: 
     addOrUpdateProbability(probabilities, key, newProb);
 }
 
+
+// takes moveKVPs, 1 Key Value Pair, {key: "Move1:0/Move2:6/Move3:0/Move4:0", value: 1}
+// takes moveStringsToAdd, an array of objects, [{move: Move3, score: 8, rate: 0.37}]
+// returns a new list of KVP's, [{key: "Move1:0/Move2:6/Move3:0/Move4:0", value: 0.63}, {key: "Move1:0/Move2:6/Move3:8/Move4:0", value: 0.37}]
+function updateMoveKVPWithMoveStrings(moveKVPs: KVP[], moveStringToAdd: { move: string, score: number, rate: number }): KVP[] {
+    // populate moveStringsToAdd to every score from that array to every instance of that move in moveKVPs
+    let newKvps: KVP[] = []; // [{key: "Move1:0/Move2:6/Move3:0/Move4:0", value: 1}]
+
+    // return if there's no point in running this
+    if (moveStringToAdd.score === 0 || moveStringToAdd.rate === 0) { return moveKVPs }
+
+    // TODO: cont from here !!
+
+    // subroutine for rate = 1
+    if (moveStringToAdd.rate === 1) {
+
+    } else { // rate <1
+
+    }
+
+    console.log(newKvps);
+    return newKvps;
+}
+
 function calculateHighestDamage(moves: any[]): KVP[] {
     let p1CurrentHealth = moves[0].defender.curHP();
     let arrays = moves.map(move => move.damageRolls().map((roll: number) => Math.min(p1CurrentHealth, roll)));
@@ -260,13 +284,13 @@ export function generateMoveDist(damageResults: any[], fastestSide: string): num
     // If player has 1 move and 1 roll that kill AI at their current health, this is true
     //console.log(damageResults[0]); // DEBUG
     const aiDeadToPlayer = true;
+    const playerHasStatusCond = false; // TODO: needs to be refactored to have this passed in as well
 
     let postBoostsMoveDist: KVP[] = [];
 
-    // TODO: cont from here
     // flat bonsues
-    // k - "Move1:X/Move2:Y/Move3:Z/Move4:A"
-    // v - 0.003125 (probability of those scores)
+    // key - "Move1:X/Move2:Y/Move3:Z/Move4:A"
+    // value - 0.003125 (probability of getting those exact scores)
     for (const damagingMoveDistKVP of damagingMoveDist) {
         let moveArr = damagingMoveDistKVP.key.split('/');
         let moveStringsToAdd: { move: string, score: number, rate: number }[] = [];
@@ -301,37 +325,45 @@ export function generateMoveDist(damageResults: any[], fastestSide: string): num
             // If target has a physical attacking move +1
             // If AI mon or partner has Hex +1
             if (moves[index].move.name === "Will-o-Wisp") {
-                // starts at +6
-                moveStringsToAdd.push({
-                    move: moveScoreString.split(':')[0],
-                    score: 6,
-                    rate: 1
-                });
+                if (playerHasStatusCond) { // any intuitive condition where AI won't click status move
+                    moveStringsToAdd.push({
+                        move: moveScoreString.split(':')[0],
+                        score: -20,
+                        rate: 1
+                    });
+                } else {
+                    // starts at +6
+                    moveStringsToAdd.push({
+                        move: moveScoreString.split(':')[0],
+                        score: 6,
+                        rate: 1
+                    });
 
-                let willOWispScore = 0;
-                const hexIndex = moves.findIndex(x => x.move.name === "Hex"); // hehe inHEX more like
-                const physicalIndex = damageResults[0].findIndex((x: { move: { category: string; }; }) => x.move.category === "Physical");
-                if (hexIndex !== -1) { willOWispScore++; }
-                if (physicalIndex !== -1) { willOWispScore++; }
+                    let willOWispScore = 0;
+                    const hexIndex = moves.findIndex(x => x.move.name === "Hex"); // hehe inHEX more like
+                    const physicalIndex = damageResults[0].findIndex((x: { move: { category: string; }; }) => x.move.category === "Physical");
+                    if (hexIndex !== -1) { willOWispScore++; }
+                    if (physicalIndex !== -1) { willOWispScore++; }
 
-                
-                moveStringsToAdd.push({
-                    move: moveScoreString.split(':')[0],
-                    score: willOWispScore,
-                    rate: 0.37
-                });
+
+                    moveStringsToAdd.push({
+                        move: moveScoreString.split(':')[0],
+                        score: willOWispScore,
+                        rate: 0.37
+                    });
+                }
             }
         });
-
-        // populate moveStringsToAdd to every score from that array to every instance of that move in moveKVPs
-        // TODO: cont from here. Will have to make a similar sister function to updateProbabilityWithVariance(), so I'd start from there
-
-        // we'll need to reconstruct the key from moveStringsToAdd
-        // we'll want rate of 1 to have its own subroutine
-        // we'll want to skip moveStringsToAdd where score is 0
-
+        
+        // iterate through all move strings and update the move kvps
+        for (const moveStringToAdd of moveStringsToAdd) {
+            moveKVPs = updateMoveKVPWithMoveStrings(moveKVPs, moveStringToAdd);
+        }
+        
         // ... array1.push(...array2); is the syntax for array1.Extend(array2); in C# lol
-        postBoostsMoveDist.push(...moveKVPs);
+        for (const moveKVP of moveKVPs) {
+            addOrUpdateProbability(postBoostsMoveDist, moveKVP.key, moveKVP.value);
+        }
     }
 
     
