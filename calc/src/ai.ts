@@ -130,16 +130,61 @@ function updateMoveKVPWithMoveStrings(moveKVPs: KVP[], moveStringToAdd: { move: 
     // return if there's no point in running this
     if (moveStringToAdd.score === 0 || moveStringToAdd.rate === 0) { return moveKVPs }
 
-    // TODO: cont from here !!
-
     // subroutine for rate = 1
     if (moveStringToAdd.rate === 1) {
+        for (const moveKVP of moveKVPs) {
+            let key: string = "";
+            let newKeyArr: string[] = [];
 
+            // update key
+            const moveScoreStrings = moveKVP.key.split("/");
+
+            for (const moveScoreString of moveScoreStrings) {
+                const moveScoreSplit = moveScoreString.split(":");
+                const moveName = moveScoreSplit[0];
+                let score = Number(moveScoreSplit[1]);
+                if (moveName === moveStringToAdd.move) {
+                    score += moveStringToAdd.score;
+                }
+
+                newKeyArr.push(`${moveName}:${String(score)}`);
+            }
+
+            key = newKeyArr.join("/");
+
+            // keep value (in this case rate) the same since rate is 1
+            addOrUpdateProbability(newKvps, key, moveKVP.value);
+        }
     } else { // rate <1
+        for (const moveKVP of moveKVPs) {
+            const oldKey = moveKVP.key;
+            let key: string = "";
+            let newKeyArr: string[] = [];
 
+            // update key
+            const moveScoreStrings = moveKVP.key.split("/");
+
+            for (const moveScoreString of moveScoreStrings) {
+                const moveScoreSplit = moveScoreString.split(":");
+                const moveName = moveScoreSplit[0];
+                let score = Number(moveScoreSplit[1]);
+                if (moveName === moveStringToAdd.move) {
+                    score += moveStringToAdd.score;
+                }
+
+                newKeyArr.push(`${moveName}:${String(score)}`);
+            }
+
+            key = newKeyArr.join("/");
+
+            // update value
+            addOrUpdateProbability(newKvps, oldKey, moveKVP.value * (1 - moveStringToAdd.rate))
+            addOrUpdateProbability(newKvps, key, moveKVP.value * moveStringToAdd.rate);
+        }
     }
 
-    console.log(newKvps);
+    // console.log("newKvps");
+    // console.log(newKvps);
     return newKvps;
 }
 
@@ -268,7 +313,7 @@ function calculateHighestDamage(moves: any[]): KVP[] {
 export function generateMoveDist(damageResults: any[], fastestSide: string): number[] {
     // set variables, parsed from move dist
     const moves: any[] = damageResults[1];
-    const aiFaster: boolean = fastestSide !== "0";
+    const aiFaster: boolean = fastestSide != "0";
 
     let finalDist: number[] = [];
     moves.forEach((move, i) => {
@@ -279,6 +324,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string): num
 
     console.log(damagingMoveDist);
 
+    // TODO: cont from here probably, pull in all field info for best calcs
     // TODO: used in a lot of checks
     // TODO: this needs to check if dead to player, maybe pass it in?
     // If player has 1 move and 1 roll that kill AI at their current health, this is true
@@ -307,14 +353,27 @@ export function generateMoveDist(damageResults: any[], fastestSide: string): num
         // iterate through each move
         moveArr.forEach((moveScoreString, index) => {
             // moveScoreString - "Move1:X" where X is the score of the move
+            const move = moves[index].move;
+            const moveName = moveScoreString.split(':')[0];
 
             // Damaging Priority moves
             // if AI is dead to player mon and slower, 
             // all attacking moves with priority get an additional +11
-            if (moves[index].move.priority > 0 && !aiFaster && aiDeadToPlayer) {
+            // TODO: shadow sneak attacks still normal types
+            if (move.priority > 0 && !aiFaster && aiDeadToPlayer) {
                 moveStringsToAdd.push({
-                    move: moveScoreString.split(':')[0],
+                    move: moveName,
                     score: 11,
+                    rate: 1
+                });
+            }
+
+            // Rollout
+            // Always +7
+            if (moveName == "Rollout") {
+                moveStringsToAdd.push({
+                    move: moveName,
+                    score: 7,
                     rate: 1
                 });
             }
@@ -324,33 +383,105 @@ export function generateMoveDist(damageResults: any[], fastestSide: string): num
             // 37% of the time, the following conditions are checked
             // If target has a physical attacking move +1
             // If AI mon or partner has Hex +1
-            if (moves[index].move.name === "Will-o-Wisp") {
+            if (moveName == "Will-O-Wisp") {
                 if (playerHasStatusCond) { // any intuitive condition where AI won't click status move
                     moveStringsToAdd.push({
-                        move: moveScoreString.split(':')[0],
+                        move: moveName,
                         score: -20,
                         rate: 1
                     });
                 } else {
                     // starts at +6
                     moveStringsToAdd.push({
-                        move: moveScoreString.split(':')[0],
+                        move: moveName,
                         score: 6,
                         rate: 1
                     });
 
                     let willOWispScore = 0;
                     const hexIndex = moves.findIndex(x => x.move.name === "Hex"); // hehe inHEX more like
+                    // TODO: status moves are listed as physical so they increase the Will-O-Wisp chance
                     const physicalIndex = damageResults[0].findIndex((x: { move: { category: string; }; }) => x.move.category === "Physical");
                     if (hexIndex !== -1) { willOWispScore++; }
                     if (physicalIndex !== -1) { willOWispScore++; }
 
 
                     moveStringsToAdd.push({
-                        move: moveScoreString.split(':')[0],
+                        move: moveName,
                         score: willOWispScore,
                         rate: 0.37
                     });
+                }
+            }
+
+            // Agility, Rock Polish, Autotomize
+            // If AI is slower than player mon +7, else -20
+            if (moveName == "Agility" || moveName == "Rock Polish" || moveName == "Autotomize") {
+                if (aiFaster) {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: -20,
+                        rate: 1
+                    });
+                } else {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: 7,
+                        rate: 1
+                    });
+                }
+            }
+
+            // Focus Energy, Laser Focus
+            // If AI has Super Luck/Sniper, holding Scope Lens, or has a high crit rate move +7, else +6
+            if (moveName == "Focus Energy" || moveName == "Laser Focus") {
+                // TODO: add high crit rate moves to this
+                // TODO: add player mon has shell armor or battle armor to this
+                const critIncentive = move.ability == "Super Luck" || move.ability == "Sniper"
+                                        || move.item == "Scope Lens"; 
+                if (critIncentive) {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: 7,
+                        rate: 1
+                    });
+                } else {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: 6,
+                        rate: 1
+                    });
+                }
+            }
+
+            // Destiny Bond
+            // If AI is faster and dies to player mon +7 (81%), +6 (19%)
+            // If AI is slower, +5 (50%), +6 (50%)
+            if (moveName == "Destiny Bond") {
+                if (aiFaster && aiDeadToPlayer) { 
+                    moveStringsToAdd.push(...[{
+                        move: moveName,
+                        score: 6,
+                        rate: 1
+                    },
+                    {
+                        move: moveName,
+                        score: 1,
+                        rate: 0.81
+                    }]);
+                }
+                
+                if (!aiFaster) {
+                    moveStringsToAdd.push(...[{
+                        move: moveName,
+                        score: 5,
+                        rate: 1
+                    },
+                    {
+                        move: moveName,
+                        score: 1,
+                        rate: 0.5
+                    }]);
                 }
             }
         });
@@ -358,17 +489,18 @@ export function generateMoveDist(damageResults: any[], fastestSide: string): num
         // iterate through all move strings and update the move kvps
         for (const moveStringToAdd of moveStringsToAdd) {
             moveKVPs = updateMoveKVPWithMoveStrings(moveKVPs, moveStringToAdd);
-        }
+        }        
         
-        // ... array1.push(...array2); is the syntax for array1.Extend(array2); in C# lol
         for (const moveKVP of moveKVPs) {
             addOrUpdateProbability(postBoostsMoveDist, moveKVP.key, moveKVP.value);
         }
     }
 
+    // console.log("damagingMoveDist before it goes into postBoostsMoveDist");
+    // console.log(postBoostsMoveDist);
     
     // actually measure score and calculate probability of each move
-    for (const dist of damagingMoveDist) {
+    for (const dist of postBoostsMoveDist) {
         let moveArr = dist.key.split('/');
 
         let maxScore = 0;
@@ -394,6 +526,6 @@ export function generateMoveDist(damageResults: any[], fastestSide: string): num
         });
     }
 
-    console.log(finalDist);
+    // console.log(finalDist);
     return finalDist;
 }
