@@ -189,6 +189,7 @@ function updateMoveKVPWithMoveStrings(moveKVPs: KVP[], moveStringToAdd: { move: 
 }
 
 function calculateHighestDamage(moves: any[]): KVP[] {
+    // TODO: multi-hit moves (i.e. Pin Missile) need their damage calculations updated
     let p1CurrentHealth = moves[0].defender.curHP();
     let arrays = moves.map(move => move.damageRolls().map((roll: number) => Math.min(p1CurrentHealth, roll)));
     let aiFaster = moves[0].attacker.stats.spe >= moves[0].defender.stats.spe;
@@ -322,7 +323,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string): num
     
     let damagingMoveDist = calculateHighestDamage(moves);
 
-    console.log(damagingMoveDist);
+    // console.log(damagingMoveDist); // DEBUG
 
     // TODO: cont from here probably, pull in all field info for best calcs
     // TODO: used in a lot of checks
@@ -355,12 +356,14 @@ export function generateMoveDist(damageResults: any[], fastestSide: string): num
             // moveScoreString - "Move1:X" where X is the score of the move
             const move = moves[index].move;
             const moveName = moveScoreString.split(':')[0];
+            const damageRolls = moves[index].damageRolls();
+            // anyValidDamageRolls should prevent Ghost type moves being chosen to hit normal types
+            const anyValidDamageRolls = damageRolls.reduce((a: number, b: number) => a + b, 0) > 0;
 
             // Damaging Priority moves
             // if AI is dead to player mon and slower, 
             // all attacking moves with priority get an additional +11
-            // TODO: shadow sneak attacks still normal types
-            if (move.priority > 0 && !aiFaster && aiDeadToPlayer) {
+            if (move.priority > 0 && !aiFaster && aiDeadToPlayer && anyValidDamageRolls) {
                 moveStringsToAdd.push({
                     move: moveName,
                     score: 11,
