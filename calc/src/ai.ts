@@ -1,5 +1,6 @@
 import { Result } from './result';
 import { Move } from './move';
+import { Pokemon } from '.';
 
 // interfaces
 interface KVP {
@@ -13,7 +14,7 @@ function isNamed(move: Move, ...names: string[]) {
 }
 
 function isTrapping(move: Move) {
-    return isNamed(move, 'Whirlpool', 'Fire Spin', 'Sand Tomb', 'Magma Storm', 'Infestation', 'Wrap');
+    return isNamed(move, 'Whirlpool', 'Fire Spin', 'Sand Tomb', 'Magma Storm', 'Infestation', 'Wrap', 'Bind');
 }
 
 function computeDistribution(array: number[]): { [key: number]: number } {
@@ -191,6 +192,29 @@ function updateMoveKVPWithMoveStrings(moveKVPs: KVP[], moveStringToAdd: { move: 
 function calculateHighestDamage(moves: any[]): KVP[] {
     // TODO: multi-hit moves (i.e. Pin Missile) need their damage calculations updated
     let p1CurrentHealth = moves[0].defender.curHP();
+
+    // console.log(moves); // DEBUG
+    
+    // Damaging Trapping Moves should always come back as -1 damage
+    // TODO: use this for later if you need to iterate on other things, but for now this isn't nessesary
+    /*
+    let newMoves: any[] = [];
+    moves.forEach((move, i) => {
+        if (isTrapping(move.move)) {
+            move.damage = [-1];
+        }
+
+        newMoves.push(move);
+    });
+
+    moves = newMoves; */
+
+    // But ^^^ is how you would change a moves damage if you artificially needed to set it to 0.
+    // TODO: consider using above code to turn off crits except for cases where Crit should be turned on
+    // And for calculating the new damage values of multi hit moves
+
+    // console.log(moves); // DEBUG
+
     let arrays = moves.map(move => move.damageRolls().map((roll: number) => Math.min(p1CurrentHealth, roll)));
     let aiFaster = moves[0].attacker.stats.spe >= moves[0].defender.stats.spe;
 
@@ -206,18 +230,34 @@ function calculateHighestDamage(moves: any[]): KVP[] {
 
     let allChoices = cartesian(moveDistributions.map(distribution => objectEntriesIntKeys(distribution)));
     
-    //console.log(allChoices); // debug
+    // console.log(allChoices); // debug
     
     for (let choice of allChoices) {
        let keys = choice.map(([key, value]) => key);
        let moveProbabilities: number[] = choice.map(([key, value]) => Number(value));
 
-       let maximumKey = Math.max(...keys);
+       let keysForMaximumCheck = [];
+       let i = 0;
+       for (const key of keys) {
+          if (moves[i].move.category === "Status" || 
+            isNamed(moves[i].move, "Explosion", "Final Gambit", "Rollout") ||
+            isNamed(moves[i].move, "Relic Song", "Meteor Beam", "Future Sight") ||
+            isTrapping(moves[i].move))
+            {
+                i++;
+                continue;
+            }
+
+            keysForMaximumCheck.push(key);
+            i++;
+       }
+
+       let maximumKey = Math.max(...keysForMaximumCheck);
 
        // generate keystring
        let keyStrings = [];
        let keyString = "";
-       let i = 0;
+       i = 0;
        for (let key of keys) {
            if (keyString != "") {
                keyString += "/"
@@ -257,7 +297,7 @@ function calculateHighestDamage(moves: any[]): KVP[] {
            // not sure how I'll get super effectives
            
            // moves that do not have damage rolled normally, still get the boosts for kills.
-           if (isTrapping(moves[i]) || isNamed(moves[i].move, "Relic Song", "Meteor Beam", "Future Sight")) {
+           if (isTrapping(moves[i].move) || isNamed(moves[i].move, "Relic Song", "Meteor Beam", "Future Sight")) {
                 keyString += `${moveName}:${moveBonus}`;
                 i++;
                 continue;
@@ -271,6 +311,8 @@ function calculateHighestDamage(moves: any[]): KVP[] {
 
            i++;
         }
+
+        // console.log(keyString);
 
         let probabilityOfChoice = 1;
         for (const probability of moveProbabilities) {
@@ -290,7 +332,7 @@ function calculateHighestDamage(moves: any[]): KVP[] {
     // update probabilities with variance
     let probabilitiesWithVariance: KVP[] = [];
 
-    //console.log(probabilities); // debug
+    // console.log(probabilities); // debug
     
     for (const probability of probabilities) {
         if (probability.key.includes("HD")) {
@@ -312,26 +354,52 @@ function calculateHighestDamage(moves: any[]): KVP[] {
  * @returns {number[]} The move distribution.
  */
 export function generateMoveDist(damageResults: any[], fastestSide: string): number[] {
+    // DEBUG
+    // console.log(damageResults);
+
     // set variables, parsed from move dist
     const moves: any[] = damageResults[1];
     const aiFaster: boolean = fastestSide != "0";
+    const playerMon: Pokemon = moves[0].defender;
 
     let finalDist: number[] = [];
     moves.forEach((move, i) => {
         finalDist[i] = 0.0;
     });
+
+    // console.log(moves); // DEBUG
     
     let damagingMoveDist = calculateHighestDamage(moves);
 
+    // iterate through player moves, get highest damaging roll
+    let playerHighestRoll = 0;
+    damageResults[0].forEach((move: {damage: number[], move: any, attacker: any}, i: number) => {
+        let playerDamageRoll: number = move.damage[move.damage.length-1];
+        if (move.move.isCrit) {
+            playerDamageRoll = Math.trunc(playerDamageRoll / 1.5);
+            if (move.attacker.ability == "Sniper") {
+                playerDamageRoll = Math.trunc(playerDamageRoll / 1.5);
+            }
+        }
+
+        if (playerDamageRoll > playerHighestRoll) {
+            playerHighestRoll = playerDamageRoll;
+        }
+    });
+
     // console.log(damagingMoveDist); // DEBUG
 
-    // TODO: cont from here probably, pull in all field info for best calcs
-    // TODO: used in a lot of checks
-    // TODO: this needs to check if dead to player, maybe pass it in?
+    // this should work fine, may need more variables and need to test them but it all lgtm so far
+
     // If player has 1 move and 1 roll that kill AI at their current health, this is true
-    //console.log(damageResults[0]); // DEBUG
-    const aiDeadToPlayer = true;
-    const playerHasStatusCond = false; // TODO: needs to be refactored to have this passed in as well
+    const aiDeadToPlayer = playerHighestRoll >= moves[0].attacker.originalCurHP &&
+         !((moves[0].move.ability == "Sturdy" || moves[0].move.item == "Focus Sash") && moves[0].attacker.originalCurHP == moves[0].attacker.stats.hp);
+    const playerHasStatusCond = playerMon.status != "";
+    const playerTypes: string[] = playerMon.types;
+    const playerAbility = moves[0].defender.moves[0].ability; // ugly but works
+    const playerHealthPercentage = Math.round((moves[0].defender.originalCurHP / moves[0].defender.stats.hp) * 100);
+    const aiMaxedOutAttack = moves[0].attacker.boosts.atk == 6;
+    const aiMonName = moves[0].attacker.name;
 
     let postBoostsMoveDist: KVP[] = [];
 
@@ -356,9 +424,16 @@ export function generateMoveDist(damageResults: any[], fastestSide: string): num
             // moveScoreString - "Move1:X" where X is the score of the move
             const move = moves[index].move;
             const moveName = moveScoreString.split(':')[0];
+            const moveScore: number = Number(moveScoreString.split(':')[1]);
             const damageRolls = moves[index].damageRolls();
+            const highestRoll = Math.max(...damageRolls);
             // anyValidDamageRolls should prevent Ghost type moves being chosen to hit normal types
+            // this just checks sum of damageRolls to make sure it's a positive number
             const anyValidDamageRolls = damageRolls.reduce((a: number, b: number) => a + b, 0) > 0;
+            const canKill = highestRoll >= moves[index].defender.originalCurHP;
+
+            // TODO: Need to go through and add anyValidDamageRolls to a lot of these checks
+            // TODO: apparently these *set* the score if set to 1, so go back and ensure that stacking scores correctly
 
             // Damaging Priority moves
             // if AI is dead to player mon and slower, 
@@ -368,6 +443,158 @@ export function generateMoveDist(damageResults: any[], fastestSide: string): num
                     move: moveName,
                     score: 11,
                     rate: 1
+                });
+            }
+
+            // Damaging Trapping Moves
+            // Always +6 80%, +8 20%
+            if (isTrapping(move)) {
+                moveStringsToAdd.push(... [{
+                    move: moveName,
+                    score: 6,
+                    rate: 1
+                },
+                {
+                    move: moveName,
+                    score: 2,
+                    rate: 0.2
+                }]);
+            }
+
+            // Damaging speed reduction moves
+            // Only applied if not highest damage already
+            const isDamagingSpeedReducing = moveName == "Icy Wind" || moveName == "Electroweb" || moveName == "Rock Tomb" || moveName == "Mud Shot" || moveName == "Low Sweep";
+            if (isDamagingSpeedReducing && moveScore == 0) {
+                if (playerAbility != "Contrary" && playerAbility != "Clear Body" && playerAbility != "White Smoke" && !aiFaster) {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: 6,
+                        rate: 1
+                    });
+                } else {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: 5,
+                        rate: 1
+                    });
+                }
+                // TODO: double battle +1 to Icy Wind and Electroweb
+            }
+
+            // Damaging Atk/SpAtk reduction moves w/ guaranteed effect
+            // TODO: will need a list for this
+
+            // Damaging -2 SpDef reduction moves w/ guaranteed effect
+            // Always +6, stacks with other boosts
+            if (moveName == "Acid Spray") {
+                moveStringsToAdd.push({
+                    move: moveName,
+                    score: 6,
+                    rate: 1
+                });
+            }
+
+            // Future Sight
+            // +8 if ai is faster and dead to player, +6 otherwise
+            if (moveName == "Future Sight") {
+                if (aiFaster && aiDeadToPlayer) {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: 8,
+                        rate: 1
+                    });
+                } else {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: 6,
+                        rate: 1
+                    });
+                }
+            }
+
+            // Relic Song
+            // +10 if Meloetta base form
+            // -20 if Meloetta Piroutette
+            // stacks with kills/HD
+            if (moveName == "Relic Song") {
+                if (aiMonName == "Meloetta-Pirouette") {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: -20,
+                        rate: 1
+                    });
+                } else {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: 10,
+                        rate: 1
+                    });
+                }
+            }
+
+            // Sucker Punch
+            // TODO: will need to add a conditional checkbox to the calc
+
+            // Pursuit
+            // +10 if can KO (stacks with kill bonuses)
+            // +3 if faster (stacks with kill bonuses)
+            // Player below 20% +10
+            // Player below 40%, +8 (50%)
+            if (moveName == "Pursuit") {
+                if (canKill) {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: 10,
+                        rate: 1
+                    });
+                } else {
+                    if (playerHealthPercentage < 20) {
+                        moveStringsToAdd.push({
+                            move: moveName,
+                            score: 10,
+                            rate: 1
+                        });
+                    } else if (playerHealthPercentage < 40) {
+                        moveStringsToAdd.push({
+                            move: moveName,
+                            score: 8,
+                            rate: 0.5
+                        });
+                    }
+                }
+
+                if (aiFaster) {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: 3,
+                        rate: 1
+                    })
+                }
+            }
+
+            // Fell Stinger
+            // If not max atk, and fell stinger kills TOTAL score is
+                // faster +21 (80%), +23 (20%)
+                // slower +15 (80%), +17 (20%)
+            // no change otherwise
+            if (moveName == "Fell Stinger" && !aiMaxedOutAttack && canKill) {
+                if (aiFaster) {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: 21 - moveScore,
+                        rate: 1
+                    });
+                } else {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: 15 - moveScore,
+                        rate: 1
+                    });
+                }
+                moveStringsToAdd.push({
+                    move: moveName,
+                    score: 2,
+                    rate: 0.2
                 });
             }
 
@@ -381,13 +608,54 @@ export function generateMoveDist(damageResults: any[], fastestSide: string): num
                 });
             }
 
+            // these setup moves all require a "first turn out" checkbox
+            // Stealth Rock
+
+            // Spikes, Toxic Spikes
+
+            // Sticky Web
+
+            // Protect, King's Shield, Spiky Shield
+
+            // Fling, Role Play, doubles weakness policy, magnitude, eq is just for doubles, so leave it for now
+
+            // Imprison
+            // One move in common +9, else -20
+
+            // Baton Pass
+
+            // Tailwind
+
+            // Trick Room
+            
+            // Fake Out
+
+            // Helping Hand, Follow Me (just make it -6 since no doubles)
+
+            // Final Gambit
+
+            // Terrain
+            // If Holding Terrain Extender +9, else +8. If already Terrain -20
+
+            // Light Screen / Reflect
+            // starts at +6, +1 if holding light clay, +1 (50%). If screen is already up -20
+
+            // Substitute
+
+            // Explostion, Self Destruct, Misty Explosion
+
+            // Memento
+
+            // Thunder Wave, Stun Spore, Glare, Nuzzle
+            
             // Will-o-Wisp
             // Starts at +6
             // 37% of the time, the following conditions are checked
             // If target has a physical attacking move +1
             // If AI mon or partner has Hex +1
             if (moveName == "Will-O-Wisp") {
-                if (playerHasStatusCond) { // any intuitive condition where AI won't click status move
+                // any intuitive condition where AI won't click status move
+                if (playerHasStatusCond || playerTypes.findIndex((type: string) => type == "Fire") != -1) { 
                     moveStringsToAdd.push({
                         move: moveName,
                         score: -20,
@@ -417,6 +685,12 @@ export function generateMoveDist(damageResults: any[], fastestSide: string): num
                 }
             }
 
+            // Trick, Switcheroo
+
+            // Yawn, Dark Void, Grasswhistle, Sing
+
+            // Poisoning Moves
+
             // Agility, Rock Polish, Autotomize
             // If AI is slower than player mon +7, else -20
             if (moveName == "Agility" || moveName == "Rock Polish" || moveName == "Autotomize") {
@@ -435,6 +709,12 @@ export function generateMoveDist(damageResults: any[], fastestSide: string): num
                 }
             }
 
+            // Tail Glow, Nasty Plot, Work Up
+
+            // Shell Smash
+
+            // Belly Drum
+
             // Focus Energy, Laser Focus
             // If AI has Super Luck/Sniper, holding Scope Lens, or has a high crit rate move +7, else +6
             if (moveName == "Focus Energy" || moveName == "Laser Focus") {
@@ -452,6 +732,26 @@ export function generateMoveDist(damageResults: any[], fastestSide: string): num
                     moveStringsToAdd.push({
                         move: moveName,
                         score: 6,
+                        rate: 1
+                    });
+                }
+            }
+
+            // Coaching
+
+            // Meteor Beam
+            // +9 if holding Power Herb, -20 otherwise
+            if (moveName == "Meteor Beam") {
+                if (move.item == "Power Herb") {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: 9,
+                        rate: 1
+                    });
+                } else {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: -20,
                         rate: 1
                     });
                 }
@@ -487,6 +787,18 @@ export function generateMoveDist(damageResults: any[], fastestSide: string): num
                     }]);
                 }
             }
+
+            // Recovery Moves
+
+            // Sun Based Recovery
+
+            // Rest
+
+            // Taunt
+
+            // Encore
+
+            // Counter, Mirror Coat
         });
         
         // iterate through all move strings and update the move kvps
@@ -500,7 +812,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string): num
     }
 
     // console.log("damagingMoveDist before it goes into postBoostsMoveDist");
-    // console.log(postBoostsMoveDist);
+    // console.log(postBoostsMoveDist); // DEBUG
     
     // actually measure score and calculate probability of each move
     for (const dist of postBoostsMoveDist) {
