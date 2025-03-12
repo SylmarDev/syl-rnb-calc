@@ -63,7 +63,7 @@
     </div>
     <hr />
     <div aria-label="Move selection" class="move-result-group" role="region" title="Select a move to show detailed results.">
-        <div  aria-labelledby="resultHeaderL" class="move-result-subgroup" role="radiogroup">
+        <div  aria-labelledby="resultHeaderL" class="move-result-subgroupL" role="radiogroup">
             <div class="result-move-header"><span id="resultHeaderL">Pok&eacute;mon 1's Moves (select one to show detailed results)</span>
             </div>
             <div>
@@ -87,7 +87,7 @@
                 <span id="resultDamageL4">??? - ???%</span>
             </div>
         </div>
-        <div aria-labelledby="resultHeaderR" class="move-result-subgroup" role="radiogroup">
+        <div aria-labelledby="resultHeaderR" class="move-result-subgroupR" role="radiogroup">
             <div class="result-move-header"><span id="resultHeaderR">Pok&eacute;mon 2's Moves (select one to show detailed results)</span>
             </div>
             <div>
@@ -113,6 +113,12 @@
                 <label class="btn btn-xxxwide btn-bottom" for="resultMoveR4">Loading...</label>
                 <span id="resultDamageR4" class="resultDamageR">??? - ???%</span>
                 <span id="resultMoveRateR4" class="resultMoveRateR">??%</span>
+            </div>
+        </div>
+        <div aria-labelledby="aiOptionsHeader" class="move-result-subgroupR" role="checkboxgroup">
+            <div>
+                <label class="unselectable" for="aiOption1">AI Option 1:</label>
+                <input class="" type="checkbox" name="aiOption" id="aiOption1" aria-describedby="aiOption1" />
             </div>
         </div>
     </div>

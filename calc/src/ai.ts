@@ -211,7 +211,7 @@ function calculateHighestDamage(moves: any[]): KVP[] {
 
     // But ^^^ is how you would change a moves damage if you artificially needed to set it to 0.
     // TODO: consider using above code to turn off crits except for cases where Crit should be turned on
-    // And for calculating the new damage values of multi hit moves
+    // And for calculating the new damage values of multi hit moves (i.e Pin Missile)
 
     // console.log(moves); // DEBUG
 
@@ -628,6 +628,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string): num
 
             // Trick Room
             
+            // needs "first turn out checkbox"
             // Fake Out
 
             // Helping Hand, Follow Me (just make it -6 since no doubles)
@@ -812,7 +813,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string): num
     }
 
     // console.log("damagingMoveDist before it goes into postBoostsMoveDist");
-    // console.log(postBoostsMoveDist); // DEBUG
+    console.log(postBoostsMoveDist); // DEBUG
     
     // actually measure score and calculate probability of each move
     for (const dist of postBoostsMoveDist) {

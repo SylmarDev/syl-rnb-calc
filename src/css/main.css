@@ -349,9 +349,14 @@ th {
     min-width: 50em;
     margin: 1em 0 11.5em;
 }
-.move-result-subgroup {
+.move-result-subgroupL {
     float: left;
-    width: 50%;
+    width: 40%;
+}
+.move-result-subgroupR {
+    float: left;
+    width: 25%;
+    padding-right: 20px;
 }
 .move-result-group .btn {
     margin-right: 1em;
@@ -665,4 +670,13 @@ table.field {
 
 .resultDamageR{
     margin-right: 1em;
+}
+
+.unselectable {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
