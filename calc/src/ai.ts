@@ -353,9 +353,10 @@ function calculateHighestDamage(moves: any[]): KVP[] {
  * @param {string} fastestSide - 0 if player, 1 if AI. "tie" if tie
  * @returns {number[]} The move distribution.
  */
-export function generateMoveDist(damageResults: any[], fastestSide: string): number[] {
+export function generateMoveDist(damageResults: any[], fastestSide: string, aiOptions: {[key: string]: boolean }): number[] {
     // DEBUG
     // console.log(damageResults);
+    // console.log(aiOptions);
 
     // set variables, parsed from move dist
     const moves: any[] = damageResults[1];
@@ -400,6 +401,19 @@ export function generateMoveDist(damageResults: any[], fastestSide: string): num
     const playerHealthPercentage = Math.round((moves[0].defender.originalCurHP / moves[0].defender.stats.hp) * 100);
     const aiMaxedOutAttack = moves[0].attacker.boosts.atk == 6;
     const aiMonName = moves[0].attacker.name;
+    const aiItem = moves[0].attacker.item;
+    const playerSideSpikes = moves[0].field.defenderSide.spikes > 0;
+    const playerSideTSpikes = moves[0].field.defenderSide.tspikes > 0;
+    const aiReflect = moves[0].field.attackerSide.isReflect;
+    const aiLightScreen = moves[0].field.attackerSide.isLightScreen;
+    const aiHasTailwind = moves[0].field.attackerSide.isTailwind;
+    const terrain = moves[0].field.terrain;
+
+    // console.log(moves[0].attacker.item);
+    
+    // ai options
+    const firstTurnOut = aiOptions["firstTurnOutAiOpt"];
+    const suckerPunchUsedLastTurn = aiOptions["suckerPunchOpt"];
 
     let postBoostsMoveDist: KVP[] = [];
 
@@ -448,7 +462,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string): num
 
             // Damaging Trapping Moves
             // Always +6 80%, +8 20%
-            if (isTrapping(move)) {
+            if (isTrapping(move) && anyValidDamageRolls) {
                 moveStringsToAdd.push(... [{
                     move: moveName,
                     score: 6,
@@ -533,7 +547,14 @@ export function generateMoveDist(damageResults: any[], fastestSide: string): num
             }
 
             // Sucker Punch
-            // TODO: will need to add a conditional checkbox to the calc
+            // If sucker punch used last turn, -20 50% of the time
+            if (moveName == "Sucker Punch" && suckerPunchUsedLastTurn) {
+                moveStringsToAdd.push({
+                    move: moveName,
+                    score: -20,
+                    rate: 0.5
+                });
+            }
 
             // Pursuit
             // +10 if can KO (stacks with kill bonuses)
@@ -608,12 +629,86 @@ export function generateMoveDist(damageResults: any[], fastestSide: string): num
                 });
             }
 
-            // these setup moves all require a "first turn out" checkbox
+            // TODO: these setup moves need a common sense -40 if they're already all out
             // Stealth Rock
+            if (moveName == "Stealth Rock") {
+                if (firstTurnOut) {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: 8,
+                        rate: 1
+                    });
+                } else {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: 6,
+                        rate: 1
+                    });
+                }
+
+                moveStringsToAdd.push({
+                    move: moveName,
+                    score: 1,
+                    rate: 0.75
+                })
+            }
 
             // Spikes, Toxic Spikes
+            // TODO: add Toxic Spikes to the calc
+            if (moveName == "Spikes" || moveName == "Toxic Spikes") {
+                if (firstTurnOut) {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: 8,
+                        rate: 1
+                    });
+                } else {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: 6,
+                        rate: 1
+                    });
+                }
+                
+                moveStringsToAdd.push({
+                    move: moveName,
+                    score: 1,
+                    rate: 0.75
+                });
+                
+                // IF PLAYER SPIKES ARE UP -1 ALWAYS
+                if ((moveName == "Spikes" && playerSideSpikes) || 
+                    ((moveName == "Toxic Spikes") && playerSideTSpikes)) {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: -1,
+                        rate: 1
+                    });
+                }
+            }
 
             // Sticky Web
+            if (moveName == "Sticky Web") {
+                if (firstTurnOut) {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: 9,
+                        rate: 1
+                    });
+                } else {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: 6,
+                        rate: 1
+                    });
+                }
+                
+                moveStringsToAdd.push({
+                    move: moveName,
+                    score: 3,
+                    rate: 0.75
+                })
+            }
 
             // Protect, King's Shield, Spiky Shield
 
@@ -625,29 +720,154 @@ export function generateMoveDist(damageResults: any[], fastestSide: string): num
             // Baton Pass
 
             // Tailwind
+            if (moveName == "Tailwind") {
+                // TODO: update for doubles if needed
+                if (!aiHasTailwind) {
+                    if (!aiFaster) {
+                        moveStringsToAdd.push({
+                            move: moveName,
+                            score: 9,
+                            rate: 1
+                        });
+                    } else {
+                        moveStringsToAdd.push({
+                            move: moveName,
+                            score: 5,
+                            rate: 1
+                        });
+                    }
+                } else { // useless move, tailwind is up
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: -40,
+                        rate: 1
+                    });
+                }
+            }
 
             // Trick Room
             
             // needs "first turn out checkbox"
             // Fake Out
+            if (moveName == "Fake Out") {
+                if (firstTurnOut && (playerAbility != "Shield Dust" && playerAbility != "Inner Focus")) {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: 9,
+                        rate: 1
+                    });
+                }
+            }
 
             // Helping Hand, Follow Me (just make it -6 since no doubles)
 
             // Final Gambit
+            if (moveName == "Final Gambit") {
+                if (aiFaster && moves[index].attacker.originalCurHP > moves[index].defender.originalCurHP) {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: 8,
+                        rate: 1
+                    });
+                } else if (aiFaster && aiDeadToPlayer) {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: 7,
+                        rate: 1
+                    });
+                } else {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: 6,
+                        rate: 1
+                    });
+                }
+            }
 
             // Terrain
             // If Holding Terrain Extender +9, else +8. If already Terrain -20
+            if (moveName.endsWith(" Terrain")) {
+                // I think there's only ever one terrain type per team, so this should be fine. 
+                // If it's broken fix it obvs
+                if (terrain != "" ) {
+                    if (aiItem != "Terrain Extender") {
+                        moveStringsToAdd.push({
+                            move: moveName,
+                            score: 9,
+                            rate: 1
+                        });
+                    } else {
+                        moveStringsToAdd.push({
+                            move: moveName,
+                            score: 8,
+                            rate: 1
+                        });
+                    }
+                } else {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: -40,
+                        rate: 1
+                    });
+                }
+            }
 
             // Light Screen / Reflect
             // starts at +6, +1 if holding light clay, +1 (50%). If screen is already up -20
+            // TODO: need to add status move category to all moves (instead of them being listed as physical)
+            if (moveName == "Light Screen" || moveName == "Reflect") {
+                // useless move check
+                if ((moveName == "Light Screen" && aiLightScreen) || 
+                    ((moveName == "Reflect") && aiReflect)) {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: -40,
+                        rate: 1
+                    });
+                } else {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: 6,
+                        rate: 1
+                    });
+                    // TODO: continue from here this is broken
+                }
+            }
 
             // Substitute
+            // TODO: need to add status category to move categories (instead of them being listed as physical)
 
             // Explostion, Self Destruct, Misty Explosion
 
             // Memento
 
             // Thunder Wave, Stun Spore, Glare, Nuzzle
+            // TODO: finish this
+            if (moveName == "Thunder Wave" || moveName == "Stun Spore" || moveName == "Nuzzle") {
+                const hexIndex = moves.findIndex(x => x.move.name === "Hex"); // hehe inHEX more like
+                var paraIncentive = (false) || hexIndex != -1;
+
+                if (paraIncentive) {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: 8,
+                        rate: 1
+                    });
+                } else {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: 7,
+                        rate: 1
+                    });
+                }
+
+                // always -1 50%
+                moveStringsToAdd.push({
+                    move: moveName,
+                    score: -1,
+                    rate: 0.5
+                });
+            }
             
             // Will-o-Wisp
             // Starts at +6
@@ -805,7 +1025,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string): num
         // iterate through all move strings and update the move kvps
         for (const moveStringToAdd of moveStringsToAdd) {
             moveKVPs = updateMoveKVPWithMoveStrings(moveKVPs, moveStringToAdd);
-        }        
+        }
         
         for (const moveKVP of moveKVPs) {
             addOrUpdateProbability(postBoostsMoveDist, moveKVP.key, moveKVP.value);
@@ -813,7 +1033,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string): num
     }
 
     // console.log("damagingMoveDist before it goes into postBoostsMoveDist");
-    console.log(postBoostsMoveDist); // DEBUG
+    // console.log(postBoostsMoveDist); // DEBUG
     
     // actually measure score and calculate probability of each move
     for (const dist of postBoostsMoveDist) {

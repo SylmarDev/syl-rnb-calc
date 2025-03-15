@@ -1460,12 +1460,50 @@ function topPokemonIcon(fullname, node) {
 	node.src = src;
 }
 
+function isNamed(moveName, ...names) {
+    return names.includes(moveName);
+}
+
+function setAiOptionVisibility(side) {
+	let moveNames = [];
+	// console.log($(`#${side} .i-f-o-move div.move-selector a.select2-choice span.select2-chosen`));
+	$(`#${side} .i-f-o-move div.move-selector a.select2-choice span.select2-chosen`).each(function() { moveNames.push($(this).text())}); // trust the process
+	// console.log(moveNames);
+
+	// if there are none, hide the header
+	let any = false;
+	
+	// if Stealth Rocks, Spikes, Toxic Spikes, Sticky Web, Protect, King's Shield, Fake Out, Or Encore
+	// first turn out checkbox needs made available
+	if (isNamed("Stealth Rock", ...moveNames) || isNamed("Spikes", ...moveNames) ||
+		isNamed("Toxic Spikes", ...moveNames) || isNamed("Sticky Web", ...moveNames) ||
+		isNamed("Protect", ...moveNames) || isNamed("King's Shield", ...moveNames) ||
+		isNamed("Fake Out", ...moveNames) || isNamed("Encore", ...moveNames))
+	{
+		$("#aiOptions").show();
+		$("#firstTurnOutOpt").show();
+		any = true;
+	}
+
+	// sucker punch
+	if (isNamed("Sucker Punch", ...moveNames)) {
+		$("#aiOptions").show();
+		$("#suckerPunchAiOpt").show();
+		any = true;
+	}
+
+	if (!any) {
+		hideAiOptions();
+	}
+}
+
 $(document).on('click', '.right-side', function () {
 	var set = $(this).attr('data-id');
 	topPokemonIcon(set, $("#p2mon")[0])
 	$('.opposing').val(set);
 	$('.opposing').change();
 	$('.opposing .select2-chosen').text(set);
+	setAiOptionVisibility('p2');
 })
 
 $(document).on('click', '.left-side', function () {
@@ -1476,6 +1514,9 @@ $(document).on('click', '.left-side', function () {
 	$('.player .select2-chosen').text(set);
 })
 
+$(document).on('change', '#p2 .i-f-o-move select.move-selector', function () {
+	setAiOptionVisibility('p2');
+})
 
 //select first mon of the box when loading
 function selectFirstMon() {
@@ -1782,6 +1823,13 @@ function switchIconDouble(){
 	document.getElementById("monDouble").toggleAttribute("hidden")
 }
 
+function hideAiOptions() {
+	$("#aiOptions").hide();
+	$("#aiOptions div:has(input)").each(function () {
+		$(this).hide();
+	});
+}
+
 $(document).ready(function () {
 	var params = new URLSearchParams(window.location.search);
 	var g = GENERATION[params.get('gen')] || 8;
@@ -1827,6 +1875,9 @@ $(document).ready(function () {
 	if (last != "") {
 		selectTrainer(parseInt(last, 10));
 	};
+
+	// hide ai options
+	hideAiOptions();
 });
 
 /* Click-to-copy function */

@@ -351,13 +351,18 @@ th {
 }
 .move-result-subgroupL {
     float: left;
-    width: 40%;
+    width: 35%;
 }
 .move-result-subgroupR {
     float: left;
-    width: 25%;
-    padding-right: 20px;
+    width: 35%;
 }
+
+.ai-options-subgroup {
+    float: left;
+    width: 20%;
+}
+
 .move-result-group .btn {
     margin-right: 1em;
 }

@@ -1,7 +1,15 @@
-3/9
+3/15
 TODO:
 - Test The Following:
   - Future Sight
+  - Stealth Rock
+  - Sticky Web
+  - Spikes, Toxic Spikes
+  - AI Options generally
+  - Tailwind
+  - Fake Out
+  - Final Gambit
+  - Terrain moves
 
 
 - Make the checkbox that appears to ask for special conditions (i.e First Turn Out, used for Stealth Rocks, Spikes, TSpikes, Sticky Web, Fake Out, etc.)

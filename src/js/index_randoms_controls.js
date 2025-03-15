@@ -24,8 +24,19 @@ for (var i = 0; i < 4; i++) {
 	});
 }
 
+// create object for all ai options
+function createAiOptionsDict() {
+	var dict = {};
+	$("#aiOptions :input").each(function ()  {
+		dict[$(this).attr('id')] = $(this).is(":checked");
+	});
+	// console.log(dict); // DEBUG
+	return dict;
+}
+
 var damageResults;
 function performCalculations() {
+	// console.log("perform calcs called"); // DEBUG
 	var p1info = $("#p1");
 	var p2info = $("#p2");
 	var p1 = createPokemon(p1info);
@@ -91,7 +102,8 @@ function performCalculations() {
 		}
 	}
 
-	var moveRates = calc.generateMoveDist(damageResults, fastestSide);
+	const aiOptions = createAiOptionsDict();
+	var moveRates = calc.generateMoveDist(damageResults, fastestSide, aiOptions);
 
 	for (var i = 0; i < moveRates.length; i++) {
 		$("#resultMoveRateR" + (i + 1)).text((moveRates[i] * 100).toFixed(2) + "%");
@@ -272,6 +284,7 @@ $(".mode").change(function () {
 });
 
 $(".notation").change(function () {
+	console.log("notation changed, running perform calcs");
 	performCalculations();
 });
 

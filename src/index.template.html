@@ -115,10 +115,16 @@
                 <span id="resultMoveRateR4" class="resultMoveRateR">??%</span>
             </div>
         </div>
-        <div aria-labelledby="aiOptionsHeader" class="move-result-subgroupR" role="checkboxgroup">
-            <div>
-                <label class="unselectable" for="aiOption1">AI Option 1:</label>
-                <input class="" type="checkbox" name="aiOption" id="aiOption1" aria-describedby="aiOption1" />
+        <div id="aiOptions" aria-labelledby="aiOptions" class="ai-options-subgroup" role="checkboxgroup">
+            <div class="result-move-header"><span id="aiOptionsHeader">Ai Options</span>
+            </div>
+            <div class="" id="firstTurnOutOpt">
+                <label class="unselectable" for="firstTurnOutAiOpt">First Turn Out:</label>
+                <input class="calc-trigger" type="checkbox" name="firstTurnOutAiOpt" id="firstTurnOutAiOpt" aria-describedby="aiOption" />
+            </div>
+            <div class="" id="suckerPunchOpt">
+                <label class="unselectable" for="suckerPunchAiOpt">Sucker Punch Used Last Turn:</label>
+                <input class="calc-trigger" type="checkbox" name="suckerPunchAiOpt" id="suckerPunchAiOpt" aria-describedby="aiOption" />
             </div>
         </div>
     </div>
