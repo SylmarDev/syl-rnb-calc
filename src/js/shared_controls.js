@@ -1488,9 +1488,20 @@ function setAiOptionVisibility(side) {
 	// sucker punch
 	if (isNamed("Sucker Punch", ...moveNames)) {
 		$("#aiOptions").show();
-		$("#suckerPunchAiOpt").show();
+		$("#suckerPunchOpt").show();
 		any = true;
 	}
+
+	if (isNamed("Explosion", ...moveNames) || isNamed("Self Destruct", ...moveNames) ||
+		isNamed("Misty Explosion", ...moveNames) || isNamed("Memento", ...moveNames)) {
+			if (!isNamed("Memento", ...moveNames)) {
+				$("#playerLastMonOpt").show();
+			}
+			
+			$("#aiOptions").show();
+			$("#lastMonOpt").show();
+			any = true;
+		}
 
 	if (!any) {
 		hideAiOptions();

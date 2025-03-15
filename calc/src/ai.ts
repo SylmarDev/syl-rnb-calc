@@ -356,7 +356,7 @@ function calculateHighestDamage(moves: any[]): KVP[] {
 export function generateMoveDist(damageResults: any[], fastestSide: string, aiOptions: {[key: string]: boolean }): number[] {
     // DEBUG
     // console.log(damageResults);
-    // console.log(aiOptions);
+    console.log(aiOptions);
 
     // set variables, parsed from move dist
     const moves: any[] = damageResults[1];
@@ -376,6 +376,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
     let playerHighestRoll = 0;
     damageResults[0].forEach((move: {damage: number[], move: any, attacker: any}, i: number) => {
         let playerDamageRoll: number = move.damage[move.damage.length-1];
+        // TODO: don't do this check if move is a guaranteed crit
         if (move.move.isCrit) {
             playerDamageRoll = Math.trunc(playerDamageRoll / 1.5);
             if (move.attacker.ability == "Sniper") {
@@ -395,6 +396,8 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
     // If player has 1 move and 1 roll that kill AI at their current health, this is true
     const aiDeadToPlayer = playerHighestRoll >= moves[0].attacker.originalCurHP &&
          !((moves[0].move.ability == "Sturdy" || moves[0].move.item == "Focus Sash") && moves[0].attacker.originalCurHP == moves[0].attacker.stats.hp);
+    const aiTwoHitKOd = playerHighestRoll * 2 >= moves[0].attacker.originalCurHP;     
+    const aiThreeHitKOd = playerHighestRoll * 3 >= moves[0].attacker.originalCurHP;
     const playerHasStatusCond = playerMon.status != "";
     const playerTypes: string[] = playerMon.types;
     const playerAbility = moves[0].defender.moves[0].ability; // ugly but works
@@ -408,12 +411,17 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
     const aiLightScreen = moves[0].field.attackerSide.isLightScreen;
     const aiHasTailwind = moves[0].field.attackerSide.isTailwind;
     const terrain = moves[0].field.terrain;
+    // TODO: create this and use where applicable
+    // TODO: add thaw moves + recharging, loafing around due to truant
+    const playerIncapacitated = playerMon.status == "frz" || playerMon.status == "slp"; 
 
     // console.log(moves[0].attacker.item);
     
     // ai options
     const firstTurnOut = aiOptions["firstTurnOutAiOpt"];
-    const suckerPunchUsedLastTurn = aiOptions["suckerPunchOpt"];
+    const suckerPunchUsedLastTurn = aiOptions["suckerPunchAiOpt"];
+    const aiLastMonOut = aiOptions["lastMonAiOpt"];
+    const playerLastMonOut = aiOptions["playerLastMonAiOpt"];
 
     let postBoostsMoveDist: KVP[] = [];
 
@@ -747,7 +755,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
 
             // Trick Room
             
-            // needs "first turn out checkbox"
+
             // Fake Out
             if (moveName == "Fake Out") {
                 if (firstTurnOut && (playerAbility != "Shield Dust" && playerAbility != "Inner Focus")) {
@@ -837,7 +845,11 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             // Substitute
             // TODO: need to add status category to move categories (instead of them being listed as physical)
 
-            // Explostion, Self Destruct, Misty Explosion
+            // Explosion, Self Destruct, Misty Explosion
+            if (moveName == "Explosion" || moveName == "Self Destruct" || moveName == "Misty Explosion") {
+                const aiHealthPercentage = Math.trunc((moves[0].attacker.originalCurHP / moves[0].attacker.stats.hp) * 100);
+                // TODO: cont from here
+            }
 
             // Memento
 
@@ -907,6 +919,34 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             }
 
             // Trick, Switcheroo
+            if (moveName == "Trick" || moveName == "Switcheroo") {
+                if (aiItem == "Toxic Orb" || aiItem == "Flame Orb" || aiItem == "Black Sludge") {
+                    moveStringsToAdd.push(...[{
+                        move: moveName,
+                        score: 6,
+                        rate: 1
+                    },
+                    {
+                        move: moveName,
+                        score: 1,
+                        rate: 0.5
+                    }]);
+                } else {
+                    if (aiItem == "Iron Ball" || aiItem == "Lagging Tail" || aiItem == "Sticky Barb") {
+                        moveStringsToAdd.push({
+                            move: moveName,
+                            score: 7,
+                            rate: 1
+                        });
+                    } else {
+                        moveStringsToAdd.push({
+                            move: moveName,
+                            score: 5,
+                            rate: 1
+                        });
+                    }
+                }
+            }
 
             // Yawn, Dark Void, Grasswhistle, Sing
 
@@ -931,10 +971,88 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             }
 
             // Tail Glow, Nasty Plot, Work Up
+            if (moveName == "Tail Glow" || moveName == "Nasty Plot" || moveName == "Work Up") {
+                // starts at +6
+                let score: number = 6;
+
+                // if player incapacitated +3
+                if (playerIncapacitated) {
+                    score += 3;
+                } else if (!aiThreeHitKOd) {
+                    score += 1;
+                    if (aiFaster) { score++; }
+                }
+
+                if (!aiFaster && aiTwoHitKOd) {
+                    score -= 5;
+                }
+
+                if (moves[0].attacker.boosts.spatk >= 2) {
+                    score--;
+                }
+
+                moveStringsToAdd.push({
+                    move: moveName,
+                    score: score,
+                    rate: 1
+                });
+            }
 
             // Shell Smash
+            if (moveName == "Shell Smash") {
+                // starts at +6
+                let score: number = 6;
+
+                if (playerIncapacitated) { score += 3; }
+
+                // if player cannot KO AI if Shell Smash is used this turn +2
+
+                // if player mon can KO AI mon if Shell Smash is used this turn -2
+
+                // TODO: these checks take white herb into account and will need to call the calc itself to reroll that info
+
+                if (moves[0].attacker.boosts.atk >= 1 || moves[0].attacker.boosts.spatk >= 6) {
+                    score -= 20;
+                }
+
+                moveStringsToAdd.push({
+                    move: moveName,
+                    score: score,
+                    rate: 1
+                });
+            }
 
             // Belly Drum
+            if (moveName == "Belly Drum") {
+                const sitrusRecovery = aiItem == "Sitrus Berry" ? Math.trunc(moves[0].attacker.stats.hp / 4) : 0;
+                const hpAfterBellyDrum = moves[0].attacker.originalCurHP - Math.trunc(moves[0].attacker.stats.hp / 2) + sitrusRecovery;
+                const aiNotDeadAfterBellyDrum = playerHighestRoll >= hpAfterBellyDrum;
+                if (aiMaxedOutAttack  || moves[0].attacker.originalCurHP - Math.trunc(moves[0].attacker.stats.hp / 2) <= 0) { // useless move
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: -40,
+                        rate: 1
+                    });
+                } else if (playerIncapacitated) {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: 9,
+                        rate: 1
+                    });
+                } else if (aiNotDeadAfterBellyDrum) {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: 8,
+                        rate: 1
+                    });
+                } else {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: 4,
+                        rate: 1
+                    });
+                }
+            }
 
             // Focus Energy, Laser Focus
             // If AI has Super Luck/Sniper, holding Scope Lens, or has a high crit rate move +7, else +6
@@ -959,6 +1077,14 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             }
 
             // Coaching
+            // TODO: doubles update
+            if (moveName == "Coaching") {
+                moveStringsToAdd.push({
+                    move: moveName,
+                    score: -20,
+                    rate: 1
+                });
+            }
 
             // Meteor Beam
             // +9 if holding Power Herb, -20 otherwise
