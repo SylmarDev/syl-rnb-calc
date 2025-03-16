@@ -1464,6 +1464,13 @@ function isNamed(moveName, ...names) {
     return names.includes(moveName);
 }
 
+function hasMove(affectedMoves, aiMoves) {
+	for (const move of affectedMoves) {
+		if (isNamed(move, ...aiMoves)) { return true; }
+	}
+	return false;
+}
+
 function setAiOptionVisibility(side) {
 	let moveNames = [];
 	// console.log($(`#${side} .i-f-o-move div.move-selector a.select2-choice span.select2-chosen`));
@@ -1471,43 +1478,35 @@ function setAiOptionVisibility(side) {
 	// console.log(moveNames);
 
 	hideAiOptions();
-
-	// if there are none, hide the header
-	let any = false;
 	
 	// if Stealth Rocks, Spikes, Toxic Spikes, Sticky Web, Protect, King's Shield, Fake Out, Or Encore
 	// first turn out checkbox needs made available
-	if (isNamed("Stealth Rock", ...moveNames) || isNamed("Spikes", ...moveNames) ||
-		isNamed("Toxic Spikes", ...moveNames) || isNamed("Sticky Web", ...moveNames) ||
-		isNamed("Protect", ...moveNames) || isNamed("King's Shield", ...moveNames) ||
-		isNamed("Fake Out", ...moveNames) || isNamed("Encore", ...moveNames))
-	{
+	if (hasMove(["Stealth Rock", "Spikes", "Toxic Spikes", "Sticky Web", "Protect", "King's Shield", "Fake Out", "Encore"], moveNames)) {
 		$("#aiOptions").show();
 		$("#firstTurnOutOpt").show();
-		any = true;
 	}
 
 	// sucker punch
 	if (isNamed("Sucker Punch", ...moveNames)) {
 		$("#aiOptions").show();
 		$("#suckerPunchOpt").show();
-		any = true;
 	}
 
-	if (isNamed("Explosion", ...moveNames) || isNamed("Self Destruct", ...moveNames) ||
-		isNamed("Misty Explosion", ...moveNames) || isNamed("Memento", ...moveNames)) {
+	// self fainting moves
+	if (hasMove(["Explosion", "Self Destruct", "Misty Explosion", "Memento"], moveNames)) {
 		if (!isNamed("Memento", ...moveNames)) {
 			$("#playerLastMonOpt").show();
 		}
 		
 		$("#aiOptions").show();
 		$("#lastMonOpt").show();
-		any = true;
 	}
 
-	//if (any) {
-	//	$("#aiOptions").show();
-	//}
+	// player charmed or confused
+	if (hasMove(["Thunder Wave", "Stun Spore", "Glare", "Nuzzle"], moveNames)) {
+		$("#aiOptions").show();
+		$("#playerCharmedOrConfusedOpt").show();
+	}
 }
 
 $(document).on('click', '.right-side', function () {

@@ -284,7 +284,7 @@ $(".mode").change(function () {
 });
 
 $(".notation").change(function () {
-	console.log("notation changed, running perform calcs");
+	// console.log("notation changed, running perform calcs");
 	performCalculations();
 });
 

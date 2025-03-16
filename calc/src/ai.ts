@@ -9,12 +9,12 @@ interface KVP {
 }
 
 // move functions
-function isNamed(move: Move, ...names: string[]) {
-    return names.includes(move.name);
+function isNamed(moveName: string, ...names: string[]) {
+    return names.includes(moveName);
 }
 
 function isTrapping(move: Move) {
-    return isNamed(move, 'Whirlpool', 'Fire Spin', 'Sand Tomb', 'Magma Storm', 'Infestation', 'Wrap', 'Bind');
+    return isNamed(move.name, 'Whirlpool', 'Fire Spin', 'Sand Tomb', 'Magma Storm', 'Infestation', 'Wrap', 'Bind');
 }
 
 function computeDistribution(array: number[]): { [key: number]: number } {
@@ -240,8 +240,8 @@ function calculateHighestDamage(moves: any[]): KVP[] {
        let i = 0;
        for (const key of keys) {
           if (moves[i].move.category === "Status" || 
-            isNamed(moves[i].move, "Explosion", "Final Gambit", "Rollout") ||
-            isNamed(moves[i].move, "Relic Song", "Meteor Beam", "Future Sight") ||
+            isNamed(moves[i].move.name, "Explosion", "Final Gambit", "Rollout") ||
+            isNamed(moves[i].move.name, "Relic Song", "Meteor Beam", "Future Sight") ||
             isTrapping(moves[i].move))
             {
                 i++;
@@ -251,6 +251,8 @@ function calculateHighestDamage(moves: any[]): KVP[] {
             keysForMaximumCheck.push(key);
             i++;
        }
+
+       // console.log(keysForMaximumCheck);
 
        let maximumKey = Math.max(...keysForMaximumCheck);
 
@@ -265,15 +267,6 @@ function calculateHighestDamage(moves: any[]): KVP[] {
 
            let moveName = moves[i].move.name;
            let moveBonus = 0;
-
-           // skip these moves entirely
-           if (moves[i].move.category === "Status" ||
-                isNamed(moves[i].move, "Explosion", "Final Gambit", "Rollout"))
-           {
-               keyString += `${moveName}:0`;
-               i++;
-               continue;
-           }
            
            // if damaging move kills
            if (key >= p1CurrentHealth) {
@@ -290,6 +283,22 @@ function calculateHighestDamage(moves: any[]): KVP[] {
                {
                    moveBonus += 1;
                }
+
+               // skip these moves entirely
+               if (moves[i].move.category === "Status" ||
+                isNamed(moves[i].move.name, "Explosion", "Final Gambit", "Rollout"))
+                {
+                    keyString += `${moveName}:0`;
+                    i++;
+                    continue;
+                }
+
+                // these still get kill bonuses
+                if (isNamed(moves[i].move.name, "Relic Song", "Meteor Beam", "Future Sight") || isTrapping(moves[i].move)) {
+                    keyString += `${moveName}:${moveBonus}`;
+                    i++;
+                    continue;
+                }
            }
 
            // TODO: add the crit chance + super effective rule
@@ -297,7 +306,7 @@ function calculateHighestDamage(moves: any[]): KVP[] {
            // not sure how I'll get super effectives
            
            // moves that do not have damage rolled normally, still get the boosts for kills.
-           if (isTrapping(moves[i].move) || isNamed(moves[i].move, "Relic Song", "Meteor Beam", "Future Sight")) {
+           if (isTrapping(moves[i].move) || isNamed(moves[i].move.name, "Relic Song", "Meteor Beam", "Future Sight")) {
                 keyString += `${moveName}:${moveBonus}`;
                 i++;
                 continue;
@@ -343,7 +352,7 @@ function calculateHighestDamage(moves: any[]): KVP[] {
         }
     }
 
-    //console.log(probabilitiesWithVariance); // Debug
+    // console.log(probabilitiesWithVariance); // Debug
     return probabilitiesWithVariance;
 }
 
@@ -356,7 +365,7 @@ function calculateHighestDamage(moves: any[]): KVP[] {
 export function generateMoveDist(damageResults: any[], fastestSide: string, aiOptions: {[key: string]: boolean }): number[] {
     // DEBUG
     // console.log(damageResults);
-    console.log(aiOptions);
+    // console.log(aiOptions);
 
     // set variables, parsed from move dist
     const moves: any[] = damageResults[1];
@@ -411,17 +420,19 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
     const aiLightScreen = moves[0].field.attackerSide.isLightScreen;
     const aiHasTailwind = moves[0].field.attackerSide.isTailwind;
     const terrain = moves[0].field.terrain;
+    const aiSlowerButFasterAfterPara = !aiFaster && moves[0].attacker.stats.spe > Math.trunc(moves[0].defender.stats.spe / 4);
     // TODO: create this and use where applicable
     // TODO: add thaw moves + recharging, loafing around due to truant
     const playerIncapacitated = playerMon.status == "frz" || playerMon.status == "slp"; 
 
-    // console.log(moves[0].attacker.item);
+    // console.log(moves[0]);
     
     // ai options
     const firstTurnOut = aiOptions["firstTurnOutAiOpt"];
     const suckerPunchUsedLastTurn = aiOptions["suckerPunchAiOpt"];
     const aiLastMonOut = aiOptions["lastMonAiOpt"];
     const playerLastMonOut = aiOptions["playerLastMonAiOpt"];
+    const playerCharmedOrConfused = aiOptions["playerCharmedOrConfusedAiOpt"];
 
     let postBoostsMoveDist: KVP[] = [];
 
@@ -441,6 +452,9 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             }
         ];
 
+        // TODO: create const for AI sees kill (for this damagingMoveDistKVP)
+        const aiSeesKill = false; // make a function for this
+
         // iterate through each move
         moveArr.forEach((moveScoreString, index) => {
             // moveScoreString - "Move1:X" where X is the score of the move
@@ -452,10 +466,14 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             // anyValidDamageRolls should prevent Ghost type moves being chosen to hit normal types
             // this just checks sum of damageRolls to make sure it's a positive number
             const anyValidDamageRolls = damageRolls.reduce((a: number, b: number) => a + b, 0) > 0;
-            const canKill = highestRoll >= moves[index].defender.originalCurHP;
+            const currentMoveCanKill = highestRoll >= moves[index].defender.originalCurHP;
 
             // TODO: Need to go through and add anyValidDamageRolls to a lot of these checks
             // TODO: apparently these *set* the score if set to 1, so go back and ensure that stacking scores correctly
+
+            // TODO: This function can probably use continues, so I probably should do that for performance lol
+
+            // console.log(move);
 
             // Damaging Priority moves
             // if AI is dead to player mon and slower, 
@@ -464,6 +482,15 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                 moveStringsToAdd.push({
                     move: moveName,
                     score: 11,
+                    rate: 1
+                });
+            }
+
+            // just ensure that prio moves aren't clicked in psychic terrain
+            if (move.priority > 0 && terrain == "Psychic") {
+                moveStringsToAdd.push({
+                    move: moveName,
+                    score: -40,
                     rate: 1
                 });
             }
@@ -570,7 +597,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             // Player below 20% +10
             // Player below 40%, +8 (50%)
             if (moveName == "Pursuit") {
-                if (canKill) {
+                if (currentMoveCanKill) {
                     moveStringsToAdd.push({
                         move: moveName,
                         score: 10,
@@ -606,7 +633,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                 // faster +21 (80%), +23 (20%)
                 // slower +15 (80%), +17 (20%)
             // no change otherwise
-            if (moveName == "Fell Stinger" && !aiMaxedOutAttack && canKill) {
+            if (moveName == "Fell Stinger" && !aiMaxedOutAttack && currentMoveCanKill) {
                 if (aiFaster) {
                     moveStringsToAdd.push({
                         move: moveName,
@@ -754,7 +781,10 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             }
 
             // Trick Room
-            
+            // TODO: add Trick Room to field object ughhhh
+            if (moveName == "Trick Room") {
+                // TODO: finish this
+            }
 
             // Fake Out
             if (moveName == "Fake Out") {
@@ -847,19 +877,114 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
 
             // Explosion, Self Destruct, Misty Explosion
             if (moveName == "Explosion" || moveName == "Self Destruct" || moveName == "Misty Explosion") {
+                const boomUseless = !anyValidDamageRolls || (aiLastMonOut && !playerLastMonOut);
                 const aiHealthPercentage = Math.trunc((moves[0].attacker.originalCurHP / moves[0].attacker.stats.hp) * 100);
-                // TODO: cont from here
+
+                if (boomUseless) {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: -40,
+                        rate: 1
+                    });
+                } else if (aiHealthPercentage < 10) {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: 10,
+                        rate: 1
+                    });
+                } else if (aiHealthPercentage < 33) {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: 8,
+                        rate: .7
+                    });
+                } else if (aiHealthPercentage < 66) {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: 7,
+                        rate: 0.5
+                    });
+                } else {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: 7,
+                        rate: 0.05
+                    });
+                }
+
+                if (aiLastMonOut && playerLastMonOut) {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: -1,
+                        rate: 1
+                    });
+                }
             }
 
             // Memento
+            if (moveName == "Memento") {
+                const aiHealthPercentage = Math.trunc((moves[0].attacker.originalCurHP / moves[0].attacker.stats.hp) * 100);
+                if (aiLastMonOut) {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: -40,
+                        rate: 1
+                    });
+                } else if (aiHealthPercentage < 10) {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: 16,
+                        rate: 1
+                    });
+                } else if (aiHealthPercentage < 33) {
+                    moveStringsToAdd.push(...[{
+                        move: moveName,
+                        score: 6,
+                        rate: 1
+                    },
+                    {
+                        move: moveName,
+                        score: 8,
+                        rate: 0.7
+                    }]);
+                } else if (aiHealthPercentage < 66) {
+                    moveStringsToAdd.push(...[{
+                        move: moveName,
+                        score: 6,
+                        rate: 1
+                    },
+                    {
+                        move: moveName,
+                        score: 7,
+                        rate: 0.5
+                    }]);
+                } else {
+                    moveStringsToAdd.push(...[{
+                        move: moveName,
+                        score: 6,
+                        rate: 1
+                    },
+                    {
+                        move: moveName,
+                        score: 7,
+                        rate: 0.05
+                    }]);
+                }
+            }
 
             // Thunder Wave, Stun Spore, Glare, Nuzzle
-            // TODO: finish this
-            if (moveName == "Thunder Wave" || moveName == "Stun Spore" || moveName == "Nuzzle") {
+            if (moveName == "Thunder Wave" || moveName == "Stun Spore" || moveName == "Nuzzle" || moveName == "Glare") {
                 const hexIndex = moves.findIndex(x => x.move.name === "Hex"); // hehe inHEX more like
-                var paraIncentive = (false) || hexIndex != -1;
+                var paraIncentive = aiSlowerButFasterAfterPara || hexIndex != -1 || playerCharmedOrConfused;
 
-                if (paraIncentive) {
+                if (playerHasStatusCond || 
+                    (move.type == "Electric" && playerTypes.includes("Ground"))) {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: -40,
+                        rate: 1
+                    });
+                } else if (paraIncentive) {
                     moveStringsToAdd.push({
                         move: moveName,
                         score: 8,
@@ -949,6 +1074,37 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             }
 
             // Yawn, Dark Void, Grasswhistle, Sing
+            if (moveName == "Yawn" || moveName == "Dark Void" || moveName == "Grasswhistle" || moveName == "Sing") {
+                // TODO: add sleep preventing abilities to this check
+                if (playerHasStatusCond || terrain == "Electric" || terrain == "Misty") { 
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: -20,
+                        rate: 1
+                    });
+                } else {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: 6,
+                        rate: 1
+                    });
+
+                    let sleepScore: number = 0;
+                    
+                    if (!aiSeesKill) {
+                        sleepScore++;
+                        // TODO: Add Dream Eater and Nightmare and Player not having Snore or Sleep Talk +1
+                        const hexIndex = moves.findIndex(x => x.move.name === "Hex"); // hehe inHEX more like
+                        if (hexIndex != -1) { sleepScore++; }
+
+                        moveStringsToAdd.push({
+                            move: moveName,
+                            score: sleepScore,
+                            rate: 0.25
+                        });
+                    }
+                }
+            }
 
             // Poisoning Moves
 
