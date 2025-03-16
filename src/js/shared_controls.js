@@ -1470,6 +1470,8 @@ function setAiOptionVisibility(side) {
 	$(`#${side} .i-f-o-move div.move-selector a.select2-choice span.select2-chosen`).each(function() { moveNames.push($(this).text())}); // trust the process
 	// console.log(moveNames);
 
+	hideAiOptions();
+
 	// if there are none, hide the header
 	let any = false;
 	
@@ -1494,18 +1496,18 @@ function setAiOptionVisibility(side) {
 
 	if (isNamed("Explosion", ...moveNames) || isNamed("Self Destruct", ...moveNames) ||
 		isNamed("Misty Explosion", ...moveNames) || isNamed("Memento", ...moveNames)) {
-			if (!isNamed("Memento", ...moveNames)) {
-				$("#playerLastMonOpt").show();
-			}
-			
-			$("#aiOptions").show();
-			$("#lastMonOpt").show();
-			any = true;
+		if (!isNamed("Memento", ...moveNames)) {
+			$("#playerLastMonOpt").show();
 		}
-
-	if (!any) {
-		hideAiOptions();
+		
+		$("#aiOptions").show();
+		$("#lastMonOpt").show();
+		any = true;
 	}
+
+	//if (any) {
+	//	$("#aiOptions").show();
+	//}
 }
 
 $(document).on('click', '.right-side', function () {
