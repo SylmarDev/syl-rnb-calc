@@ -17,6 +17,10 @@ function isTrapping(move: Move) {
     return isNamed(move.name, 'Whirlpool', 'Fire Spin', 'Sand Tomb', 'Magma Storm', 'Infestation', 'Wrap', 'Bind');
 }
 
+function isTrappingStr(s: string) {
+    return isNamed(s, 'Whirlpool', 'Fire Spin', 'Sand Tomb', 'Magma Storm', 'Infestation', 'Wrap', 'Bind');
+}
+
 function computeDistribution(array: number[]): { [key: number]: number } {
     let sortedArray = array.sort((a, b) => a - b);
     let distribution: { [key: number]: number } = {};
@@ -118,6 +122,51 @@ function updateProbabilityWithVariance(probabilities: KVP[], key: string, prob: 
     }
 
     addOrUpdateProbability(probabilities, key, newProb);
+}
+
+// returns bool based on if this damagingKVP sees a kill
+// TODO: this needs reworked if it needs to check for kills with Explosion, Final Gambit and Rollout
+// for now lets just hope there are no sing + boom/roolout mons lol
+function getAISeesKill(moveScores: string[], attackerAbility: string) {
+    const abilityMoveBonus = attackerAbility === "Moxie" ||
+                                attackerAbility === "Beast Boost" ||
+                                attackerAbility === "Chilling Neigh" ||
+                                attackerAbility === "Grim Neigh";
+
+    let killScores: number[] = [9, 11, 12, 14];
+    let exceptionKillScores: number[] = [3, 6];
+    if (abilityMoveBonus) {
+        let newKs: number[] = [];
+        let newEks: number[] = [];
+
+        for (const killScore of killScores) {
+            newKs.push(killScore + 1);
+        }
+
+        for (const exceptionKillScore of exceptionKillScores) {
+            newEks.push(exceptionKillScore + 1);
+        }
+
+        killScores = newKs;
+        exceptionKillScores = newEks;
+    }
+
+    // ["Move1:0", "Move2:6", "Move3:0", "Move4:3"]
+    for (const moveStr of moveScores) {
+        const moveStrSplit = moveStr.split(':');
+        const moveName = moveStrSplit[0];
+        const moveScore: number = +moveStrSplit[1];
+
+        if ((isNamed(moveName, "Relic Song", "Meteor Beam", "Future Sight") 
+            || isTrappingStr(moveName)) && exceptionKillScores.includes(moveScore)) 
+        {
+            return true;
+        } else if (killScores.includes(moveScore)) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 
@@ -304,13 +353,6 @@ function calculateHighestDamage(moves: any[]): KVP[] {
            // TODO: add the crit chance + super effective rule
            // TODO: will have to get high crit ratio moves from a predefined list
            // not sure how I'll get super effectives
-           
-           // moves that do not have damage rolled normally, still get the boosts for kills.
-           if (isTrapping(moves[i].move) || isNamed(moves[i].move.name, "Relic Song", "Meteor Beam", "Future Sight")) {
-                keyString += `${moveName}:${moveBonus}`;
-                i++;
-                continue;
-           }
 
            if (key === maximumKey) {
                keyString += `${moveName}:HD+${moveBonus}`;
@@ -369,6 +411,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
 
     // set variables, parsed from move dist
     const moves: any[] = damageResults[1];
+    const playerMoves: any[] = damageResults[0];
     const aiFaster: boolean = fastestSide != "0";
     const playerMon: Pokemon = moves[0].defender;
 
@@ -452,8 +495,8 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             }
         ];
 
-        // TODO: create const for AI sees kill (for this damagingMoveDistKVP)
-        const aiSeesKill = false; // make a function for this
+        // this returns if *this* damagingMoveDistKVP sees a kill
+        const aiSeesKill = getAISeesKill(moveArr, moves[0].ability);
 
         // iterate through each move
         moveArr.forEach((moveScoreString, index) => {
@@ -469,8 +512,6 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             const currentMoveCanKill = highestRoll >= moves[index].defender.originalCurHP;
 
             // TODO: Need to go through and add anyValidDamageRolls to a lot of these checks
-            // TODO: apparently these *set* the score if set to 1, so go back and ensure that stacking scores correctly
-
             // TODO: This function can probably use continues, so I probably should do that for performance lol
 
             // console.log(move);
@@ -690,6 +731,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
 
             // Spikes, Toxic Spikes
             // TODO: add Toxic Spikes to the calc
+            // TODO: add max spikes = -20
             if (moveName == "Spikes" || moveName == "Toxic Spikes") {
                 if (firstTurnOut) {
                     moveStringsToAdd.push({
@@ -1076,7 +1118,8 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             // Yawn, Dark Void, Grasswhistle, Sing
             if (moveName == "Yawn" || moveName == "Dark Void" || moveName == "Grasswhistle" || moveName == "Sing") {
                 // TODO: add sleep preventing abilities to this check
-                if (playerHasStatusCond || terrain == "Electric" || terrain == "Misty") { 
+                const sleepPreventingAbility = playerAbility == "Insomnia" || playerAbility == "Vital Spirit" || playerAbility == "Sweet Veil";
+                if (sleepPreventingAbility || playerHasStatusCond || terrain == "Electric" || terrain == "Misty") { 
                     moveStringsToAdd.push({
                         move: moveName,
                         score: -20,
@@ -1093,7 +1136,14 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                     
                     if (!aiSeesKill) {
                         sleepScore++;
-                        // TODO: Add Dream Eater and Nightmare and Player not having Snore or Sleep Talk +1
+                        const dreamEaterIndex = moves.findIndex(x => x.move.name === "Dream Eater");
+                        const nightmareIndex = moves.findIndex(x => x.move.name === "Nightmare");
+                        const snoreIndex = playerMoves.findIndex(x => x.move.name == "Snore");
+                        const sleepTalkIndex = playerMoves.findIndex(x => x.move.name == "Sleep Talk");
+                        
+                        if ((dreamEaterIndex != -1 || nightmareIndex != -1) && (snoreIndex == -1 && sleepTalkIndex == -1)) { sleepScore++; }
+                        
+                        // needs update for doubles one day
                         const hexIndex = moves.findIndex(x => x.move.name === "Hex"); // hehe inHEX more like
                         if (hexIndex != -1) { sleepScore++; }
 
@@ -1107,6 +1157,14 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             }
 
             // Poisoning Moves
+
+            // General Setup
+
+            // Offensive Setup
+
+            // Defensive Setup
+
+            // Coil, Bulk Up, Calm Mind, Quiver Dance (falls under setups above, see doc)
 
             // Agility, Rock Polish, Autotomize
             // If AI is slower than player mon +7, else -20
@@ -1241,6 +1299,8 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                     rate: 1
                 });
             }
+
+            // Contrary edge cases
 
             // Meteor Beam
             // +9 if holding Power Herb, -20 otherwise
