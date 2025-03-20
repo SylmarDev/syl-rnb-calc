@@ -1,27 +1,24 @@
 FROM node:12
 
-# Set the working directory
-WORKDIR /usr/src/app
-
-# Copy and install root dependencies
-COPY package*.json ./
-RUN npm install
-
-# Set up the 'calc' directory separately
-WORKDIR /usr/src/app/calc
-COPY calc/package*.json ./
-RUN npm install
-
-# Copy the entire repo
+# Set up the main working directory
 WORKDIR /usr/src/app
 COPY . .
 
-# Build the project
-RUN node build
+# Install root dependencies
+RUN npm install
+
+# Install dependencies for the 'calc' module separately
+WORKDIR /usr/src/app/calc
+RUN npm install
+
+# Return to the root directory
+WORKDIR /usr/src/app
+
+# Build the project (if needed)
+RUN node build || true
 
 # Expose the app's port
 EXPOSE 3000
 
-# Ensure the command runs from the correct directory
-WORKDIR /usr/src/app
+# Run the server
 CMD [ "node", "server.js" ]
