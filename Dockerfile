@@ -1,6 +1,7 @@
 FROM node:12
 # Create app directory
 WORKDIR /usr/src/app/calc
+COPY . .
 
 # Install app dependencies
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
@@ -16,7 +17,6 @@ RUN npm install
 
 # Bundle app source
 
-COPY . .
 RUN node build
 
 EXPOSE 3000
