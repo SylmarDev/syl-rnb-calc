@@ -30,6 +30,11 @@ function createAiOptionsDict() {
 	$("#aiOptions :input").each(function ()  {
 		dict[$(this).attr('id')] = $(this).is(":checked");
 	});
+
+	if ($("#enableDebugLogging").length) {
+		dict["enableDebugLogging"] = $("#enableDebugLogging").is(":checked");
+	}
+
 	// console.log(dict); // DEBUG
 	return dict;
 }
@@ -284,7 +289,6 @@ $(".mode").change(function () {
 });
 
 $(".notation").change(function () {
-	// console.log("notation changed, running perform calcs");
 	performCalculations();
 });
 

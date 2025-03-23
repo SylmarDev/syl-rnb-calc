@@ -477,6 +477,9 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
     const playerLastMonOut = aiOptions["playerLastMonAiOpt"];
     const playerCharmedOrConfused = aiOptions["playerCharmedOrConfusedAiOpt"];
 
+    // debug logging
+    const debugLogging = aiOptions["enableDebugLogging"];
+
     let postBoostsMoveDist: KVP[] = [];
 
     // flat bonsues
@@ -1375,7 +1378,9 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
     }
 
     // console.log("damagingMoveDist before it goes into postBoostsMoveDist");
-    // console.log(postBoostsMoveDist); // DEBUG
+    if (debugLogging) {
+        console.log(postBoostsMoveDist); // DEBUG
+    }
     
     // actually measure score and calculate probability of each move
     for (const dist of postBoostsMoveDist) {
