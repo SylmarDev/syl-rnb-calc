@@ -839,6 +839,12 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                         score: 9,
                         rate: 1
                     });
+                } else {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: -40,
+                        rate: 1
+                    });
                 }
             }
 
