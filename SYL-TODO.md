@@ -40,5 +40,8 @@ In general
   - Make stealth rock, spikes, and toxic spikes -20 if max layers are up
   - "Should AI Recover function"
     - will likely need to return the chance that function returns true, which will then be used as a modifier on the score of the recovery move being clicked
+  - Needs Focus Energy AI option for if its already up
 - Make switch % chance underneath all the moves (only make it show if its above 0, it should be a very rare case)
+- Edit CSS to prevent long text (like recoil info) from making the calc look weird
+- Remove Dynamax and Z move toggles from frontend
 - Add post-ko switch in order to display (that's deterministic so it should be easier lol)
