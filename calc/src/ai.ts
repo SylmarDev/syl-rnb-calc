@@ -1125,7 +1125,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             }
 
             // Yawn, Dark Void, Grasswhistle, Sing
-            if (moveName == "Yawn" || moveName == "Dark Void" || moveName == "Grasswhistle" || moveName == "Sing") {
+            if (moveName == "Yawn" || moveName == "Dark Void" || moveName == "Grasswhistle" || moveName == "Sing" || moveName == "Hypnosis") {
                 // TODO: add sleep preventing abilities to this check
                 const sleepPreventingAbility = playerAbility == "Insomnia" || playerAbility == "Vital Spirit" || playerAbility == "Sweet Veil";
                 if (sleepPreventingAbility || playerHasStatusCond || terrain == "Electric" || terrain == "Misty") { 
