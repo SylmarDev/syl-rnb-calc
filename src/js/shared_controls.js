@@ -1482,13 +1482,13 @@ function setAiOptionVisibility(side) {
 	// if Stealth Rocks, Spikes, Toxic Spikes, Sticky Web, Protect, King's Shield, Fake Out, Or Encore
 	// first turn out checkbox needs made available
 	if (hasMove(["Stealth Rock", "Spikes", "Toxic Spikes", "Sticky Web", "Protect", "King's Shield", "Fake Out", "Encore"], moveNames)) {
-		$("#aiOptions").show();
+		showAiOptionsDiv();
 		$("#firstTurnOutOpt").show();
 	}
 
 	// sucker punch
 	if (isNamed("Sucker Punch", ...moveNames)) {
-		$("#aiOptions").show();
+		showAiOptionsDiv();
 		$("#suckerPunchOpt").show();
 	}
 
@@ -1498,13 +1498,13 @@ function setAiOptionVisibility(side) {
 			$("#playerLastMonOpt").show();
 		}
 		
-		$("#aiOptions").show();
+		showAiOptionsDiv();
 		$("#lastMonOpt").show();
 	}
 
 	// player charmed or confused
 	if (hasMove(["Thunder Wave", "Stun Spore", "Glare", "Nuzzle"], moveNames)) {
-		$("#aiOptions").show();
+		showAiOptionsDiv();
 		$("#playerCharmedOrConfusedOpt").show();
 	}
 }
@@ -1840,6 +1840,11 @@ function hideAiOptions() {
 	$("#aiOptions div:has(input)").each(function () {
 		$(this).hide();
 	});
+}
+
+function showAiOptionsDiv() {
+	$("#aiOptions").show();
+	$("#aiOptions .row").show();
 }
 
 $(document).ready(function () {

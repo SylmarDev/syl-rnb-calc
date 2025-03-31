@@ -1,4 +1,4 @@
-3/16
+3/31
 TODO:
 - Test The Following:
   - Future Sight
@@ -42,6 +42,6 @@ In general
     - will likely need to return the chance that function returns true, which will then be used as a modifier on the score of the recovery move being clicked
   - Needs Focus Energy AI option for if its already up
 - Make switch % chance underneath all the moves (only make it show if its above 0, it should be a very rare case)
-- Edit CSS to prevent long text (like recoil info) from making the calc look weird
-- Remove Dynamax and Z move toggles from frontend
+- Figure out something to make the Crit buttons look less ugly (Colors?)
 - Add post-ko switch in order to display (that's deterministic so it should be easier lol)
+- Add a graph (graph.js perhaps?) that reloads and visualizes the everything for visual learners

@@ -351,23 +351,43 @@ th {
 }
 .move-result-subgroupL {
     float: left;
-    width: 35%;
+    width: 40%;
 }
-.move-result-subgroupR {
+
+ .move-result-subgroupR {
     float: left;
-    width: 35%;
+    width: 60%;
 }
 
 .ai-options-subgroup {
-    float: left;
-    width: 20%;
+    /* float: left; */
+    width: 80%;
+}
+
+.ai-options-subgroup .row {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.row .col {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+#aiOptionsHeader {
+    display: table;
+    margin: 0 auto;
+    font-size: 1.2em;
 }
 
 .move-result-group .btn {
     margin-right: 1em;
 }
 .main-result-group {
-    margin: 2em 0 1em;
+    margin: 1em 0;
 }
 .result-move-header {
     font-size: 0.8em;
@@ -424,22 +444,10 @@ select.toxic-counter {
 }
 .poke-info .crit-btn {
     font-size: 0.8em;
-    width: 2.5em;
+    width: 6em;
     height: 1em;
     padding: 3px 3px;
     margin: 0px 1px;
-}
-.poke-info .z-btn {
-    font-size: 0.8em;
-    width: 1.5em;
-    height: 1em;
-    padding: 3px 3px;
-}
-.poke-info .max-btn {
-	font-size: 0.8em;
-	width: 2.5em;
-	height: 1em;
-	padding: 3px 3px;
 }
 
 /* field info */

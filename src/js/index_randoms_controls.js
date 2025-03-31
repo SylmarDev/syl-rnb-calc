@@ -27,6 +27,7 @@ for (var i = 0; i < 4; i++) {
 // create object for all ai options
 function createAiOptionsDict() {
 	var dict = {};
+	// TODO: Cont from here
 	$("#aiOptions :input").each(function ()  {
 		dict[$(this).attr('id')] = $(this).is(":checked");
 	});
@@ -35,7 +36,7 @@ function createAiOptionsDict() {
 		dict["enableDebugLogging"] = $("#enableDebugLogging").is(":checked");
 	}
 
-	// console.log(dict); // DEBUG
+	console.log(dict); // DEBUG
 	return dict;
 }
 
