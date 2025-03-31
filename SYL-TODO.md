@@ -33,8 +33,7 @@ In general
   - Counter / Mirror Coat
 - Clean up TODO's
   - Add Trick Room to fields
-  - Add Substitue to fields
-  - Add toxic spikes to fields
+  - Add Substitute to fields
   - Make multi hit moves work correctly
   - Make status category
   - Make stealth rock, spikes, and toxic spikes -20 if max layers are up

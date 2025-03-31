@@ -107,7 +107,7 @@ function performCalculations() {
 		}
 	}
 
-	const aiOptions = createAiOptionsDict();
+	var aiOptions = createAiOptionsDict();
 	var moveRates = calc.generateMoveDist(damageResults, fastestSide, aiOptions);
 
 	for (var i = 0; i < moveRates.length; i++) {

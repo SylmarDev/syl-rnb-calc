@@ -296,6 +296,10 @@ th {
 .btn-mid {
     border-radius: 0;
 }
+.btn-tspikes {
+    width: 8.5em;
+}
+
 .visually-hidden:focus + .btn, /* Add visual indication when focusing on visually hidden elements */
 .btn:hover {
     z-index: 10;
