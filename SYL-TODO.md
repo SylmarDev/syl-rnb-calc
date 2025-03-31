@@ -44,4 +44,4 @@ In general
 - Make switch % chance underneath all the moves (only make it show if its above 0, it should be a very rare case)
 - Figure out something to make the Crit buttons look less ugly (Colors?)
 - Add post-ko switch in order to display (that's deterministic so it should be easier lol)
-- Add a graph (graph.js perhaps?) that reloads and visualizes the everything for visual learners
+- Add a pie chart (chart.js perhaps?) that reloads and visualizes the everything for visual learners
