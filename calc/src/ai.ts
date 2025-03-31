@@ -466,7 +466,9 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
     const aiSlowerButFasterAfterPara = !aiFaster && moves[0].attacker.stats.spe > Math.trunc(moves[0].defender.stats.spe / 4);
     // TODO: create this and use where applicable
     // TODO: add thaw moves + recharging, loafing around due to truant
-    const playerIncapacitated = playerMon.status == "frz" || playerMon.status == "slp"; 
+    const playerIncapacitated = playerMon.status == "frz" || playerMon.status == "slp";
+
+    console.log(`Player Substitute: ${moves[0].defenderSide.isSubstitute}`);
 
     // console.log(moves[0]);
     

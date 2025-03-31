@@ -27,7 +27,7 @@ for (var i = 0; i < 4; i++) {
 // create object for all ai options
 function createAiOptionsDict() {
 	var dict = {};
-	$("#aiOptions :input").each(function ()  {
+	$("#aiOptions :input").each(function () {
 		dict[$(this).attr('id')] = $(this).is(":checked");
 	});
 

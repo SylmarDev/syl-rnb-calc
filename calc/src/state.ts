@@ -67,6 +67,7 @@ export namespace State {
     isSeeded?: boolean;
     isForesight?: boolean;
     isTailwind?: boolean;
+    isSubstitute?: boolean;
     isHelpingHand?: boolean;
     isFlowerGift?: boolean;
     isFriendGuard?: boolean;
