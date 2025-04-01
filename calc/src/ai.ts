@@ -468,7 +468,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
     // TODO: add thaw moves + recharging, loafing around due to truant
     const playerIncapacitated = playerMon.status == "frz" || playerMon.status == "slp";
 
-    console.log(`Player Substitute: ${moves[0].defenderSide.isSubstitute}`);
+    console.log(`Trick Room: ${moves[0].field.isTrickRoom}`);
 
     // console.log(moves[0]);
     
@@ -828,7 +828,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             }
 
             // Trick Room
-            // TODO: add Trick Room to field object ughhhh
+            // TODO: implement
             if (moveName == "Trick Room") {
                 // TODO: finish this
             }
@@ -926,7 +926,10 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             }
 
             // Substitute
-            // TODO: need to add status category to move categories (instead of them being listed as physical)
+            // TODO: implement
+            if (moveName == "Substitute") {
+
+            }
 
             // Explosion, Self Destruct, Misty Explosion
             if (moveName == "Explosion" || moveName == "Self Destruct" || moveName == "Misty Explosion") {

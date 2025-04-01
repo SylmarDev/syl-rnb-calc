@@ -32,8 +32,6 @@ In general
   - Encore (will need an aiOption for encore incentive)
   - Counter / Mirror Coat
 - Clean up TODO's
-  - Add Trick Room to fields
-  - Add Substitute to fields
   - Make multi hit moves work correctly
   - Make status category
   - Make stealth rock, spikes, and toxic spikes -20 if max layers are up
