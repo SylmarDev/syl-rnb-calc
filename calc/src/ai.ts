@@ -453,7 +453,8 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
     const playerHasStatusCond = playerMon.status != "";
     const playerTypes: string[] = playerMon.types;
     const playerAbility = moves[0].defender.moves[0].ability; // ugly but works
-    const playerHealthPercentage = Math.round((moves[0].defender.originalCurHP / moves[0].defender.stats.hp) * 100);
+    const playerHealthPercentage = Math.trunc((moves[0].defender.originalCurHP / moves[0].defender.stats.hp) * 100);
+    const aiHealthPercentage = Math.trunc((moves[0].attacker.originalCurHP / moves[0].attacker.stats.hp) * 100);
     const aiMaxedOutAttack = moves[0].attacker.boosts.atk == 6;
     const aiMonName = moves[0].attacker.name;
     const aiItem = moves[0].attacker.item;
@@ -464,6 +465,8 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
     const aiHasTailwind = moves[0].field.attackerSide.isTailwind;
     const terrain = moves[0].field.terrain;
     const aiSlowerButFasterAfterPara = !aiFaster && moves[0].attacker.stats.spe > Math.trunc(moves[0].defender.stats.spe / 4);
+    const trickRoomUp = moves[0].field.isTrickRoom;
+    const playerLeechSeeded = moves[0].field.defenderSide.isSeeded;
     // TODO: create this and use where applicable
     // TODO: add thaw moves + recharging, loafing around due to truant
     const playerIncapacitated = playerMon.status == "frz" || playerMon.status == "slp";
@@ -828,9 +831,29 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             }
 
             // Trick Room
-            // TODO: implement
             if (moveName == "Trick Room") {
-                // TODO: finish this
+                if (trickRoomUp) {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: -20,
+                        rate: 1
+                    });
+                } else {
+                    // TODO: doubles update
+                    if (!aiFaster) {
+                        moveStringsToAdd.push({
+                            move: moveName,
+                            score: 10,
+                            rate: 1
+                        });
+                    } else {
+                        moveStringsToAdd.push({
+                            move: moveName,
+                            score: 5,
+                            rate: 1
+                        });
+                    }
+                }
             }
 
             // Fake Out
@@ -926,9 +949,31 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             }
 
             // Substitute
-            // TODO: implement
             if (moveName == "Substitute") {
-
+                if (playerAbility == "Infiltrator" || aiHealthPercentage <= 50) {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: -40,
+                        rate: 1
+                    });
+                } else {
+                    let subScore = 6;
+                    if (playerMon.status == "slp") { subScore += 2; }
+                    if (playerLeechSeeded && aiFaster) { subScore += 2; }
+                    // TODO: get all sound based moves
+                    // if (ANY SOUND BASED MOVE) { subScore -8; }
+    
+                    moveStringsToAdd.push(...[{
+                        move: moveName,
+                        score: subScore,
+                        rate: 1
+                    },
+                    { // always -1 50%
+                        move: moveName,
+                        score: -1,
+                        rate: 0.5
+                    }]);
+                }
             }
 
             // Explosion, Self Destruct, Misty Explosion
