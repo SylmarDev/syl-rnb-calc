@@ -774,37 +774,45 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             }
 
             // Spikes, Toxic Spikes
-            // TODO: add Toxic Spikes to the calc
-            // TODO: add max spikes = -20
             if (moveName == "Spikes" || moveName == "Toxic Spikes") {
-                if (firstTurnOut) {
-                    moveStringsToAdd.push({
-                        move: moveName,
-                        score: 8,
-                        rate: 1
-                    });
+                // if max layers of spikes are out, never used
+                if (moveName == "Spikes" && moves[0].field.defenderSide.spikes >= 3 ||
+                    moveName == "Toxic Spikes" && moves[0].field.defenderSide.tspikes >= 2) {
+                        moveStringsToAdd.push({
+                            move: moveName,
+                            score: -40,
+                            rate: 1
+                        });
                 } else {
+                    if (firstTurnOut) {
+                        moveStringsToAdd.push({
+                            move: moveName,
+                            score: 8,
+                            rate: 1
+                        });
+                    } else {
+                        moveStringsToAdd.push({
+                            move: moveName,
+                            score: 6,
+                            rate: 1
+                        });
+                    }
+                    
                     moveStringsToAdd.push({
                         move: moveName,
-                        score: 6,
-                        rate: 1
+                        score: 1,
+                        rate: 0.75
                     });
-                }
-                
-                moveStringsToAdd.push({
-                    move: moveName,
-                    score: 1,
-                    rate: 0.75
-                });
-                
-                // IF PLAYER SPIKES ARE UP -1 ALWAYS
-                if ((moveName == "Spikes" && playerSideSpikes) || 
-                    ((moveName == "Toxic Spikes") && playerSideTSpikes)) {
-                    moveStringsToAdd.push({
-                        move: moveName,
-                        score: -1,
-                        rate: 1
-                    });
+                    
+                    // IF PLAYER SPIKES ARE UP -1 ALWAYS
+                    if ((moveName == "Spikes" && playerSideSpikes) || 
+                        ((moveName == "Toxic Spikes") && playerSideTSpikes)) {
+                        moveStringsToAdd.push({
+                            move: moveName,
+                            score: -1,
+                            rate: 1
+                        });
+                    }
                 }
             }
 

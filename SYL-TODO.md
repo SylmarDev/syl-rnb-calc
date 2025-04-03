@@ -34,7 +34,6 @@ In general
 - Clean up TODO's
   - Make multi hit moves work correctly
   - Make status category
-  - Make stealth rock, spikes, and toxic spikes -20 if max layers are up
   - "Should AI Recover function"
     - will likely need to return the chance that function returns true, which will then be used as a modifier on the score of the recovery move being clicked
 - Make switch % chance underneath all the moves (only make it show if its above 0, it should be a very rare case)
