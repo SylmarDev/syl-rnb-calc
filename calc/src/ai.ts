@@ -1322,7 +1322,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                     });
 
                     // if player mon can be poisoned and is above 20% HP
-                    if (playerHealthPercentage > 20) {
+                    if (playerHealthPercentage > 20 && !aiDeadToPlayer) {
                         let toxScore = 0;
 
                         if (playerHighestRoll == 0) { toxScore++; }
@@ -1343,13 +1343,91 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             }
 
             // General Setup
+            if (isNamed(moveName, "Power-up Punch", "Swords Dance", "Howl",
+                "Stuff Cheeks", "Barrier", "Acid Armor", "Iron Defense", "Cotton Guard",
+                "Charge Beam", "Tail Glow", "Nasty Plot", "Cosmic Power",
+                "Bulk Up", "Calm Mind", "Dragon Dance", "Coil", "Hone Claws", "Quiver Dance",
+                "Shift Gear", "Shell Smash", "Growth", "Work Up", "Curse",
+                "Coil", "No Retreat")) {
+                if (aiDeadToPlayer || 
+                    ((moveName != "Power-up Punch" && moveName != "Swords Dance" && moveName != "Howl") &&
+                    playerAbility == "Unaware")) { 
+                        moveStringsToAdd.push({
+                            move: moveName,
+                            score: -20,
+                            rate: 1
+                        });
+                    }
+            }
 
             // Offensive Setup
+            // TODO: funnel some moves to this sometimes
+            // i.e. Coil, Bulk Up, Calm Mind, Quiver Dance, Curse (non ghost type)
+            if (isNamed(moveName, "Dragon Dance", "Shift Gear", "Swords Dance", "Howl",
+                "Sharpen", "Meditate", "Hone Claws")) {
+                let offensiveScore = 6;
+
+                if (playerIncapacitated) { 
+                    offensiveScore += 3; 
+                } else if (!aiThreeHitKOd) {
+                    offensiveScore++;
+                    if (aiFaster) { offensiveScore++; }
+                }
+
+                if (!aiFaster && aiTwoHitKOd) {
+                    offensiveScore -= 5;
+                }
+
+                // if AI is at +2 Atk or higher
+                if (moves[0].attacker.boosts.atk >= 2) {
+                    offensiveScore--;
+                }
+
+                moveStringsToAdd.push({
+                    move: moveName,
+                    score: offensiveScore,
+                    rate: 1
+                });
+            }
 
             // Defensive Setup
-
+            // TODO: funnel some moves to this sometimes
+            // i.e. Coil, Bulk Up, Calm Mind, Quiver Dance, Curse (non ghost type)
             // Coil, Bulk Up, Calm Mind, Quiver Dance, Curse (falls under setups above, see doc)
             // (moveName == "Curse" && !moves[0].attacker.types.includes("Ghost"))
+            if (isNamed(moveName, "Acid Armor", "Barrier", "Cotton Guard", "Harden", "Iron Defense",
+                "Stockpile", "Cosmic Power")) {
+                // TODO: update these
+                const boostsDef = false;
+                const boostsspDef = false;
+                
+                let initialDefensiveScore = 6;
+                if (!aiFaster && aiTwoHitKOd) {
+                    initialDefensiveScore -= 5;
+                }
+
+                moveStringsToAdd.push({
+                    move: moveName,
+                    score: initialDefensiveScore,
+                    rate: 1
+                });
+
+                // for the 95% checks
+                // TODO : NOOOOOOOOOOOO STUCK because there's a nested chance AUGH
+                let defensiveScore = 0;
+                let storedPowerBodyPressScore = 0;
+
+                if (playerIncapacitated) { defensiveScore += 2; }
+                if (movesetHasMoves(moves, "Stored Power", "Body Press")) {
+                    storedPowerBodyPressScore++;
+                }
+
+                moveStringsToAdd.push(...[{
+                    move: moveName,
+                    score: defensiveScore,
+                    rate: 0.95
+                }]);
+            }
 
             // Agility, Rock Polish, Autotomize
             // If AI is slower than player mon +7, else -20

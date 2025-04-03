@@ -25,7 +25,7 @@ In general
 - Finish off special move cases
   - Guaranteed Atk/SpAtk drop moves
   - Protect
-  - Poisoning Moves
+    - needs several AI options
   - Setup moves
   - Shell Smash needs revision
   - Recovery Moves
