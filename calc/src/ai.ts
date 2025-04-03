@@ -503,11 +503,12 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
     const aiSlowerButFasterAfterPara = !aiFaster && moves[0].attacker.stats.spe > Math.trunc(moves[0].defender.stats.spe / 4);
     const trickRoomUp = moves[0].field.isTrickRoom;
     const playerLeechSeeded = moves[0].field.defenderSide.isSeeded;
+    const aiHasAnyStatRaised = Object.values(moves[0].attacker.boosts).some(value => (value as number) > 0);
     // TODO: create this and use where applicable
     // TODO: add thaw moves + recharging, loafing around due to truant
     const playerIncapacitated = playerMon.status == "frz" || playerMon.status == "slp";
 
-    // console.log(`Trick Room: ${moves[0].field.isTrickRoom}`);
+    // console.log(moves[0].attacker.boosts);
 
     // console.log(moves[0]);
     
@@ -866,7 +867,27 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             }
 
             // Baton Pass
-            
+            if (moveName == "Baton Pass") {
+                if (aiLastMonOut) {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: -20,
+                        rate: 1
+                    });
+                } else if (moves[0].field.attackerSide.isSubstitute || aiHasAnyStatRaised) {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: 14,
+                        rate: 1
+                    });
+                } else { // this is important so it doesn't overwrite to +6 whenever we set default to +6
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: 0,
+                        rate: 1
+                    });
+                }
+            }
 
             // Tailwind
             if (moveName == "Tailwind") {
@@ -1242,7 +1263,6 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
 
             // Yawn, Dark Void, Grasswhistle, Sing
             if (moveName == "Yawn" || moveName == "Dark Void" || moveName == "Grasswhistle" || moveName == "Sing" || moveName == "Hypnosis") {
-                // TODO: add sleep preventing abilities to this check
                 const sleepPreventingAbility = playerAbility == "Insomnia" || playerAbility == "Vital Spirit" || playerAbility == "Sweet Veil";
                 if (sleepPreventingAbility || playerHasStatusCond || terrain == "Electric" || terrain == "Misty") { 
                     moveStringsToAdd.push({

@@ -12,6 +12,7 @@ TODO:
   - Terrain moves
   - Explosion
   - Imprison
+  - Baton Pass
 
 STATUS NAME: 
 export type StatusName = 'slp' | 'psn' | 'brn' | 'frz' | 'par' | 'tox';
@@ -21,7 +22,6 @@ In general
 - Finish off special move cases
   - Guaranteed Atk/SpAtk drop moves
   - Protect
-  - Baton Pass
   - Poisoning Moves
   - Setup moves
   - Shell Smash needs revision
