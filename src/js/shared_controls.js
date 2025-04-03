@@ -1511,6 +1511,18 @@ function setAiOptionVisibility(side) {
 		showAiOptionsDiv();
 		$("#playerCharmedOrConfusedOpt").show();
 	}
+
+	// imprison
+	if (isNamed("Imprison", ...moveNames)) {
+		showAiOptionsDiv();
+		// $("#imprisonOpt").show();
+	}
+
+	// taunt
+	if (isNamed("Taunt", ...moveNames)) {
+		showAiOptionsDiv();
+		$("#tauntOpt").show();
+	}
 }
 
 $(document).on('click', '.right-side', function () {

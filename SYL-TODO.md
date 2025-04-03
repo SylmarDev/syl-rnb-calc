@@ -13,6 +13,7 @@ TODO:
   - Explosion
   - Imprison
   - Baton Pass
+  - Taunt
 
 STATUS NAME: 
 export type StatusName = 'slp' | 'psn' | 'brn' | 'frz' | 'par' | 'tox';
@@ -28,7 +29,6 @@ In general
   - Recovery Moves
   - Sun based recovery
   - Rest
-  - Taunt
   - Encore (will need an aiOption for encore incentive)
   - Counter / Mirror Coat
 - Clean up TODO's

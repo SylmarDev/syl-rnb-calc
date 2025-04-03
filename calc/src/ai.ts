@@ -518,6 +518,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
     const aiLastMonOut = aiOptions["lastMonAiOpt"];
     const playerLastMonOut = aiOptions["playerLastMonAiOpt"];
     const playerCharmedOrConfused = aiOptions["playerCharmedOrConfusedAiOpt"];
+    const playerTaunted = aiOptions["tauntAiOpt"];
 
     // debug logging
     const debugLogging = aiOptions["enableDebugLogging"];
@@ -1511,6 +1512,30 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             // Rest
 
             // Taunt
+            if (moveName == "Taunt") {
+                if (playerTaunted) {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: -40,
+                        rate: 1
+                    });
+                } else {
+                    if ((movesetHasMove(playerMoves, "Trick Room") && !trickRoomUp) ||
+                        movesetHasMove(playerMoves, "Defog") && moves[0].field.attackerSide.isAuroraVeil && aiFaster) {
+                        moveStringsToAdd.push({
+                            move: moveName,
+                            score: 9,
+                            rate: 1
+                        });
+                    } else {
+                        moveStringsToAdd.push({
+                            move: moveName,
+                            score: 5,
+                            rate: 1
+                        });
+                    }
+                }
+            }
 
             // Encore
 
