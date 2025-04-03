@@ -35,7 +35,6 @@ In general
   - Make multi hit moves work correctly
   - Make status category
   - Make stealth rock, spikes, and toxic spikes -20 if max layers are up
-  - Tally all sound based moves for substitute check
   - "Should AI Recover function"
     - will likely need to return the chance that function returns true, which will then be used as a modifier on the score of the recovery move being clicked
   - Needs Focus Energy AI option for if its already up

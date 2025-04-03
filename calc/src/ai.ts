@@ -21,6 +21,36 @@ function isTrappingStr(s: string) {
     return isNamed(s, 'Whirlpool', 'Fire Spin', 'Sand Tomb', 'Magma Storm', 'Infestation', 'Wrap', 'Bind');
 }
 
+function movesetHasMove(moves: any[], moveName: string) {
+    for (const move of moves) {
+        if (move.move.name == moveName) { return true; }
+    }
+    return false;
+}
+
+// returns true if one of the moves in moveNames is contained in moves
+function movesetHasMoves(moves: any[], ...moveNames: string[]) {
+    let hasMove: boolean = false;
+    for (const moveName of moveNames) {
+        hasMove = movesetHasMove(moves, moveName);
+        if (hasMove) { return true; }
+    }
+    return false;
+}
+
+function movesetHasSoundMove(moves: any[]) {
+    var hasSoundMove = movesetHasMoves(moves, "Boomburst", "Bug Buzz", "Chatter",
+        "Clanging Scales", "Clangorous Soul", "Clangorous Soulblaze",
+       "Confide", "Disarming Voice", "Echoed Voice", "Eerie Spell",
+       "Grass Whistle", "Growl", "Heal Bell", "Howl", "Hyper Voice",
+       "Metal Sound", "Noble Roar", "Overdrive", "Parting Shot",
+       "Perish Song", "Psychic Noise", "Relic Song", "Roar",
+       "Round", "Screech", "Sing", "Snarl", "Snore", "Sparkling Aria",
+       "Supersonic","Uproar");
+    console.log(hasSoundMove);
+    return hasSoundMove;
+}
+
 function computeDistribution(array: number[]): { [key: number]: number } {
     let sortedArray = array.sort((a, b) => a - b);
     let distribution: { [key: number]: number } = {};
@@ -471,7 +501,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
     // TODO: add thaw moves + recharging, loafing around due to truant
     const playerIncapacitated = playerMon.status == "frz" || playerMon.status == "slp";
 
-    console.log(`Trick Room: ${moves[0].field.isTrickRoom}`);
+    // console.log(`Trick Room: ${moves[0].field.isTrickRoom}`);
 
     // console.log(moves[0]);
     
@@ -950,7 +980,10 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
 
             // Substitute
             if (moveName == "Substitute") {
-                if (playerAbility == "Infiltrator" || aiHealthPercentage <= 50) {
+                // if Infiltrator, at or below 50% health, or sub already up
+                if (playerAbility == "Infiltrator" || 
+                    aiHealthPercentage <= 50 ||
+                    moves[0].field.attackerSide.isSubstitute) {
                     moveStringsToAdd.push({
                         move: moveName,
                         score: -40,
@@ -960,8 +993,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                     let subScore = 6;
                     if (playerMon.status == "slp") { subScore += 2; }
                     if (playerLeechSeeded && aiFaster) { subScore += 2; }
-                    // TODO: get all sound based moves
-                    // if (ANY SOUND BASED MOVE) { subScore -8; }
+                    if (movesetHasSoundMove(playerMoves)) { subScore -= 8; }
     
                     moveStringsToAdd.push(...[{
                         move: moveName,
