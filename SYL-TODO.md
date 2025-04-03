@@ -37,8 +37,8 @@ In general
   - Make stealth rock, spikes, and toxic spikes -20 if max layers are up
   - "Should AI Recover function"
     - will likely need to return the chance that function returns true, which will then be used as a modifier on the score of the recovery move being clicked
-  - Needs Focus Energy AI option for if its already up
 - Make switch % chance underneath all the moves (only make it show if its above 0, it should be a very rare case)
 - Figure out something to make the Crit buttons look less ugly (Colors?)
+  - Maybe show the crit rate of each move as a percentage next to the crit toggle, that way the button isn't as big. Take focus energy and high crit ratio moves into account
 - Add post-ko switch in order to display (that's deterministic so it should be easier lol)
 - Add a pie chart (chart.js perhaps?) that reloads and visualizes the everything for visual learners

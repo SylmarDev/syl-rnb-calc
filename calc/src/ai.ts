@@ -39,7 +39,7 @@ function movesetHasMoves(moves: any[], ...moveNames: string[]) {
 }
 
 function movesetHasSoundMove(moves: any[]) {
-    var hasSoundMove = movesetHasMoves(moves, "Boomburst", "Bug Buzz", "Chatter",
+    return movesetHasMoves(moves, "Boomburst", "Bug Buzz", "Chatter",
         "Clanging Scales", "Clangorous Soul", "Clangorous Soulblaze",
        "Confide", "Disarming Voice", "Echoed Voice", "Eerie Spell",
        "Grass Whistle", "Growl", "Heal Bell", "Howl", "Hyper Voice",
@@ -47,8 +47,14 @@ function movesetHasSoundMove(moves: any[]) {
        "Perish Song", "Psychic Noise", "Relic Song", "Roar",
        "Round", "Screech", "Sing", "Snarl", "Snore", "Sparkling Aria",
        "Supersonic","Uproar");
-    console.log(hasSoundMove);
-    return hasSoundMove;
+}
+
+function movesetHasHighCritRatioMove(moves: any[]) {
+    return movesetHasMoves(moves, "Aeroblast", "Air Cutter", "Attack Order",
+        "Blaze Kick", "Crabhammer", "Cross Chop", "Cross Poison", "Drill Run",
+        "Karate Chop", "Leaf Blade", "Night Slash", "Poison Tail", "Psycho Cut",
+        "Razor Leaf", "Razor Wind", "Shadow Claw", "Sky Attack", "Slash",
+        "Spacial Rend", "Stone Edge");
 }
 
 function computeDistribution(array: number[]): { [key: number]: number } {
@@ -1362,22 +1368,29 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             // Focus Energy, Laser Focus
             // If AI has Super Luck/Sniper, holding Scope Lens, or has a high crit rate move +7, else +6
             if (moveName == "Focus Energy" || moveName == "Laser Focus") {
-                // TODO: add high crit rate moves to this
-                // TODO: add player mon has shell armor or battle armor to this
                 const critIncentive = move.ability == "Super Luck" || move.ability == "Sniper"
-                                        || move.item == "Scope Lens"; 
-                if (critIncentive) {
+                                        || move.item == "Scope Lens" || movesetHasHighCritRatioMove(moves);
+                if ((moveName == "Focus Energy" && moves[0].field.attackerSide.isFocusEnergy) ||
+                    playerAbility == "Shell Armor" || playerAbility == "Battle Armor") {
                     moveStringsToAdd.push({
                         move: moveName,
-                        score: 7,
+                        score: -40,
                         rate: 1
                     });
                 } else {
-                    moveStringsToAdd.push({
-                        move: moveName,
-                        score: 6,
-                        rate: 1
-                    });
+                    if (critIncentive) {
+                        moveStringsToAdd.push({
+                            move: moveName,
+                            score: 7,
+                            rate: 1
+                        });
+                    } else {
+                        moveStringsToAdd.push({
+                            move: moveName,
+                            score: 6,
+                            rate: 1
+                        });
+                    }
                 }
             }
 

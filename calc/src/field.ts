@@ -90,6 +90,7 @@ export class Side implements State.Side {
   isForesight: boolean;
   isTailwind: boolean;
   isSubstitute: boolean;
+  isFocusEnergy: boolean;
   isHelpingHand: boolean;
   isFlowerGift: boolean;
   isFriendGuard: boolean;
@@ -114,6 +115,7 @@ export class Side implements State.Side {
     this.isForesight = !!side.isForesight;
     this.isTailwind = !!side.isTailwind;
     this.isSubstitute = !!side.isSubstitute;
+    this.isFocusEnergy = !!side.isFocusEnergy;
     this.isHelpingHand = !!side.isHelpingHand;
     this.isFlowerGift = !!side.isFlowerGift;
     this.isFriendGuard = !!side.isFriendGuard;
