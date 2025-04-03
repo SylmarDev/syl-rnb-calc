@@ -1304,7 +1304,43 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                 }
             }
 
-            // Poisoning Moves
+            // Toxic
+            if (moveName == "Toxic") {
+                if (playerHasStatusCond ||
+                    ((playerTypes.includes("Poison") || playerTypes.includes("Steel")) && moves[0].ability != "Corrosion")) {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: -40,
+                        rate: 1
+                    });
+                } else {
+                    // Starts at +6
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: 6,
+                        rate: 1
+                    });
+
+                    // if player mon can be poisoned and is above 20% HP
+                    if (playerHealthPercentage > 20) {
+                        let toxScore = 0;
+
+                        if (playerHighestRoll == 0) { toxScore++; }
+                        if (movesetHasMoves(moves, "Hex", "Venom Drench") || moves[0].ability == "Merciless") {
+                            toxScore += 2;
+                        } else {
+                            toxScore++;
+                        }
+    
+    
+                        moveStringsToAdd.push({
+                            move: moveName,
+                            score: toxScore,
+                            rate: 0.38
+                        });
+                    }
+                }
+            }
 
             // General Setup
 
