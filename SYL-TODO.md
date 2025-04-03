@@ -14,6 +14,7 @@ TODO:
   - Imprison
   - Baton Pass
   - Taunt
+  - Encore
 
 STATUS NAME: 
 export type StatusName = 'slp' | 'psn' | 'brn' | 'frz' | 'par' | 'tox';
@@ -29,13 +30,11 @@ In general
   - Recovery Moves
   - Sun based recovery
   - Rest
-  - Encore (will need an aiOption for encore incentive)
   - Counter / Mirror Coat
 - Clean up TODO's
   - Make multi hit moves work correctly
   - Make status category
     - default to +6 if move is not in moveStringsToAdd and move is score of 0 and type of status
-  - Imprison AI Option or Field toggle
   - Baton Pass must include AI Option for "Last AI Mon"
   - "Should AI Recover function"
     - will likely need to return the chance that function returns true, which will then be used as a modifier on the score of the recovery move being clicked

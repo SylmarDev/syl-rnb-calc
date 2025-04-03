@@ -1506,6 +1506,12 @@ function setAiOptionVisibility(side) {
 		$("#lastMonOpt").show();
 	}
 
+	// baton pass
+	if (isNamed("Baton Pass", ...moveNames)) {
+		showAiOptionsDiv();
+		$("#lastMonOpt").show();
+	}
+
 	// player charmed or confused
 	if (hasMove(["Thunder Wave", "Stun Spore", "Glare", "Nuzzle"], moveNames)) {
 		showAiOptionsDiv();
