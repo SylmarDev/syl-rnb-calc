@@ -845,8 +845,28 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
 
             // Imprison
             // One move in common +9, else -20
+            if (moveName == "Imprison") {
+                const playerMoveNames = playerMoves.map(x => x.move.name);
+                console.log(playerMoveNames); // debug
+                const movesInCommon = movesetHasMoves(moves, ...playerMoveNames);
+                // TODO: add AI option or field option for being already imprisoned
+                if (!movesInCommon) {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: -20,
+                        rate: 1
+                    });
+                } else {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: 9,
+                        rate: 1
+                    });
+                }
+            }
 
             // Baton Pass
+            
 
             // Tailwind
             if (moveName == "Tailwind") {
@@ -1476,6 +1496,14 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
 
             // Counter, Mirror Coat
         });
+
+        // TODO IF...
+        // move is not in moveStringsToAdd
+        // AND
+        // move is score of 0
+        // AND
+        // move is status
+        // set score to +6 as a default
         
         // iterate through all move strings and update the move kvps
         for (const moveStringToAdd of moveStringsToAdd) {
