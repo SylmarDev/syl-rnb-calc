@@ -1261,7 +1261,8 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
 
             // Defensive Setup
 
-            // Coil, Bulk Up, Calm Mind, Quiver Dance (falls under setups above, see doc)
+            // Coil, Bulk Up, Calm Mind, Quiver Dance, Curse (falls under setups above, see doc)
+            // (moveName == "Curse" && !moves[0].attacker.types.includes("Ghost"))
 
             // Agility, Rock Polish, Autotomize
             // If AI is slower than player mon +7, else -20
