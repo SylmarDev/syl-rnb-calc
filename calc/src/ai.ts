@@ -519,6 +519,9 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
     const playerLastMonOut = aiOptions["playerLastMonAiOpt"];
     const playerCharmedOrConfused = aiOptions["playerCharmedOrConfusedAiOpt"];
     const playerTaunted = aiOptions["tauntAiOpt"];
+    const playerImprisoned = aiOptions["imprisonAiOpt"];
+    const encoreIncentive = aiOptions["encoreAiOpt"];
+    const playerFirstTurnOut = aiOptions["playerFirstTurnOutAiOpt"]; // or encored
 
     // debug logging
     const debugLogging = aiOptions["enableDebugLogging"];
@@ -851,8 +854,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                 const playerMoveNames = playerMoves.map(x => x.move.name);
                 console.log(playerMoveNames); // debug
                 const movesInCommon = movesetHasMoves(moves, ...playerMoveNames);
-                // TODO: add AI option or field option for being already imprisoned
-                if (!movesInCommon) {
+                if (!movesInCommon || playerImprisoned) {
                     moveStringsToAdd.push({
                         move: moveName,
                         score: -20,
@@ -1538,8 +1540,47 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             }
 
             // Encore
+            // kind of TODO? Doc says...
+                //  If AI is faster and Encore Encouraged +7
+                //  IF AI is slower: +5/+6 50/50
+            // it says nothing about ai faster and not encouraged. I assume its +6
+            // didn't see anything in the discord about it either
+            if (moveName == "Encore") {
+                // this also takes into account if player is already encored
+                if (playerFirstTurnOut) {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: -40,
+                        rate: 1
+                    });
+                } else {
+                    if (aiFaster && encoreIncentive) {
+                        moveStringsToAdd.push({
+                            move: moveName,
+                            score: 7,
+                            rate: 1
+                        });
+                    } else if (!aiFaster) {
+                        moveStringsToAdd.push(...[{
+                            move: moveName,
+                            score: 5,
+                            rate: 1
+                        },
+                        {
+                            move: moveName,
+                            score: 1,
+                            rate: 0.5
+                        }
+                        ]);
+                    }
+                }
+            }
 
             // Counter, Mirror Coat
+            // TODO: needs status move type
+            if (moveName == "Counter" || moveName == "Mirror Coat") {
+
+            }
         });
 
         // TODO IF...

@@ -1515,13 +1515,20 @@ function setAiOptionVisibility(side) {
 	// imprison
 	if (isNamed("Imprison", ...moveNames)) {
 		showAiOptionsDiv();
-		// $("#imprisonOpt").show();
+		$("#imprisonOpt").show();
 	}
 
 	// taunt
 	if (isNamed("Taunt", ...moveNames)) {
 		showAiOptionsDiv();
 		$("#tauntOpt").show();
+	}
+
+	// encore
+	if (isNamed("Encore", ...moveNames)) {
+		showAiOptionsDiv();
+		$("#encoreOpt").show();
+		$("#playerFirstTurnOutOpt").show();
 	}
 }
 
