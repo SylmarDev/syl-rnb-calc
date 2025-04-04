@@ -621,7 +621,27 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             }
 
             // Damaging Atk/SpAtk reduction moves w/ guaranteed effect
-            // TODO: will need a list for this
+            // TODO: there are probably more
+            // TODO: need to take kill bonus into account, unsure how to rn
+            if (isNamed(moveName, "Skitter Smack", "Trop Kick") && moveScore == 0) {
+                const affectedMoveType = moveName == "Trop Kick" ? "Physical" : "Special";
+                if (playerAbility != "Contrary" && playerAbility != "Clear Body" && playerAbility != "White Smoke" &&
+                    playerMoves.findIndex((x: { move: { category: string; }; }) => x.move.category === affectedMoveType))
+                {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: 6,
+                        rate: 1
+                    });
+                } else {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: 5,
+                        rate: 1
+                    });
+                }
+                // TODO: double battle +1 to spread moves
+            }
 
             // Damaging -2 SpDef reduction moves w/ guaranteed effect
             // Always +6, stacks with other boosts
@@ -1304,8 +1324,8 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                 }
             }
 
-            // Toxic
-            if (moveName == "Toxic") {
+            // Poisoning Moves
+            if (isNamed(moveName, "Toxic", "Poison Gas", "Poison Powder")) {
                 if (playerHasStatusCond ||
                     ((playerTypes.includes("Poison") || playerTypes.includes("Steel")) && moves[0].ability != "Corrosion")) {
                     moveStringsToAdd.push({
@@ -1347,8 +1367,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                 "Stuff Cheeks", "Barrier", "Acid Armor", "Iron Defense", "Cotton Guard",
                 "Charge Beam", "Tail Glow", "Nasty Plot", "Cosmic Power",
                 "Bulk Up", "Calm Mind", "Dragon Dance", "Coil", "Hone Claws", "Quiver Dance",
-                "Shift Gear", "Shell Smash", "Growth", "Work Up", "Curse",
-                "Coil", "No Retreat")) {
+                "Shift Gear", "Shell Smash", "Growth", "Work Up", "Curse", "No Retreat")) {
                 if (aiDeadToPlayer || 
                     ((moveName != "Power-up Punch" && moveName != "Swords Dance" && moveName != "Howl") &&
                     playerAbility == "Unaware")) { 
@@ -1360,6 +1379,10 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                     }
             }
 
+            // Coil, Bulk Up, Calm Mind, Quiver Dance
+            // (above Offensive and Defensive so we can decide where to send it)
+            // TODO: requires status move designation
+
             // Offensive Setup
             // TODO: funnel some moves to this sometimes
             // i.e. Coil, Bulk Up, Calm Mind, Quiver Dance, Curse (non ghost type)
@@ -1369,19 +1392,22 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
 
                 if (playerIncapacitated) { 
                     offensiveScore += 3; 
-                } else if (!aiThreeHitKOd) {
+                } 
+                // comented out because of run and bug
+                /* else if (!aiThreeHitKOd) {
                     offensiveScore++;
                     if (aiFaster) { offensiveScore++; }
-                }
+                } */
 
                 if (!aiFaster && aiTwoHitKOd) {
                     offensiveScore -= 5;
                 }
 
                 // if AI is at +2 Atk or higher
-                if (moves[0].attacker.boosts.atk >= 2) {
+                // commented out cause run and bug
+                /* if (moves[0].attacker.boosts.atk >= 2) {
                     offensiveScore--;
-                }
+                } */
 
                 moveStringsToAdd.push({
                     move: moveName,
@@ -1397,9 +1423,8 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             // (moveName == "Curse" && !moves[0].attacker.types.includes("Ghost"))
             if (isNamed(moveName, "Acid Armor", "Barrier", "Cotton Guard", "Harden", "Iron Defense",
                 "Stockpile", "Cosmic Power")) {
-                // TODO: update these
-                const boostsDef = false;
-                const boostsspDef = false;
+                // this may need updating this is off my memory
+                const boostsDefAndSpDef = isNamed(moveName, "Stockpile", "Cosmic Power");
                 
                 let initialDefensiveScore = 6;
                 if (!aiFaster && aiTwoHitKOd) {
@@ -1413,13 +1438,12 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                 });
 
                 // for the 95% checks
-                // TODO : NOOOOOOOOOOOO STUCK because there's a nested chance AUGH
                 let defensiveScore = 0;
-                let storedPowerBodyPressScore = 0;
 
                 if (playerIncapacitated) { defensiveScore += 2; }
-                if (movesetHasMoves(moves, "Stored Power", "Body Press")) {
-                    storedPowerBodyPressScore++;
+
+                if (boostsDefAndSpDef && (moves[0].attacker.boosts.def < 2 || moves[0].attacker.boosts.spdef < 2)) {
+                    defensiveScore += 2;
                 }
 
                 moveStringsToAdd.push(...[{
