@@ -217,7 +217,7 @@ function shouldAIRecover(aiMon: Pokemon, recoveryPercentage: number,
     const aiHealthPercentage = Math.trunc((aiMonCurrentHP / aiMonMaxHP) * 100);
     const aiRecoveredHP = Math.trunc(aiMonMaxHP * recoveryPercentage);
 
-    if (aiMon.status = "tox") { return 0; }
+    if (aiMon.status == "tox") { return 0; }
     if (playerMaxRoll >= aiRecoveredHP) { return 0; }
 
     if (aiFaster) {
@@ -1749,7 +1749,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                                                 (moves[0].ability == "Hydration" && weather.includes("Rain")) ? 1 : 0;
                 
                 const aiShouldRecover = shouldAIRecover(moves[0].attacker, 1, playerHighestRoll, aiFaster);
-                
+
                 moveStringsToAdd.push(...[{
                     move: moveName,
                     score: 5,
