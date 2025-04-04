@@ -27,8 +27,10 @@ In general
 - Finish off special move cases
   - Protect
     - needs several AI options
+  - Coil, Bulk Up, Calm Mind, Quiver Dance, non-Ghost Curse
   - Shell Smash needs revision
     - needs to call the calc to see if it lives after white herb
+  - Contrary Edge Cases
   - Sun based recovery
   - Counter / Mirror Coat
 - Clean up TODO's
@@ -36,6 +38,7 @@ In general
   - +6/+8's are happening on all the same entry. If Move1 and Move2 are both highest damage, they create one entry that's "Move1:6/Move2:6..." and one entry that's "Move1:8/Move2:8...". That needs to be changed for edge cases to break down into all possible lines
   - Make status category
     - default to +6 if move is not in moveStringsToAdd and move is score of 0 and type of status
+    - go back through and update all the things that need updated with that
   - Damaging Speed Reduction and Damaging Atk/SpAtk go if score is 0, but they can get kill bonuses so that's not always true. Look into how to fix that
 - Make switch % chance underneath all the moves (only make it show if its above 0, it should be a very rare case)
 - Figure out something to make the Crit buttons look less ugly (Colors?)

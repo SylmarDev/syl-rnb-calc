@@ -539,6 +539,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
     const aiItem = moves[0].attacker.item;
     const playerSideSpikes = moves[0].field.defenderSide.spikes > 0;
     const playerSideTSpikes = moves[0].field.defenderSide.tspikes > 0;
+    const playerSideStealthRocks = moves[0].field.defenderSide.isSR;
     const aiReflect = moves[0].field.attackerSide.isReflect;
     const aiLightScreen = moves[0].field.attackerSide.isLightScreen;
     const aiHasTailwind = moves[0].field.attackerSide.isTailwind;
@@ -588,7 +589,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             }
         ];
 
-        // this returns if *this* damagingMoveDistKVP sees a kill
+        // this returns if *this* damagingMoveDisFtKVP sees a kill
         const aiSeesKill = getAISeesKill(moveArr, moves[0].ability);
 
         // iterate through each move
@@ -818,28 +819,35 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                 });
             }
 
-            // TODO: these setup moves need a common sense -40 if they're already all out
             // Stealth Rock
             if (moveName == "Stealth Rock") {
-                if (firstTurnOut) {
+                if (playerSideStealthRocks) {
                     moveStringsToAdd.push({
                         move: moveName,
-                        score: 8,
+                        score: -40,
                         rate: 1
                     });
                 } else {
+                    if (firstTurnOut) {
+                        moveStringsToAdd.push({
+                            move: moveName,
+                            score: 8,
+                            rate: 1
+                        });
+                    } else {
+                        moveStringsToAdd.push({
+                            move: moveName,
+                            score: 6,
+                            rate: 1
+                        });
+                    }
+    
                     moveStringsToAdd.push({
                         move: moveName,
-                        score: 6,
-                        rate: 1
+                        score: 1,
+                        rate: 0.75
                     });
                 }
-
-                moveStringsToAdd.push({
-                    move: moveName,
-                    score: 1,
-                    rate: 0.75
-                })
             }
 
             // Spikes, Toxic Spikes
@@ -1026,6 +1034,14 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             }
 
             // Helping Hand, Follow Me (just make it -6 since no doubles)
+            // TODO: doubles update
+            if (isNamed(moveName, "Helping Hand", "Follow Me")) {
+                moveStringsToAdd.push({
+                    move: moveName,
+                    score: -6,
+                    rate: 1
+                });
+            }
 
             // Final Gambit
             if (moveName == "Final Gambit") {
@@ -1423,7 +1439,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                     }
             }
 
-            // Coil, Bulk Up, Calm Mind, Quiver Dance
+            // Coil, Bulk Up, Calm Mind, Quiver Dance, Non-Ghost Curse
             // (above Offensive and Defensive so we can decide where to send it)
             // TODO: requires status move designation
 
