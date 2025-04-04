@@ -668,7 +668,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             // Damaging Atk/SpAtk reduction moves w/ guaranteed effect
             // TODO: there are probably more
             // TODO: need to take kill bonus into account, unsure how to rn
-            if (isNamed(moveName, "Skitter Smack", "Trop Kick") && moveScore == 0) {
+            if (isNamed(moveName, "Skitter Smack", "Trop Kick", "Snarl") && moveScore == 0) {
                 const affectedMoveType = moveName == "Trop Kick" ? "Physical" : "Special";
                 if (playerAbility != "Contrary" && playerAbility != "Clear Body" && playerAbility != "White Smoke" &&
                     playerMoves.findIndex((x: { move: { category: string; }; }) => x.move.category === affectedMoveType))
