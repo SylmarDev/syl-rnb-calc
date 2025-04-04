@@ -162,7 +162,7 @@ function updateProbabilityWithVariance(probabilities: KVP[], key: string, prob: 
 
 // returns bool based on if this damagingKVP sees a kill
 // TODO: this needs reworked if it needs to check for kills with Explosion, Final Gambit and Rollout
-// for now lets just hope there are no sing + boom/roolout mons lol
+// for now lets just hope there are no sing + boom/rollout mons lol
 function getAISeesKill(moveScores: string[], attackerAbility: string) {
     const abilityMoveBonus = attackerAbility === "Moxie" ||
                                 attackerAbility === "Beast Boost" ||
@@ -205,6 +205,49 @@ function getAISeesKill(moveScores: string[], attackerAbility: string) {
     return false;
 }
 
+// should AI recover function
+// returns 0-1 based on probability of AI recover function being true (0 false, 1 true)
+// return value is used as a modifier on the rate of recover moves in the moveStringsToAdd
+// recoveryPercentage needs to be in decimal form (50% -> 0.5)
+function shouldAIRecover(aiMon: Pokemon, recoveryPercentage: number,
+    playerMaxRoll: number, aiFaster: boolean) : number 
+{
+    const aiMonCurrentHP = aiMon.originalCurHP;
+    const aiMonMaxHP = aiMon.stats.hp;
+    const aiHealthPercentage = Math.trunc((aiMonCurrentHP / aiMonMaxHP) * 100);
+    const aiRecoveredHP = Math.trunc(aiMonMaxHP * recoveryPercentage);
+
+    if (aiMon.status = "tox") { return 0; }
+    if (playerMaxRoll >= aiRecoveredHP) { return 0; }
+
+    if (aiFaster) {
+        const playerCanKillAI = playerMaxRoll >= aiMonCurrentHP;
+        const playerCanKillAIAfterRecovery = playerMaxRoll >= Math.min(aiMonCurrentHP + aiRecoveredHP, aiMonMaxHP);
+        if (playerCanKillAI && !playerCanKillAIAfterRecovery) {
+            return 1;
+        }
+
+        if (!playerCanKillAI) {
+            if (aiHealthPercentage < 66 && aiHealthPercentage > 40) {
+                return 0.5;
+            }
+            if (aiHealthPercentage <= 40) {
+                return 1;
+            }
+        }
+    } else {
+        if (aiHealthPercentage < 50) {
+            return 1;
+        }
+        if (aiHealthPercentage < 70) {
+            return 0.75;
+        }
+    }
+
+    // default to false if slips through the cracks
+    return 0;
+}
+
 
 // takes moveKVPs, 1 Key Value Pair, {key: "Move1:0/Move2:6/Move3:0/Move4:0", value: 1}
 // takes moveStringsToAdd, an array of objects, [{move: Move3, score: 8, rate: 0.37}]
@@ -214,7 +257,7 @@ function updateMoveKVPWithMoveStrings(moveKVPs: KVP[], moveStringToAdd: { move: 
     let newKvps: KVP[] = []; // [{key: "Move1:0/Move2:6/Move3:0/Move4:0", value: 1}]
 
     // return if there's no point in running this
-    if (moveStringToAdd.score === 0 || moveStringToAdd.rate === 0) { return moveKVPs }
+    if (moveStringToAdd.score === 0 || moveStringToAdd.rate === 0) { return moveKVPs; }
 
     // subroutine for rate = 1
     if (moveStringToAdd.rate === 1) {
@@ -504,6 +547,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
     const trickRoomUp = moves[0].field.isTrickRoom;
     const playerLeechSeeded = moves[0].field.defenderSide.isSeeded;
     const aiHasAnyStatRaised = Object.values(moves[0].attacker.boosts).some(value => (value as number) > 0);
+    const weather = moves[0].field.weather;
     // TODO: create this and use where applicable
     // TODO: add thaw moves + recharging, loafing around due to truant
     const playerIncapacitated = playerMon.status == "frz" || playerMon.status == "slp";
@@ -1646,10 +1690,67 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             }
 
             // Recovery Moves
+            if (isNamed(moveName, "Recover", "Slack Off", "Heal Order", "Soft-Boiled",
+                "Roost", "Strength Sap"))
+            {
+                if (aiHealthPercentage == 100) {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: -20,
+                        rate: 1
+                    });
+                } else if (aiHealthPercentage >= 85) {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: -6,
+                        rate: 1
+                    });
+                } else {
+                    moveStringsToAdd.push(...[{
+                        move: moveName,
+                        score: 5,
+                        rate: 1
+                    },
+                    {
+                        move: moveName,
+                        score: 2,
+                        rate: shouldAIRecover(moves[0].attacker, 0.5, playerHighestRoll, aiFaster)
+                    }]);
+                }
+            }
 
             // Sun Based Recovery
+            // TODO: tabled for now, needs some funky solution
+            /* if (isNamed(moveName, "Morning Sun", "Synthesis", "Moonlight")) {
+                
+            } */
 
             // Rest
+            if (moveName == "Rest") {
+                const restIncentive: number = aiItem == "Lum Berry" || aiItem == "Chesto Berry" ||
+                                                movesetHasMoves(moves, "Sleep Talk", "Snore") ||
+                                                moves[0].ability == "Shed Skin" || moves[0].ability == "Early Bird" ||
+                                                (moves[0].ability == "Hydration" && weather.includes("Rain")) ? 1 : 0;
+                
+                const aiShouldRecover = shouldAIRecover(moves[0].attacker, 1, playerHighestRoll, aiFaster);
+                
+                moveStringsToAdd.push(...[{
+                    move: moveName,
+                    score: 5,
+                    rate: 1
+                },
+                {
+                    move: moveName,
+                    score: 2,
+                    rate: aiShouldRecover
+                },
+                {
+                    move: moveName,
+                    score: 1,
+                    rate: aiShouldRecover * restIncentive
+                }
+                ]);
+            }
 
             // Taunt
             if (moveName == "Taunt") {
@@ -1721,7 +1822,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             }
         });
 
-        // TODO IF...
+        // TODO: Iterate through moveArr again, IF...
         // move is not in moveStringsToAdd
         // AND
         // move is score of 0
