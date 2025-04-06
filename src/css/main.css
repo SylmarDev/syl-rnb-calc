@@ -454,6 +454,19 @@ select.toxic-counter {
     margin: 0px 1px;
 }
 
+.small-crit-btn {
+    font-size: 0.8em;
+    width: 2.5em;
+    height: 1em;
+    padding: 3px 3px;
+    margin: 0px 1px;
+    
+}
+
+.small-crit-btn[id*="TopL"] {
+    margin-left: 0.8em;
+}
+
 /* field info */
 .field-info .btn {
     font-size: 0.8em;

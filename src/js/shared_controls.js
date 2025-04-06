@@ -1922,6 +1922,22 @@ $(document).ready(function () {
 		selectTrainer(parseInt(last, 10));
 	};
 
+	// set crit checkboxes to align their values
+	/* Crits on the top of the screen */
+	$(".top-crit").change(function() {
+		const idSuffix = this.id.substr(this.id.length - 2);
+		if ($(`#crit${idSuffix}`).is(":checked") != this.checked) {
+			$(`#crit${idSuffix}`).click();
+		}
+	});
+
+	$(".move-crit").change(function() {
+		const idSuffix = this.id.substr(this.id.length - 2);
+		if ($(`#critTop${idSuffix}`).is(":checked") != this.checked) {
+			$(`#critTop${idSuffix}`).click();
+		}
+	});
+
 	// hide ai options
 	hideAiOptions();
 });
