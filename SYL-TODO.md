@@ -41,6 +41,7 @@ In general
     - go back through and update all the things that need updated with that
   - Damaging Speed Reduction and Damaging Atk/SpAtk go if score is 0, but they can get kill bonuses so that's not always true. Look into how to fix that
 - Make switch % chance underneath all the moves (only make it show if its above 0, it should be a very rare case)
+- Crit buttons should automatically set to clicked on Guaranteed Crit moves (Frost Breath, Super Luck+Scope Lens+Air Slash)
 - Figure out something to make the Crit buttons look less ugly (Colors?)
   - Maybe show the crit rate of each move as a percentage next to the crit toggle, that way the button isn't as big. Take focus energy and high crit ratio moves into account
 - Add post-ko switch in order to display (that's deterministic so it should be easier lol)
