@@ -924,7 +924,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             // One move in common +9, else -20
             if (moveName == "Imprison") {
                 const playerMoveNames = playerMoves.map(x => x.move.name);
-                console.log(playerMoveNames); // debug
+                // console.log(playerMoveNames); // debug
                 const movesInCommon = movesetHasMoves(moves, ...playerMoveNames);
                 if (!movesInCommon || playerImprisoned) {
                     moveStringsToAdd.push({
