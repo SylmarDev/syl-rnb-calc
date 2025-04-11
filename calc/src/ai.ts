@@ -265,8 +265,6 @@ function isSuperEffective(move: Move, monTypes: I.TypeName[], gravity: boolean =
         getMoveEffectiveness(move.gen, move, monTypes[1], false, gravity, ringTarget) :
         1;
 
-    console.log(`${move.name}: Effective Multiplier: ${type1Effectiveness}`);
-
     return (type1Effectiveness * type2Effectiveness) >= 2;
 }
 
