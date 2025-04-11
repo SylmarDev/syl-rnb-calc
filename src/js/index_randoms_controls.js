@@ -79,7 +79,7 @@ function performCalculations() {
 	p2.maxDamages = [];
 	p1info.find(".sp .totalMod").text(p1.stats.spe);
 	p2info.find(".sp .totalMod").text(p2.stats.spe);
-	var fastestSide = p1.stats.spe > p2.stats.spe ? 0 : p1.stats.spe === p2.stats.spe ? "tie" : 1;
+	var fastestSide = p1.stats.spe > p2.stats.spe ? 0 : 1;
 
 	var result, maxDamage;
 	var bestResult;
@@ -120,8 +120,8 @@ function performCalculations() {
 		if (fastestSide === "tie") {
 			// Technically the order should be random in a speed tie, but this non-determinism makes manual testing more difficult.
 			// battling.sort(function () { return 0.5 - Math.random(); });
-			bestMove = battling[0].maxDamages[0].moveOrder;
-			var chosenPokemon = battling[0] === p1 ? "0" : "1";
+			bestMove = battling[1].maxDamages[0].moveOrder;
+			var chosenPokemon = battling[1] === p1 ? "0" : "1";
 			bestResult = $(resultLocations[chosenPokemon][bestMove].move);
 		} else {
 			bestMove = battling[fastestSide].maxDamages[0].moveOrder;
