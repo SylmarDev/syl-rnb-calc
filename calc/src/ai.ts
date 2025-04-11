@@ -1,6 +1,8 @@
 import { Result } from './result';
 import { Move } from './move';
 import { Pokemon } from '.';
+import { getMoveEffectiveness } from './mechanics/util';
+import * as I from './data/interface';
 
 // interfaces
 interface KVP {
@@ -8,17 +10,30 @@ interface KVP {
     value: number
 }
 
+const trappingMoveNames: string[] = ['Whirlpool', 'Fire Spin', 'Sand Tomb', 'Magma Storm', 'Infestation', 'Wrap', 'Bind'];
+const highCritRatioMoveNames: string[] = [
+        "Aeroblast", "Air Cutter", "Attack Order",
+        "Blaze Kick", "Crabhammer", "Cross Chop", "Cross Poison", "Drill Run",
+        "Karate Chop", "Leaf Blade", "Night Slash", "Poison Tail", "Psycho Cut",
+        "Razor Leaf", "Razor Wind", "Shadow Claw", "Sky Attack", "Slash",
+        "Spacial Rend", "Stone Edge"
+];
+
 // move functions
 function isNamed(moveName: string, ...names: string[]) {
     return names.includes(moveName);
 }
 
 function isTrapping(move: Move) {
-    return isNamed(move.name, 'Whirlpool', 'Fire Spin', 'Sand Tomb', 'Magma Storm', 'Infestation', 'Wrap', 'Bind');
+    return isNamed(move.name, ...trappingMoveNames);
 }
 
 function isTrappingStr(s: string) {
-    return isNamed(s, 'Whirlpool', 'Fire Spin', 'Sand Tomb', 'Magma Storm', 'Infestation', 'Wrap', 'Bind');
+    return isNamed(s, ...trappingMoveNames);
+}
+
+function isHighCritRate(s: string) {
+    return isNamed(s, ...highCritRatioMoveNames);
 }
 
 function movesetHasMove(moves: any[], moveName: string) {
@@ -50,11 +65,7 @@ function movesetHasSoundMove(moves: any[]) {
 }
 
 function movesetHasHighCritRatioMove(moves: any[]) {
-    return movesetHasMoves(moves, "Aeroblast", "Air Cutter", "Attack Order",
-        "Blaze Kick", "Crabhammer", "Cross Chop", "Cross Poison", "Drill Run",
-        "Karate Chop", "Leaf Blade", "Night Slash", "Poison Tail", "Psycho Cut",
-        "Razor Leaf", "Razor Wind", "Shadow Claw", "Sky Attack", "Slash",
-        "Spacial Rend", "Stone Edge");
+    return movesetHasMoves(moves, ...highCritRatioMoveNames);
 }
 
 function computeDistribution(array: number[]): { [key: number]: number } {
@@ -248,6 +259,17 @@ function shouldAIRecover(aiMon: Pokemon, recoveryPercentage: number,
     return 0;
 }
 
+function isSuperEffective(move: Move, monTypes: I.TypeName[], gravity: boolean = false, ringTarget: boolean = false) {
+    const type1Effectiveness = getMoveEffectiveness(move.gen, move, monTypes[0], false, gravity, ringTarget);
+    const type2Effectiveness = monTypes[1] as string != "" ? 
+        getMoveEffectiveness(move.gen, move, monTypes[1], false, gravity, ringTarget) :
+        1;
+
+    console.log(`${move.name}: Effective Multiplier: ${type1Effectiveness}`);
+
+    return (type1Effectiveness * type2Effectiveness) >= 2;
+}
+
 
 // takes moveKVPs, 1 Key Value Pair, {key: "Move1:0/Move2:6/Move3:0/Move4:0", value: 1}
 // takes moveStringsToAdd, an array of objects, [{move: Move3, score: 8, rate: 0.37}]
@@ -429,10 +451,6 @@ function calculateHighestDamage(moves: any[]): KVP[] {
                 }
            }
 
-           // TODO: add the crit chance + super effective rule
-           // TODO: will have to get high crit ratio moves from a predefined list
-           // not sure how I'll get super effectives
-
            if (key === maximumKey) {
                keyString += `${moveName}:HD+${moveBonus}`;
            } else {
@@ -442,13 +460,10 @@ function calculateHighestDamage(moves: any[]): KVP[] {
            i++;
         }
 
-        // console.log(keyString);
-
         let probabilityOfChoice = 1;
         for (const probability of moveProbabilities) {
             probabilityOfChoice *= Number(probability);
         }
-        //console.log(probabilityOfChoice); // Debug
 
         keyStrings = setKeyStrings(keyString, ["HD"]);
 
@@ -461,8 +476,6 @@ function calculateHighestDamage(moves: any[]): KVP[] {
 
     // update probabilities with variance
     let probabilitiesWithVariance: KVP[] = [];
-
-    // console.log(probabilities); // debug
     
     for (const probability of probabilities) {
         if (probability.key.includes("HD")) {
@@ -474,7 +487,43 @@ function calculateHighestDamage(moves: any[]): KVP[] {
     }
 
     // console.log(probabilitiesWithVariance); // Debug
-    return probabilitiesWithVariance;
+
+    if (!movesetHasHighCritRatioMove(moves)) {
+        return probabilitiesWithVariance;
+    }
+
+    // if has high crit rate move
+    let critBoostMoveDist: KVP[] = [];
+
+    for (const damagingMoveDistKVP of probabilitiesWithVariance) {
+        let moveArr = damagingMoveDistKVP.key.split('/');
+        let moveStringsToAdd: { move: string, score: number, rate: number}[] = [];
+
+        let moveKVPs: KVP[] = [
+            {
+                key: damagingMoveDistKVP.key,
+                value: damagingMoveDistKVP.value
+            }
+        ];
+
+        moveArr.forEach((moveScoreString, index) => {
+            const move = moves[index].move;
+            if (isHighCritRate(move.name) && isSuperEffective(move, moves[index].defender.types, moves[0].field.isGravity, moves[index].defender.item == "Ring Target")) {
+                moveStringsToAdd.push({move: move.name, score: 1, rate: 0.5});
+            }
+        });
+
+        for (const moveStringToAdd of moveStringsToAdd) {
+            moveKVPs = updateMoveKVPWithMoveStrings(moveKVPs, moveStringToAdd);
+        }
+
+        for (const moveKVP of moveKVPs) {
+            addOrUpdateProbability(critBoostMoveDist, moveKVP.key, moveKVP.value);
+        }
+    }
+
+    // console.log(critBoostMoveDist); // DEBUG
+    return critBoostMoveDist;
 }
 
 /**
@@ -589,7 +638,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             }
         ];
 
-        // this returns if *this* damagingMoveDisFtKVP sees a kill
+        // this returns if *this* damagingMoveDistKVP sees a kill
         const aiSeesKill = getAISeesKill(moveArr, moves[0].ability);
 
         // iterate through each move
