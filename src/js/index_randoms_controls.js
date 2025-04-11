@@ -39,6 +39,29 @@ function createAiOptionsDict() {
 	return dict;
 }
 
+function showAIPercentages() {
+	// show percentages
+	$(".resultMoveRateR").each(function () {
+		$(this).show();
+	});
+
+	// return widths to 60-40%
+	$("#move-result-subgroupL").attr("class", "move-result-subgroupL");
+	$("#move-result-subgroupR").attr("class", "move-result-subgroupR");
+}
+
+function hideAiPercentages() {
+	// hide percentages
+	$(".resultMoveRateR").each(function () {
+		console.log($(this));
+		$(this).hide();
+	});
+
+	// return widths to 50%
+	$("#move-result-subgroupL").attr("class", "move-result-subgroup-aiPercentageless");
+	$("#move-result-subgroupR").attr("class", "move-result-subgroup-aiPercentageless");
+}
+
 var damageResults;
 function performCalculations() {
 	// console.log("perform calcs called"); // DEBUG
@@ -108,10 +131,14 @@ function performCalculations() {
 	}
 
 	var aiOptions = createAiOptionsDict();
-	var moveRates = calc.generateMoveDist(damageResults, fastestSide, aiOptions);
+	var runAIPercentageCode = !($("#disableAiMovePercentage").is(":checked"));
 
-	for (var i = 0; i < moveRates.length; i++) {
-		$("#resultMoveRateR" + (i + 1)).text((moveRates[i] * 100).toFixed(2) + "%");
+	if (runAIPercentageCode) {
+		var moveRates = calc.generateMoveDist(damageResults, fastestSide, aiOptions);
+
+		for (var i = 0; i < moveRates.length; i++) {
+			$("#resultMoveRateR" + (i + 1)).text((moveRates[i] * 100).toFixed(2) + "%");
+		}
 	}
 
 	if ($('.locked-move').length) {
@@ -295,6 +322,7 @@ $(".notation").change(function () {
 $(document).ready(function () {
 	var params = new URLSearchParams(window.location.search);
 	var m = params.get('mode');
+
 	if (m) {
 		if (m !== 'one-vs-one' && m !== 'randoms') {
 			window.location.replace('honkalculate' + linkExtension + '?' + params);
@@ -310,6 +338,16 @@ $(document).ready(function () {
 			}
 		}
 	}
+
+	$("#disableAiMovePercentage").change(function () {
+		var disableAiMovePercentage = $(this).is(":checked");
+		if (disableAiMovePercentage) {
+			hideAiPercentages();
+		} else {
+			showAIPercentages();
+		}
+	});
+
 	$(".calc-trigger").bind("change keyup", function (ev) {
 		/*
 			This prevents like 8 performCalculations out of 8 that were useless
@@ -323,6 +361,7 @@ $(document).ready(function () {
 		}
 		performCalculations();
 	});
+
 	performCalculations();
 });
 

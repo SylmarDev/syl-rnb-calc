@@ -353,6 +353,7 @@ th {
     min-width: 50em;
     margin: 1em 0 11.5em;
 }
+
 .move-result-subgroupL {
     float: left;
     width: 40%;
@@ -361,6 +362,12 @@ th {
  .move-result-subgroupR {
     float: left;
     width: 60%;
+}
+
+/* I love good class names */
+.move-result-subgroup-aiPercentageless {
+    float: left;
+    width: 50%;
 }
 
 .ai-options-subgroup {

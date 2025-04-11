@@ -1872,6 +1872,10 @@ function hideAiOptions() {
 }
 
 function showAiOptionsDiv() {
+	if ($("#disableAiMovePercentage").is(":checked")) {
+		return;
+	}
+	
 	$("#aiOptions").show();
 	$("#aiOptions .row").show();
 }

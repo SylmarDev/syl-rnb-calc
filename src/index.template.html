@@ -62,7 +62,7 @@
     </div>
     <hr />
     <div aria-label="Move selection" class="move-result-group" role="region" title="Select a move to show detailed results.">
-        <div  aria-labelledby="resultHeaderL" class="move-result-subgroupL" role="radiogroup">
+        <div  aria-labelledby="resultHeaderL" class="move-result-subgroupL" id="move-result-subgroupL" role="radiogroup">
             <div class="result-move-header"><span id="resultHeaderL">Pok&eacute;mon 1's Moves (select one to show detailed results)</span>
             </div>
             <div>
@@ -94,7 +94,7 @@
                 <label class="btn small-crit-btn" for="critTopL4" title="Force this attack to be a critical hit?">Crit</label>
             </div>
         </div>
-        <div aria-labelledby="resultHeaderR" class="move-result-subgroupR" role="radiogroup">
+        <div aria-labelledby="resultHeaderR" class="move-result-subgroupR" id="move-result-subgroupR" role="radiogroup">
             <div class="result-move-header"><span id="resultHeaderR">Pok&eacute;mon 2's Moves (select one to show detailed results)</span>
             </div>
             <div>
@@ -1758,6 +1758,10 @@
         <li>
             <label class="unselectable" for="enableDebugLogging">Enable Debug Logging</label>
             <input class="" type="checkbox" name="enableDebugLogging" id="enableDebugLogging" aria-describedby="aiOption" />
+        </li>
+        <li>
+            <label class="unselectable" for="disableAiMovePercentage">Disable AI Move %</label>
+            <input class="" type="checkbox" name="disableAiMovePercentage" id="disableAiMovePercentage" aria-describedby="aiOption" />
         </li>
     </ul>
     <ul>
