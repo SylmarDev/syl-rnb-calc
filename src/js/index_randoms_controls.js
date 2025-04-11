@@ -53,7 +53,6 @@ function showAIPercentages() {
 function hideAiPercentages() {
 	// hide percentages
 	$(".resultMoveRateR").each(function () {
-		console.log($(this));
 		$(this).hide();
 	});
 
