@@ -33,6 +33,7 @@ In general
   - Contrary Edge Cases
   - Sun based recovery
   - Counter / Mirror Coat
+  - Finish Magnet Rise
   - Reflect / Light Screen
 - Clean up TODO's
   - Make multi hit moves work correctly

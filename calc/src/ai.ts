@@ -614,6 +614,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
     const playerImprisoned = aiOptions["imprisonAiOpt"];
     const encoreIncentive = aiOptions["encoreAiOpt"];
     const playerFirstTurnOut = aiOptions["playerFirstTurnOutAiOpt"]; // or encored
+    const aiMagnetRisen = aiOptions["magnetRiseAiOpt"];
 
     // debug logging
     const debugLogging = aiOptions["enableDebugLogging"];
@@ -1882,6 +1883,23 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             // TODO: needs status move type
             if (moveName == "Counter" || moveName == "Mirror Coat") {
 
+            }
+
+            // put Magnet Rise in the docs, going off what Grintoul has said
+            if (moveName == "Magnet Rise") {
+                if (aiMagnetRisen) {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: -40,
+                        rate: 1
+                    });
+                } else {
+                    // TODO: cont from here
+                    if (true) {
+                        // +8 if you have damaging ground type move, and aiFaster
+                        // +5 otherwise
+                    }
+                }
             }
         });
 
