@@ -33,10 +33,9 @@ In general
   - Contrary Edge Cases
   - Sun based recovery
   - Counter / Mirror Coat
-  - Finish Magnet Rise
   - Reflect / Light Screen
 - Clean up TODO's
-  - Make multi hit moves work correctly
+  - **CONTINUE** making multi hit moves work correctly
   - +6/+8's are happening on all the same entry. If Move1 and Move2 are both highest damage, they create one entry that's "Move1:6/Move2:6..." and one entry that's "Move1:8/Move2:8...". That needs to be changed for edge cases to break down into all possible lines
   - Make status category
     - default to +6 if move is not in moveStringsToAdd and move is score of 0 and type of status

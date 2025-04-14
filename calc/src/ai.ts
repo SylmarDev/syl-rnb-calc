@@ -18,6 +18,8 @@ const highCritRatioMoveNames: string[] = [
         "Razor Leaf", "Razor Wind", "Shadow Claw", "Sky Attack", "Slash",
         "Spacial Rend", "Stone Edge"
 ];
+const twoHitMoves: string[] = ["Double Hit", "Double Kick"];
+const threeHitMoves: string[] = ["Pin Missile", "Rock Blast"];
 
 // move functions
 function isNamed(moveName: string, ...names: string[]) {
@@ -34,6 +36,14 @@ function isTrappingStr(s: string) {
 
 function isHighCritRate(s: string) {
     return isNamed(s, ...highCritRatioMoveNames);
+}
+
+function isTwoHit(move: Move) {
+    return isNamed(move.name, ...twoHitMoves);
+}
+
+function isThreeHit(move: Move) {
+    return isNamed(move.name, ...threeHitMoves);
 }
 
 function movesetHasMove(moves: any[], moveName: string) {
@@ -79,6 +89,27 @@ function getMoveIndexesOfType(moves: any[], type: string) {
     }
 
     return moveIndexes;
+}
+
+function movesetHasMultiHitMove(moves: any[]) {
+    return movesetHasMoves(moves, ...twoHitMoves) || movesetHasMoves(moves, ...threeHitMoves);
+}
+
+function getMultiHitCount(move: Move) {
+    if (isTwoHit(move)) {
+        return 2;
+    }
+
+    if (isThreeHit(move)) {
+        console.log(`${move.name} caught as 3 hit move`);
+        return move.ability == "Skill Link" ? 5 : 3;
+    }
+
+    return 1;
+}
+
+function updateMultiHitMoves(moves: any, multiply: boolean = true) {
+    
 }
 
 function computeDistribution(array: number[]): { [key: number]: number } {
@@ -549,7 +580,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
     // console.log(aiOptions);
 
     // set variables, parsed from move dist
-    const moves: any[] = damageResults[1];
+    let moves: any[] = damageResults[1];
     const playerMoves: any[] = damageResults[0];
     const aiFaster: boolean = fastestSide != "0";
     const playerMon: Pokemon = moves[0].defender;
@@ -558,6 +589,23 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
     moves.forEach((move, i) => {
         finalDist[i] = 0.0;
     });
+
+    // handle multi-hit moves
+    // not making this into a function because passing moves to a function will mess up the functionality
+    // we will live with the code duplication and get through it together
+    if (movesetHasMultiHitMove(moves)) {
+        moves.forEach((move, i) => {
+            const multiHit: number = getMultiHitCount(move.move);
+            console.log(multiHit);
+            if (multiHit > 1) {
+                if (typeof move.damage == 'number') {
+                    move.damage *= multiHit;
+                } else if (Array.isArray(move.damage)) {
+                    move.damage = move.damage.map((x: number) => x * multiHit);
+                }
+            }
+        });
+    }
 
     // console.log(moves); // DEBUG
     
@@ -1960,6 +2008,21 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
     // console.log("damagingMoveDist before it goes into postBoostsMoveDist");
     if (debugLogging) {
         console.log(postBoostsMoveDist); // DEBUG
+    }
+
+    // reset multi-hit moves for display
+    if (movesetHasMultiHitMove(moves)) {
+        moves.forEach((move, i) => {
+            const multiHit: number = getMultiHitCount(move.move);
+            console.log(multiHit);
+            if (multiHit > 1) {
+                if (typeof move.damage == 'number') {
+                    move.damage /= multiHit;
+                } else if (Array.isArray(move.damage)) {
+                    move.damage = move.damage.map((x: number) => x / multiHit);
+                }
+            }
+        });
     }
     
     // actually measure score and calculate probability of each move
