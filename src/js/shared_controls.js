@@ -1536,6 +1536,11 @@ function setAiOptionVisibility(side) {
 		$("#encoreOpt").show();
 		$("#playerFirstTurnOutOpt").show();
 	}
+
+	if (isNamed("Magnet Rise", ...moveNames)) {
+		showAiOptionsDiv();
+		$("#magnetRiseOpt").show();
+	}
 }
 
 $(document).on('click', '.right-side', function () {

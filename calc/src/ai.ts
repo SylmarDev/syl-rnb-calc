@@ -68,6 +68,19 @@ function movesetHasHighCritRatioMove(moves: any[]) {
     return movesetHasMoves(moves, ...highCritRatioMoveNames);
 }
 
+function getMoveIndexesOfType(moves: any[], type: string) {
+    let moveIndexes: number[] = [];
+    let i = 0;
+    for (const move of moves) {
+        if (move.move.type == type) {
+            moveIndexes.push(i)
+        }
+        i++;
+    }
+
+    return moveIndexes;
+}
+
 function computeDistribution(array: number[]): { [key: number]: number } {
     let sortedArray = array.sort((a, b) => a - b);
     let distribution: { [key: number]: number } = {};
@@ -1885,7 +1898,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
 
             }
 
-            // put Magnet Rise in the docs, going off what Grintoul has said
+            // put Magnet Rise in the docs, going off what Grintoul has said in dekcord
             if (moveName == "Magnet Rise") {
                 if (aiMagnetRisen) {
                     moveStringsToAdd.push({
@@ -1894,13 +1907,36 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                         rate: 1
                     });
                 } else {
-                    // TODO: cont from here
-                    if (true) {
-                        // +8 if you have damaging ground type move, and aiFaster
-                        // +5 otherwise
+                    // +8 if player has a damaging ground type move, and aiFaster
+                    const playerGroundMoveIndexes: number[] = getMoveIndexesOfType(playerMoves, "Ground");
+                    let playerHasDamagingGroundMove: boolean = false;
+
+                    for (const groundMoveIndex of playerGroundMoveIndexes) {
+                        // if damaging ground move
+                        const groundMoveDamage = playerMoves[groundMoveIndex].damage;
+                        if ((typeof groundMoveDamage === 'number' && groundMoveDamage != 0) ||
+                            (Array.isArray(groundMoveDamage) && groundMoveDamage.reduce((a: number, b: number) => a + b, 0) > 0)) {
+                            playerHasDamagingGroundMove = true;
+                            break;
+                        }
+                    }
+                    
+                    if (aiFaster && playerHasDamagingGroundMove) {
+                        moveStringsToAdd.push({
+                            move: moveName,
+                            score: 8,
+                            rate: 1
+                        });
+                    } else { // +5 otherwise
+                        moveStringsToAdd.push({
+                            move: moveName,
+                            score: 5,
+                            rate: 1
+                        });
                     }
                 }
             }
+            // end of the hell loop
         });
 
         // TODO: Iterate through moveArr again, IF...
