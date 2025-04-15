@@ -1522,16 +1522,13 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                     });
 
                     // if player mon can be poisoned and is above 20% HP
-                    if (playerHealthPercentage > 20 && !aiDeadToPlayer) {
+                    if (playerHealthPercentage > 20 && !aiSeesKill) {
                         let toxScore = 0;
 
-                        if (playerHighestRoll == 0) { toxScore++; }
-                        if (movesetHasMoves(moves, "Hex", "Venom Drench") || moves[0].ability == "Merciless") {
+                        if (playerHighestRoll == 0 && 
+                            (movesetHasMoves(moves, "Hex", "Venom Drench") || moves[0].ability == "Merciless")) {
                             toxScore += 2;
-                        } else {
-                            toxScore++;
                         }
-    
     
                         moveStringsToAdd.push({
                             move: moveName,
