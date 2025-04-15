@@ -18,8 +18,14 @@ const highCritRatioMoveNames: string[] = [
         "Razor Leaf", "Razor Wind", "Shadow Claw", "Sky Attack", "Slash",
         "Spacial Rend", "Stone Edge"
 ];
-const twoHitMoves: string[] = ["Double Hit", "Double Kick"];
-const threeHitMoves: string[] = ["Pin Missile", "Rock Blast"];
+const twoHitMoves: string[] = ["Bonemerang", "Double Hit", "Double Iron Bash", "Double Kick", "Dragon Darts",
+    "Dual Chop", "Dual Wingbeat", "Gear Grind", "Tachyon Cutter", "Twin Beam", "Twineedle"
+];
+const threeHitMoves: string[] = [
+    "Arm Thrust", "Barrage", "Bone Rush", "Bullet Seed", "Comet Punch", "Double Slap",
+    "Fury Attack", "Icicle Spear", "Pin Missile", "Rock Blast", "Scale Shot", "Spike Cannon",
+    "Surging Strikes", "Tail Slap", "Triple Dive", "Water Shuriken"
+];
 
 // move functions
 function isNamed(moveName: string, ...names: string[]) {
@@ -92,7 +98,9 @@ function getMoveIndexesOfType(moves: any[], type: string) {
 }
 
 function movesetHasMultiHitMove(moves: any[]) {
-    return movesetHasMoves(moves, ...twoHitMoves) || movesetHasMoves(moves, ...threeHitMoves);
+    return movesetHasMoves(moves, ...twoHitMoves) ||
+     movesetHasMoves(moves, ...threeHitMoves) ||
+      movesetHasMove(moves, "Triple Axel");
 }
 
 function getMultiHitCount(move: Move) {
@@ -101,15 +109,14 @@ function getMultiHitCount(move: Move) {
     }
 
     if (isThreeHit(move)) {
-        console.log(`${move.name} caught as 3 hit move`);
         return move.ability == "Skill Link" ? 5 : 3;
     }
 
     return 1;
 }
 
-function updateMultiHitMoves(moves: any, multiply: boolean = true) {
-    
+function getTripleAxelDamage(damageRolls: number[]) {
+    return damageRolls.map(x => Math.trunc(x / 2) + x + Math.trunc(x * 1.5));
 }
 
 function computeDistribution(array: number[]): { [key: number]: number } {
@@ -596,13 +603,17 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
     if (movesetHasMultiHitMove(moves)) {
         moves.forEach((move, i) => {
             const multiHit: number = getMultiHitCount(move.move);
-            console.log(multiHit);
             if (multiHit > 1) {
                 if (typeof move.damage == 'number') {
                     move.damage *= multiHit;
                 } else if (Array.isArray(move.damage)) {
                     move.damage = move.damage.map((x: number) => x * multiHit);
                 }
+            }
+
+            // handle triple axel and update damage numbers
+            if (move.move.name == "Triple Axel" && Array.isArray(move.damage)) {
+                move.damage = getTripleAxelDamage(move.damage);
             }
         });
     }
@@ -2014,7 +2025,6 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
     if (movesetHasMultiHitMove(moves)) {
         moves.forEach((move, i) => {
             const multiHit: number = getMultiHitCount(move.move);
-            console.log(multiHit);
             if (multiHit > 1) {
                 if (typeof move.damage == 'number') {
                     move.damage /= multiHit;

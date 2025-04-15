@@ -1,4 +1,4 @@
-3/11
+4/15
 TODO:
 - Test The Following:
   - Future Sight
@@ -18,6 +18,7 @@ TODO:
   - Toxic
   - Setup moves
   - Guaranteed Atk/SpAtk drop moves
+  - Multi-Hit Moves
 
 STATUS NAME: 
 export type StatusName = 'slp' | 'psn' | 'brn' | 'frz' | 'par' | 'tox';
@@ -35,7 +36,6 @@ In general
   - Counter / Mirror Coat
   - Reflect / Light Screen
 - Clean up TODO's
-  - **CONTINUE** making multi hit moves work correctly
   - +6/+8's are happening on all the same entry. If Move1 and Move2 are both highest damage, they create one entry that's "Move1:6/Move2:6..." and one entry that's "Move1:8/Move2:8...". That needs to be changed for edge cases to break down into all possible lines
   - Make status category
     - default to +6 if move is not in moveStringsToAdd and move is score of 0 and type of status
@@ -45,7 +45,7 @@ In general
 - Crit buttons should automatically set to clicked on Guaranteed Crit moves (Frost Breath, Super Luck+Scope Lens+Air Slash)
 - Figure out something to make the Crit buttons look less ugly (Colors?)
   - Maybe show the crit rate of each move as a percentage next to the crit toggle, that way the button isn't as big. Take focus energy and high crit ratio moves into account
-- Add post-ko switch in order to display (that's deterministic so it should be easier lol)
+- Add post-ko switch in order to display (that's usually deterministic so it should be easier lol)
 - Add a pie chart (chart.js perhaps?) that reloads and visualizes the everything for visual learners
 - Add in the survival chance calculator that I have the python program for (that'll take a while)
 
@@ -55,3 +55,4 @@ Community suggestions
   - Sitrus berry button, burn tick button, poison tick button
 - A way to show high rolls and low rolls
 - A way to show crit rolls along with noncrit rolls together
+- All stat boosts being horizontal and closer to the top
