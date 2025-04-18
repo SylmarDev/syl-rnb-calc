@@ -19,6 +19,8 @@ TODO:
   - Setup moves
   - Guaranteed Atk/SpAtk drop moves
   - Multi-Hit Moves
+  - Counter / Mirror Coat
+  - Reflect / Light Screen
 
 STATUS NAME: 
 export type StatusName = 'slp' | 'psn' | 'brn' | 'frz' | 'par' | 'tox';
@@ -33,13 +35,9 @@ In general
     - needs to call the calc to see if it lives after white herb
   - Contrary Edge Cases
   - Sun based recovery
-  - Counter / Mirror Coat
-  - Reflect / Light Screen
+  - Flame Charge (no, there's no docs or consensus on the score, but they can click it sometimes)
 - Clean up TODO's
   - +6/+8's are happening on all the same entry. If Move1 and Move2 are both highest damage, they create one entry that's "Move1:6/Move2:6..." and one entry that's "Move1:8/Move2:8...". That needs to be changed for edge cases to break down into all possible lines
-  - Make status category
-    - default to +6 if move is not in moveStringsToAdd and move is score of 0 and type of status
-    - go back through and update all the things that need updated with that
   - Damaging Speed Reduction and Damaging Atk/SpAtk go if score is 0, but they can get kill bonuses so that's not always true. Look into how to fix that
 - Make switch % chance underneath all the moves (only make it show if its above 0, it should be a very rare case)
 - Crit buttons should automatically set to clicked on Guaranteed Crit moves (Frost Breath, Super Luck+Scope Lens+Air Slash)
@@ -50,9 +48,9 @@ In general
 - Add in the survival chance calculator that I have the python program for (that'll take a while)
 
 Community suggestions
-- Remove items button
+- Remove items button (set your box to have all items (none))
 - Toggleable button group for...
   - Sitrus berry button, burn tick button, poison tick button
 - A way to show high rolls and low rolls
 - A way to show crit rolls along with noncrit rolls together
-- All stat boosts being horizontal and closer to the top
+- All stat boosts being horizontal and closer to the top so its easier to press

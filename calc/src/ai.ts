@@ -651,6 +651,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
     const playerHasStatusCond = playerMon.status != "";
     const playerTypes: string[] = playerMon.types;
     const playerAbility = moves[0].defender.moves[0].ability; // ugly but works
+    const aiAbility = moves[0].move.ability;
     const playerHealthPercentage = Math.trunc((moves[0].defender.originalCurHP / moves[0].defender.stats.hp) * 100);
     const aiHealthPercentage = Math.trunc((moves[0].attacker.originalCurHP / moves[0].attacker.stats.hp) * 100);
     const aiMaxedOutAttack = moves[0].attacker.boosts.atk == 6;
@@ -668,13 +669,15 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
     const playerLeechSeeded = moves[0].field.defenderSide.isSeeded;
     const aiHasAnyStatRaised = Object.values(moves[0].attacker.boosts).some(value => (value as number) > 0);
     const weather = moves[0].field.weather;
+    const playerHasStatusMove = playerMoves.some(x => x.move.bp <= 0);
+    const aiHasStatusMove = moves.some(x => x.move.bp <= 0); // AI has at least 1 status move
     // TODO: create this and use where applicable
     // TODO: add thaw moves + recharging, loafing around due to truant
     const playerIncapacitated = playerMon.status == "frz" || playerMon.status == "slp";
 
     // console.log(moves[0].attacker.boosts);
 
-    // console.log(moves[0]);
+    // console.log(moves);
     
     // ai options
     const firstTurnOut = aiOptions["firstTurnOutAiOpt"];
@@ -710,7 +713,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
         ];
 
         // this returns if *this* damagingMoveDistKVP sees a kill
-        const aiSeesKill = getAISeesKill(moveArr, moves[0].ability);
+        const aiSeesKill = getAISeesKill(moveArr, aiAbility);
 
         // iterate through each move
         moveArr.forEach((moveScoreString, index) => {
@@ -724,6 +727,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             // this just checks sum of damageRolls to make sure it's a positive number
             const anyValidDamageRolls = damageRolls.reduce((a: number, b: number) => a + b, 0) > 0;
             const currentMoveCanKill = highestRoll >= moves[index].defender.originalCurHP;
+            const moveIsStatus = move.bp <= 0; // can't believe I didn't think of this till now
 
             // TODO: Need to go through and add anyValidDamageRolls to a lot of these checks
             // TODO: This function can probably use continues, so I probably should do that for performance lol
@@ -1216,7 +1220,6 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
 
             // Light Screen / Reflect
             // starts at +6, +1 if holding light clay, +1 (50%). If screen is already up -20
-            // TODO: need to add status move category to all moves (instead of them being listed as physical)
             if (moveName == "Light Screen" || moveName == "Reflect") {
                 // useless move check
                 if ((moveName == "Light Screen" && aiLightScreen) || 
@@ -1227,12 +1230,26 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                         rate: 1
                     });
                 } else {
+                    let screenScore = 6;
+                    const correspondingMoveSplit = moveName == "Reflect" ? "Physical": "Special";
+                    const playerHasAnyOfCorrespondingSplit = playerMoves.some(x => x.move.category == correspondingMoveSplit && x.move.bp > 0);
+
+                    if (playerHasAnyOfCorrespondingSplit) {
+                        if (aiItem == "Light Clay") {
+                            screenScore++;
+                        }
+                        moveStringsToAdd.push({
+                            move: moveName,
+                            score: 1,
+                            rate: 0.5
+                        });
+                    }
+
                     moveStringsToAdd.push({
                         move: moveName,
-                        score: 6,
+                        score: screenScore,
                         rate: 1
                     });
-                    // TODO: continue from here this is broken
                 }
             }
 
@@ -1420,8 +1437,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
 
                     let willOWispScore = 0;
                     const hexIndex = moves.findIndex(x => x.move.name === "Hex"); // hehe inHEX more like
-                    // TODO: status moves are listed as physical so they increase the Will-O-Wisp chance
-                    const physicalIndex = damageResults[0].findIndex((x: { move: { category: string; }; }) => x.move.category === "Physical");
+                    const physicalIndex = damageResults[0].findIndex((x: { move: { category: string; bp: number }; }) => x.move.category === "Physical" && x.move.bp > 0);
                     if (hexIndex !== -1) { willOWispScore++; }
                     if (physicalIndex !== -1) { willOWispScore++; }
 
@@ -1491,7 +1507,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                         
                         if ((dreamEaterIndex != -1 || nightmareIndex != -1) && (snoreIndex == -1 && sleepTalkIndex == -1)) { sleepScore++; }
                         
-                        // needs update for doubles one day
+                        // TODO: needs update for doubles one day
                         const hexIndex = moves.findIndex(x => x.move.name === "Hex"); // hehe inHEX more like
                         if (hexIndex != -1) { sleepScore++; }
 
@@ -1854,6 +1870,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
 
             // Sun Based Recovery
             // TODO: tabled for now, needs some funky solution
+            // I'm sure we can multiply rate to figure it out, and move this above recovery moves so we can funnel these moves to normal recovery
             /* if (isNamed(moveName, "Morning Sun", "Synthesis", "Moonlight")) {
                 
             } */
@@ -1949,9 +1966,56 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             }
 
             // Counter, Mirror Coat
-            // TODO: needs status move type
             if (moveName == "Counter" || moveName == "Mirror Coat") {
-
+                // aiDeadToPlayer, -20
+                if (aiDeadToPlayer) {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: -20,
+                        rate: 1
+                    });
+                } else {
+                    let counterScore = 6;
+                    const correspondingMoveSplit = moveName == "Counter" ? "Physical": "Special";
+                    const playerOnlyHasMovesOfCorrespondingSplit = playerMoves.every(x => x.move.category == correspondingMoveSplit && x.move.bp > 0);
+    
+                    if (playerHighestRoll >= moves[0].attacker.originalCurHP &&
+                       (aiAbility == "Sturdy" || aiItem == "Focus Sash") &&
+                    aiHealthPercentage == 100 &&
+                    playerOnlyHasMovesOfCorrespondingSplit) {
+                        counterScore += 2;
+                    }
+    
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: counterScore,
+                        rate: 1
+                    });
+    
+                    if (!aiDeadToPlayer && playerOnlyHasMovesOfCorrespondingSplit) {
+                        moveStringsToAdd.push({
+                            move: moveName,
+                            score: 2,
+                            rate: 0.8
+                        });
+                    }
+    
+                    if (aiFaster) {
+                        moveStringsToAdd.push({
+                            move: moveName,
+                            score: -1,
+                            rate: 0.25
+                        });
+                    }
+    
+                    if (playerHasStatusMove) {
+                        moveStringsToAdd.push({
+                            move: moveName,
+                            score: -1,
+                            rate: 0.25
+                        });
+                    }
+                }
             }
 
             // put Magnet Rise in the docs, going off what Grintoul has said in dekcord
@@ -1995,13 +2059,28 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             // end of the hell loop
         });
 
-        // TODO: Iterate through moveArr again, IF...
-        // move is not in moveStringsToAdd
-        // AND
-        // move is score of 0
-        // AND
-        // move is status
         // set score to +6 as a default
+        let i = 0;
+        for (const moveScoreString of moveArr) {
+            const move = moves[i].move;
+            const moveName = moveScoreString.split(':')[0];
+            const moveScore: number = Number(moveScoreString.split(':')[1]);
+            const moveIsStatus = move.bp <= 0;
+            // if move doesn't have custom rules already (not in moveStringsToAdd)
+            // and doesn't already have a score, and is status
+            // default to +6
+            if (moveScore == 0 &&
+                moveIsStatus &&
+                !(moveStringsToAdd.map(x => x.move).includes(moveName))) {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: 6,
+                        rate: 1
+                    });
+            }
+
+            i++;
+        }
         
         // iterate through all move strings and update the move kvps
         for (const moveStringToAdd of moveStringsToAdd) {
