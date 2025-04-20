@@ -26,7 +26,7 @@ const threeHitMoves: string[] = [
     "Fury Attack", "Icicle Spear", "Pin Missile", "Rock Blast", "Scale Shot", "Spike Cannon",
     "Surging Strikes", "Tail Slap", "Triple Dive", "Water Shuriken"
 ];
-const zeroBPButNotStatus: string[] = ["Low Kick"];
+const zeroBPButNotStatus: string[] = ["(No Move)", "Low Kick"];
 
 // move functions
 function isNamed(moveName: string, ...names: string[]) {
