@@ -655,8 +655,9 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
 
     // If player has 1 move and 1 roll that kill AI at their current health, this is true
     const aiDeadToPlayer = playerHighestRoll >= moves[0].attacker.originalCurHP &&
-         !((moves[0].move.ability == "Sturdy" || moves[0].move.item == "Focus Sash") && moves[0].attacker.originalCurHP == moves[0].attacker.stats.hp);
-    const aiTwoHitKOd = playerHighestRoll * 2 >= moves[0].attacker.originalCurHP;     
+         !((moves[0].move.ability == "Sturdy" || moves[0].move.item == "Focus Sash") &&
+          moves[0].attacker.originalCurHP == moves[0].attacker.stats.hp);
+    const aiTwoHitKOd = playerHighestRoll * 2 >= moves[0].attacker.originalCurHP;
     const aiThreeHitKOd = playerHighestRoll * 3 >= moves[0].attacker.originalCurHP;
     const playerHasStatusCond = playerMon.status != "";
     const playerTypes: string[] = playerMon.types;
@@ -781,7 +782,8 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
 
             // Damaging speed reduction moves
             // Only applied if not highest damage already
-            const isDamagingSpeedReducing = moveName == "Icy Wind" || moveName == "Electroweb" || moveName == "Rock Tomb" || moveName == "Mud Shot" || moveName == "Low Sweep";
+            const isDamagingSpeedReducing = moveName == "Icy Wind" || moveName == "Electroweb" || moveName == "Rock Tomb"
+            || moveName == "Mud Shot" || moveName == "Low Sweep";
             if (isDamagingSpeedReducing && moveScore == 0) {
                 if (playerAbility != "Contrary" && playerAbility != "Clear Body" && playerAbility != "White Smoke" && !aiFaster) {
                     moveStringsToAdd.push({
