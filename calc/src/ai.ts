@@ -26,7 +26,11 @@ const threeHitMoves: string[] = [
     "Fury Attack", "Icicle Spear", "Pin Missile", "Rock Blast", "Scale Shot", "Spike Cannon",
     "Surging Strikes", "Tail Slap", "Triple Dive", "Water Shuriken"
 ];
-const zeroBPButNotStatus: string[] = ["(No Move)", "Low Kick"];
+const zeroBPButNotStatus: string[] = ["(No Move)", "Electro Ball", "Metal Burst", "Endeavor", "Bide",
+     "Seismic Toss", "Punishment", "Flail", "Reversal", "Gyro Ball", "Magnitude", "Heat Crash",
+      "Heavy Slam", "Present", "Natural Gift", "Beat Up", "Fissure", "Guillotine", "Horn Drill", "Super Fang",
+      "Low Kick", "Sheer Cold", "Final Gambit", "Mirror Coat", "Nature's Madness", "Psywave", "Night Shade", "Dragon Rage",
+      "Sonic Boom", "Spit Up", "Trump Card", "Grass Knot", "Wring Out"];
 
 // move functions
 function isNamed(moveName: string, ...names: string[]) {
