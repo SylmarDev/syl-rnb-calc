@@ -26,6 +26,7 @@ const threeHitMoves: string[] = [
     "Fury Attack", "Icicle Spear", "Pin Missile", "Rock Blast", "Scale Shot", "Spike Cannon",
     "Surging Strikes", "Tail Slap", "Triple Dive", "Water Shuriken"
 ];
+const zeroBPButNotStatus: string[] = ["Low Kick"];
 
 // move functions
 function isNamed(moveName: string, ...names: string[]) {
@@ -117,6 +118,11 @@ function getMultiHitCount(move: Move) {
 
 function getTripleAxelDamage(damageRolls: number[]) {
     return damageRolls.map(x => Math.trunc(x / 2) + x + Math.trunc(x * 1.5));
+}
+
+function getMoveIsStatus(moveName: string, moveBp: number) {
+    return moveBp <= 0 &&
+            !isNamed(moveName, ...zeroBPButNotStatus)
 }
 
 function computeDistribution(array: number[]): { [key: number]: number } {
@@ -669,8 +675,8 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
     const playerLeechSeeded = moves[0].field.defenderSide.isSeeded;
     const aiHasAnyStatRaised = Object.values(moves[0].attacker.boosts).some(value => (value as number) > 0);
     const weather = moves[0].field.weather;
-    const playerHasStatusMove = playerMoves.some(x => x.move.bp <= 0);
-    const aiHasStatusMove = moves.some(x => x.move.bp <= 0); // AI has at least 1 status move
+    const playerHasStatusMove = playerMoves.some(x => getMoveIsStatus(x.move.name, x.move.bp));
+    const aiHasStatusMove = moves.some(x => getMoveIsStatus(x.move.name, x.move.bp)); // AI has at least 1 status move
     // TODO: create this and use where applicable
     // TODO: add thaw moves + recharging, loafing around due to truant
     const playerIncapacitated = playerMon.status == "frz" || playerMon.status == "slp";
@@ -727,7 +733,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             // this just checks sum of damageRolls to make sure it's a positive number
             const anyValidDamageRolls = damageRolls.reduce((a: number, b: number) => a + b, 0) > 0;
             const currentMoveCanKill = highestRoll >= moves[index].defender.originalCurHP;
-            const moveIsStatus = move.bp <= 0; // can't believe I didn't think of this till now
+            const moveIsStatus = getMoveIsStatus(moveName, move.bp); // can't believe I didn't think of this till now
 
             // TODO: Need to go through and add anyValidDamageRolls to a lot of these checks
             // TODO: This function can probably use continues, so I probably should do that for performance lol
@@ -2065,7 +2071,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             const move = moves[i].move;
             const moveName = moveScoreString.split(':')[0];
             const moveScore: number = Number(moveScoreString.split(':')[1]);
-            const moveIsStatus = move.bp <= 0;
+            const moveIsStatus = getMoveIsStatus(moveName, move.bp);
             // if move doesn't have custom rules already (not in moveStringsToAdd)
             // and doesn't already have a score, and is status
             // default to +6
