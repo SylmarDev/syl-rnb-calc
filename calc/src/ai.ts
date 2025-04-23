@@ -31,6 +31,14 @@ const zeroBPButNotStatus: string[] = ["(No Move)", "Electro Ball", "Metal Burst"
       "Heavy Slam", "Present", "Natural Gift", "Beat Up", "Fissure", "Guillotine", "Horn Drill", "Super Fang",
       "Low Kick", "Sheer Cold", "Final Gambit", "Mirror Coat", "Nature's Madness", "Psywave", "Night Shade", "Dragon Rage",
       "Sonic Boom", "Spit Up", "Trump Card", "Grass Knot", "Wring Out"];
+const soundMoves: string[] = ["Boomburst", "Bug Buzz", "Chatter",
+        "Clanging Scales", "Clangorous Soul", "Clangorous Soulblaze",
+       "Confide", "Disarming Voice", "Echoed Voice", "Eerie Spell",
+       "Grass Whistle", "Growl", "Heal Bell", "Howl", "Hyper Voice",
+       "Metal Sound", "Noble Roar", "Overdrive", "Parting Shot",
+       "Perish Song", "Psychic Noise", "Relic Song", "Roar",
+       "Round", "Screech", "Sing", "Snarl", "Snore", "Sparkling Aria",
+       "Supersonic","Uproar"];
 
 // move functions
 function isNamed(moveName: string, ...names: string[]) {
@@ -75,14 +83,7 @@ function movesetHasMoves(moves: any[], ...moveNames: string[]) {
 }
 
 function movesetHasSoundMove(moves: any[]) {
-    return movesetHasMoves(moves, "Boomburst", "Bug Buzz", "Chatter",
-        "Clanging Scales", "Clangorous Soul", "Clangorous Soulblaze",
-       "Confide", "Disarming Voice", "Echoed Voice", "Eerie Spell",
-       "Grass Whistle", "Growl", "Heal Bell", "Howl", "Hyper Voice",
-       "Metal Sound", "Noble Roar", "Overdrive", "Parting Shot",
-       "Perish Song", "Psychic Noise", "Relic Song", "Roar",
-       "Round", "Screech", "Sing", "Snarl", "Snore", "Sparkling Aria",
-       "Supersonic","Uproar");
+    return movesetHasMoves(moves, ...soundMoves);
 }
 
 function movesetHasHighCritRatioMove(moves: any[]) {
