@@ -278,6 +278,36 @@ function getAISeesKill(moveScores: string[], attackerAbility: string) {
     return false;
 }
 
+function getAiDeadToSecondaryDamage(result: any)
+{
+    const currentHP = result.attacker.originalCurHP;
+    const maxHP = result.attacker.stats.hp;
+    const ability = result.move.ability;
+    const status = result.attacker.status;
+    const weather = result.field.weather;
+
+    let statusDamage = 0;
+
+    switch (status) {
+        case "brn":
+            statusDamage = Math.trunc(maxHP / 16);
+            break;
+        case "psn":
+            statusDamage = Math.trunc(maxHP / 8);
+            break;
+        case "tox":
+            statusDamage = 10; // temp
+            break;
+        default:
+            break;
+    }
+
+    let weatherDamage = 0;
+
+    let damageTaken = statusDamage + weatherDamage;
+    return damageTaken > currentHP;
+}
+
 // should AI recover function
 // returns 0-1 based on probability of AI recover function being true (0 false, 1 true)
 // return value is used as a modifier on the rate of recover moves in the moveStringsToAdd
@@ -689,7 +719,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
 
     // console.log(moves[0].attacker.boosts);
 
-    // console.log(moves);
+    console.log(moves);
     
     // ai options
     const firstTurnOut = aiOptions["firstTurnOutAiOpt"];
@@ -702,6 +732,12 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
     const encoreIncentive = aiOptions["encoreAiOpt"];
     const playerFirstTurnOut = aiOptions["playerFirstTurnOutAiOpt"]; // or encored
     const aiMagnetRisen = aiOptions["magnetRiseAiOpt"];
+
+    // protect yayyy
+    const protectIncentive = aiOptions["protectIncentiveAiOpt"];
+    const protectDisincentive = aiOptions["protectDisincentiveAiOpt"];
+    const aiProtectLastTurn = aiOptions["protectLastAiOpt"];
+    const aiProtectLastTwoTurns = aiOptions["protectLastTwoAiOpt"];
 
     // debug logging
     const debugLogging = aiOptions["enableDebugLogging"];
@@ -1053,7 +1089,47 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                 })
             }
 
-            // Protect, King's Shield, Spiky Shield
+            // Protect, King's Shield, Spiky Shield, Baneful Bunker
+            if (moveName == "Protect" || moveName == "King's Shield" ||
+                 moveName == "Spiky Shield" || moveName == "Baneful Bunker" ||
+                moveName == "Detect") {
+                const aiDeadToSecondaryDamage = getAiDeadToSecondaryDamage(moves[0]);
+                if (aiProtectLastTwoTurns || aiDeadToSecondaryDamage) {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: -20,
+                        rate: 1
+                    });
+                } else {
+                    let protectScore = 6;
+
+                    if (protectDisincentive) {
+                        protectScore -= 2;
+                    }
+                    if (protectIncentive) {
+                        protectScore++;
+                    }
+
+                    // TODO: doubles update
+                    if (firstTurnOut) {
+                        protectScore--;
+                    }
+
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: protectScore,
+                        rate: 1
+                    });
+
+                    if (aiProtectLastTurn) {
+                        moveStringsToAdd.push({
+                            move: moveName,
+                            score: -20,
+                            rate: 0.5
+                        });
+                    }
+                }
+            }
 
             // Fling, Role Play, doubles weakness policy, magnitude, eq is just for doubles, so leave it for now
 

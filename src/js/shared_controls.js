@@ -862,6 +862,11 @@ function createPokemon(pokeInfo) {
 		// FIXME the Pokemon constructor expects non-dynamaxed HP
 		if (isDynamaxed) curHP = Math.floor(curHP / 2);
 		var types = [pokeInfo.find(".type1").val(), pokeInfo.find(".type2").val()];
+
+		// TODO : cont from here get toxic counter value and make sure its setting
+		// try replacing deprecated status with
+		// pokeInfo.find(".status").val()
+
 		return new calc.Pokemon(gen, name, {
 			level: ~~pokeInfo.find(".level").val(),
 			ability: ability,
