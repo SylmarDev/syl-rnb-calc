@@ -410,7 +410,7 @@ $(".move-selector").change(function () {
 	$(this).attr('data-prev', moveName);
 	moveGroupObj.children(".move-type").val(move.type);
 	moveGroupObj.children(".move-cat").val(move.category);
-	moveGroupObj.children(".move-crit").prop("checked", move.willCrit === true);
+	moveGroupObj.children(".move-crit").prop("checked", move.willCrit === true).change();
 
 	var stat = move.category === 'Special' ? 'spa' : 'atk';
 	var dropsStats =
