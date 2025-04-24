@@ -423,7 +423,7 @@ function calculateHighestDamage(moves: any[]): KVP[] {
     // TODO: consider using above code to turn off crits except for cases where Crit should be turned on
     // And for calculating the new damage values of multi hit moves (i.e Pin Missile)
 
-    console.log(moves); // DEBUG
+    // console.log(moves); // DEBUG
 
     let arrays = moves.map(move => move.damageRolls().map((roll: number) => Math.min(p1CurrentHealth, roll)));
     let aiFaster = moves[0].attacker.stats.spe >= moves[0].defender.stats.spe;
