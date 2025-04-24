@@ -453,7 +453,7 @@ function calculateHighestDamage(moves: any[]): KVP[] {
     // TODO: consider using above code to turn off crits except for cases where Crit should be turned on
     // And for calculating the new damage values of multi hit moves (i.e Pin Missile)
 
-    // console.log(moves); // DEBUG
+    console.log(moves); // DEBUG
 
     let arrays = moves.map(move => move.damageRolls().map((roll: number) => Math.min(p1CurrentHealth, roll)));
     let aiFaster = moves[0].attacker.stats.spe >= moves[0].defender.stats.spe;
@@ -641,7 +641,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
     // handle multi-hit moves
     // not making this into a function because passing moves to a function will mess up the functionality
     // we will live with the code duplication and get through it together
-    if (movesetHasMultiHitMove(moves)) {
+    if (movesetHasMultiHitMove(moves) || movesetHasMove(moves, "Super Fang")) {
         moves.forEach((move, i) => {
             const multiHit: number = getMultiHitCount(move.move);
             if (multiHit > 1) {
@@ -655,6 +655,10 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             // handle triple axel and update damage numbers
             if (move.move.name == "Triple Axel" && Array.isArray(move.damage)) {
                 move.damage = getTripleAxelDamage(move.damage);
+            }
+
+            if (move.move.name == "Super Fang" || move.move.name == "Nature's Madness") {
+                move.damage = Math.trunc(playerMon.originalCurHP / 2);
             }
         });
     }

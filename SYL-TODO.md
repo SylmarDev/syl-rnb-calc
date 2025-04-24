@@ -1,4 +1,4 @@
-4/15
+4/24
 TODO:
 - Test The Following:
   - Future Sight
@@ -21,6 +21,7 @@ TODO:
   - Multi-Hit Moves
   - Counter / Mirror Coat
   - Reflect / Light Screen
+  - Super Fang / Nature's Madness
 
 STATUS NAME: 
 export type StatusName = 'slp' | 'psn' | 'brn' | 'frz' | 'par' | 'tox';
