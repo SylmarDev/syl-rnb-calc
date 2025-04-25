@@ -758,6 +758,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
     const aiTwoHitKOd = playerHighestRoll * 2 >= moves[0].attacker.originalCurHP;
     const aiThreeHitKOd = playerHighestRoll * 3 >= moves[0].attacker.originalCurHP;
     const playerHasStatusCond = playerMon.status != "";
+    const aiStatusCond = moves[0].attacker.status ?? "";
     const playerTypes: string[] = playerMon.types;
     const playerAbility = moves[0].defender.moves[0].ability; // ugly but works
     const aiAbility = moves[0].move.ability;
@@ -1169,12 +1170,26 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                     });
                 } else {
                     let protectScore = 6;
+                    let playerBurnedOrPoisoned = false;
+                    let aiBurnedOrPoisoned = false;
 
-                    if (protectDisincentive) {
+                    if (aiStatusCond == "brn" || 
+                        aiStatusCond == "psn" ||
+                        aiStatusCond == "tox") {
+                        aiBurnedOrPoisoned = true;
+                    }
+
+                    if (playerMon.status == "brn" || 
+                        playerMon.status == "psn" ||
+                        playerMon.status == "tox") {
+                        playerBurnedOrPoisoned = true;
+                    }
+
+                    if (protectDisincentive || aiBurnedOrPoisoned) {
                         protectScore -= 2;
                     }
 
-                    if (protectIncentive) {
+                    if (protectIncentive || playerBurnedOrPoisoned) {
                         protectScore++;
                     }
 
