@@ -318,8 +318,11 @@ function getAiDeadToSecondaryDamage(result: any)
 {
     const currentHP = result.attacker.originalCurHP;
     const maxHP = result.attacker.stats.hp;
+    const types = result.attacker.types;
     const ability = result.move.ability;
+    const item = result.move.item;
     const status = result.attacker.status;
+    const toxCounter = result.attacker.toxicCounter;
     const weather = result.field.weather;
 
     let statusDamage = 0;
@@ -332,7 +335,7 @@ function getAiDeadToSecondaryDamage(result: any)
             statusDamage = Math.trunc(maxHP / 8);
             break;
         case "tox":
-            statusDamage = 10; // temp
+            statusDamage = Math.trunc(maxHP / 16) * toxCounter;
             break;
         default:
             break;
@@ -340,8 +343,38 @@ function getAiDeadToSecondaryDamage(result: any)
 
     let weatherDamage = 0;
 
+    switch (weather) {
+        case "Sand":
+            const immuneToSand = (types.includes("Rock") ||
+                types.includes("Steel") ||
+                types.includes("Ground")) ||
+            (ability == "Sand Force" || ability == "Sand Rush" ||
+                ability == "Sand Veil" || ability == "Magic Guard" ||
+                ability == "Overcoat") ||
+            item == "Safety Goggles";
+
+            if (immuneToSand) { break; }
+
+            weatherDamage = Math.trunc(maxHP / 16);
+            
+            break;
+        case "Hail":
+            const immuneToHail = types.includes("Ice") || 
+                (ability == "Ice Body" || ability == "Snow Cloak" ||
+                ability == "Magic Guard" || ability == "Overcoat") ||
+                item == "Safety Goggles";
+
+            if (immuneToHail) { break; }
+
+            weatherDamage = Math.trunc(maxHP / 16);
+
+            break;
+        default:
+            break;
+    }
+
     let damageTaken = statusDamage + weatherDamage;
-    return damageTaken > currentHP;
+    return damageTaken >= currentHP;
 }
 
 // should AI recover function
@@ -677,7 +710,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
     // handle multi-hit moves
     // not making this into a function because passing moves to a function will mess up the functionality
     // we will live with the code duplication and get through it together
-    if (movesetHasMultiHitMove(moves) || movesetHasMove(moves, "Super Fang")) {
+    if (movesetHasMultiHitMove(moves)) {
         moves.forEach((move, i) => {
             const multiHit: number = getMultiHitCount(move.move);
             if (multiHit > 1) {
@@ -695,7 +728,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
         });
     }
 
-    // console.log(moves); // DEBUG
+    //console.log(moves); // DEBUG
     
     let damagingMoveDist = calculateHighestDamage(moves);
 
@@ -1127,7 +1160,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
 
             // Protect, King's Shield, Spiky Shield, Baneful Bunker
             if (moveName == "Protect" || moveName == "King's Shield" ||
-                 moveName == "Spiky Shield" || moveName == "Baneful Bunker" ||
+                moveName == "Spiky Shield" || moveName == "Baneful Bunker" ||
                 moveName == "Detect") {
                 const aiDeadToSecondaryDamage = getAiDeadToSecondaryDamage(moves[0]);
                 if (aiProtectLastTwoTurns || aiDeadToSecondaryDamage) {
@@ -1142,6 +1175,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                     if (protectDisincentive) {
                         protectScore -= 2;
                     }
+
                     if (protectIncentive) {
                         protectScore++;
                     }

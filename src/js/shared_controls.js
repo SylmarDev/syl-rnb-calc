@@ -862,10 +862,7 @@ function createPokemon(pokeInfo) {
 		// FIXME the Pokemon constructor expects non-dynamaxed HP
 		if (isDynamaxed) curHP = Math.floor(curHP / 2);
 		var types = [pokeInfo.find(".type1").val(), pokeInfo.find(".type2").val()];
-
-		// TODO : cont from here get toxic counter value and make sure its setting
-		// try replacing deprecated status with
-		// pokeInfo.find(".status").val()
+		var status = $("#statusR1").val();
 
 		return new calc.Pokemon(gen, name, {
 			level: ~~pokeInfo.find(".level").val(),
@@ -1488,9 +1485,9 @@ function setAiOptionVisibility(side) {
 
 	hideAiOptions();
 	
-	// if Stealth Rocks, Spikes, Toxic Spikes, Sticky Web, Protect, King's Shield, Fake Out, Or Encore
+	// if Stealth Rocks, Spikes, Toxic Spikes, Sticky Web, Fake Out, Or Encore
 	// first turn out checkbox needs made available
-	if (hasMove(["Stealth Rock", "Spikes", "Toxic Spikes", "Sticky Web", "Protect", "King's Shield", "Fake Out", "Encore"], moveNames)) {
+	if (hasMove(["Stealth Rock", "Spikes", "Toxic Spikes", "Sticky Web", "Fake Out", "Encore"], moveNames)) {
 		showAiOptionsDiv();
 		$("#firstTurnOutOpt").show();
 	}
@@ -1545,6 +1542,15 @@ function setAiOptionVisibility(side) {
 	if (isNamed("Magnet Rise", ...moveNames)) {
 		showAiOptionsDiv();
 		$("#magnetRiseOpt").show();
+	}
+
+	if (hasMove(["Protect", "King's Shield", "Baneful Bunker", "Spiky Shield", "Detect"], moveNames)) {
+		showAiOptionsDiv();
+		$("#firstTurnOutOpt").show();
+		$("#protectIncentiveOpt").show();
+		$("#protectDisincentiveOpt").show();
+		$("#protectLastOpt").show();
+		$("#protectLastTwoOpt").show();
 	}
 }
 
