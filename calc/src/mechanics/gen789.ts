@@ -382,7 +382,7 @@ export function calculateSMSSSV(
     return result;
   }
 
-  if (move.named('Nature\'s Madness')) {
+  if (move.named("Super Fang", 'Nature\'s Madness')) {
     const lostHP = field.defenderSide.isProtected ? 0 : Math.floor(defender.curHP() / 2);
     result.damage = lostHP;
     return result;

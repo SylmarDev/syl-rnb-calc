@@ -626,10 +626,6 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             if (move.move.name == "Triple Axel" && Array.isArray(move.damage)) {
                 move.damage = getTripleAxelDamage(move.damage);
             }
-
-            if (move.move.name == "Super Fang" || move.move.name == "Nature's Madness") {
-                move.damage = Math.trunc(playerMon.originalCurHP / 2);
-            }
         });
     }
 
