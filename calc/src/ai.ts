@@ -142,8 +142,6 @@ function getTripleAxelDamage(res: Result) {
             category: "Physical"
         };
 
-        console.log(move);
-
         tripleAxelDamageRolls[i] = calculateSMSSSV(Generations.get(8),
         res.attacker.clone(),
         res.defender.clone(),
