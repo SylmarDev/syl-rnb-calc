@@ -22,6 +22,8 @@ TODO:
   - Counter / Mirror Coat
   - Reflect / Light Screen
   - Super Fang / Nature's Madness
+  - Triple Axel
+  - Protect
 
 STATUS NAME: 
 export type StatusName = 'slp' | 'psn' | 'brn' | 'frz' | 'par' | 'tox';
@@ -29,8 +31,6 @@ export type StatusName = 'slp' | 'psn' | 'brn' | 'frz' | 'par' | 'tox';
 In general
 - Someday make a test suite to verify this all works
 - Finish off special move cases
-  - Protect
-    - needs several AI options
   - Coil, Bulk Up, Calm Mind, Quiver Dance, non-Ghost Curse
   - Shell Smash needs revision
     - needs to call the calc to see if it lives after white herb
