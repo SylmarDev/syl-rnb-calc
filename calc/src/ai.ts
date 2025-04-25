@@ -1,7 +1,11 @@
 import { Result } from './result';
 import { Move } from './move';
-import { Pokemon } from '.';
+import { Generations, Pokemon } from '.';
+import { Field } from './field';
+import { MoveName } from './data/interface';
 import { getMoveEffectiveness } from './mechanics/util';
+import { calculateSMSSSV } from './mechanics/gen789';
+
 import * as I from './data/interface';
 
 // interfaces
@@ -121,8 +125,40 @@ function getMultiHitCount(move: Move) {
     return 1;
 }
 
-function getTripleAxelDamage(damageRolls: number[]) {
-    return damageRolls.map(x => Math.trunc(x / 2) + x + Math.trunc(x * 1.5));
+function getTripleAxelDamage(res: Result) {
+    let tripleAxelDamageRolls: number[][] = [];
+    let tripleAxelDamage: number[] = [];
+
+    let i = 0;
+    for (const bp of [20, 40, 60]) {
+        let move: Move = res.move.clone();
+        move.bp = bp;
+        move.hits = 1;
+        move.name = "Ice Punch" as MoveName;
+        move.originalName = "Ice Punch";
+        move.overrides = {
+            basePower: bp,
+            type: "Ice",
+            category: "Physical"
+        };
+
+        console.log(move);
+
+        tripleAxelDamageRolls[i] = calculateSMSSSV(Generations.get(8),
+        res.attacker.clone(),
+        res.defender.clone(),
+        move,
+        res.field ? res.field.clone() : new Field())
+        .damageRolls();
+
+        i++;
+    }
+
+    tripleAxelDamage = tripleAxelDamageRolls.reduce((acc, curr) =>
+        acc.map((val, i) => val + curr[i])
+    );
+
+    return tripleAxelDamage;
 }
 
 function getMoveIsStatus(moveName: string, moveBp: number) {
@@ -654,7 +690,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
 
             // handle triple axel and update damage numbers
             if (move.move.name == "Triple Axel" && Array.isArray(move.damage)) {
-                move.damage = getTripleAxelDamage(move.damage);
+                move.damage = getTripleAxelDamage(move);
             }
         });
     }
@@ -719,7 +755,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
 
     // console.log(moves[0].attacker.boosts);
 
-    console.log(moves);
+    // console.log(moves);
     
     // ai options
     const firstTurnOut = aiOptions["firstTurnOutAiOpt"];
