@@ -197,7 +197,7 @@ function getAIDeadAfterShellSmash(res: any[], playerMaxDamage: number) {
 
 function getMoveIsStatus(moveName: string, moveBp: number) {
     return moveBp <= 0 &&
-            !isNamed(moveName, ...zeroBPButNotStatus)
+        !isNamed(moveName, ...zeroBPButNotStatus)
 }
 
 function computeDistribution(array: number[]): { [key: number]: number } {
@@ -1763,32 +1763,66 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                 }
             }
 
+            // variables to handle setup moves
+            let isOffensiveSetup = false;
+            let isDefensiveSetup = false;
+            let isContrary = aiAbility == "Contrary";
+            let actAsBulkUp = false;
+
+            // Contrary edge cases
+            if (isContrary && moveScore == 0) {
+                if (isNamed(moveName, "Overheat", "Leaf Storm")) {
+                    isOffensiveSetup = true;
+                } else if (moveName == "Superpower") {
+                    actAsBulkUp = true;
+                }
+            }
+
             // General Setup
-            if (isNamed(moveName, "Power-up Punch", "Swords Dance", "Howl",
+            if (isNamed(moveName, "Power-Up Punch", "Swords Dance", "Howl",
                 "Stuff Cheeks", "Barrier", "Acid Armor", "Iron Defense", "Cotton Guard",
                 "Charge Beam", "Tail Glow", "Nasty Plot", "Cosmic Power",
                 "Bulk Up", "Calm Mind", "Dragon Dance", "Coil", "Hone Claws", "Quiver Dance",
-                "Shift Gear", "Shell Smash", "Growth", "Work Up", "Curse", "No Retreat")) {
+                "Shift Gear", "Shell Smash", "Growth", "Work Up", "Curse", "No Retreat") && !isContrary) {
                 if (aiDeadToPlayer || 
-                    ((moveName != "Power-up Punch" && moveName != "Swords Dance" && moveName != "Howl") &&
-                    playerAbility == "Unaware")) { 
-                        moveStringsToAdd.push({
-                            move: moveName,
-                            score: -40,
-                            rate: 1
-                        });
-                    }
+                    ((moveName != "Power-Up Punch" && moveName != "Swords Dance" && moveName != "Howl") &&
+                    playerAbility == "Unaware")) {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: -40,
+                        rate: 1
+                    });
+                }
             }
 
             // Coil, Bulk Up, Calm Mind, Quiver Dance, Non-Ghost Curse
             // (above Offensive and Defensive so we can decide where to send it)
-            // TODO: requires status move designation
+            if (isNamed(moveName, "Coil", "Bulk Up", "Quiver Dance", "No Retreat", "Calm Mind") ||
+                moveName == "Curse" && !moves[0].attacker.types.includes("Ghost") ||
+                actAsBulkUp)
+            {
+                // physical
+                // (just leaving curse because we did the ghost type check earlier)
+                if (isNamed(moveName, "Coil", "Bulk Up", "No Retreat", "Curse") || actAsBulkUp) {
+                    if (playerMoves.some(x => x.move.category == "Physical" && !getMoveIsStatus(x.move.name, x.move.bp)) &&
+                        !playerMoves.some(x => x.move.category == "Special" && !getMoveIsStatus(x.move.name, x.move.bp))) {
+                        isDefensiveSetup = true;
+                    } else {
+                        isOffensiveSetup = true;
+                    }
+                } else { // special
+                    if (playerMoves.some(x => x.move.category == "Special" && !getMoveIsStatus(x.move.name, x.move.bp)) &&
+                        !playerMoves.some(x => x.move.category == "Physical" && !getMoveIsStatus(x.move.name, x.move.bp))) {
+                        isDefensiveSetup = true;
+                    } else {
+                        isOffensiveSetup = true;
+                    }
+                }
+            }
 
             // Offensive Setup
-            // TODO: funnel some moves to this sometimes
-            // i.e. Coil, Bulk Up, Calm Mind, Quiver Dance, Curse (non ghost type)
             if (isNamed(moveName, "Dragon Dance", "Shift Gear", "Swords Dance", "Howl",
-                "Sharpen", "Meditate", "Hone Claws")) {
+                "Sharpen", "Meditate", "Hone Claws") || isOffensiveSetup) {
                 let offensiveScore = 6;
 
                 if (playerIncapacitated) { 
@@ -1800,7 +1834,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                     if (aiFaster) { offensiveScore++; }
                 } */
 
-                if (!aiFaster && aiTwoHitKOd) {
+                if ((!aiFaster && aiTwoHitKOd) && !isContrary) {
                     offensiveScore -= 5;
                 }
 
@@ -1818,17 +1852,13 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             }
 
             // Defensive Setup
-            // TODO: funnel some moves to this sometimes
-            // i.e. Coil, Bulk Up, Calm Mind, Quiver Dance, Curse (non ghost type)
-            // Coil, Bulk Up, Calm Mind, Quiver Dance, Curse (falls under setups above, see doc)
-            // (moveName == "Curse" && !moves[0].attacker.types.includes("Ghost"))
             if (isNamed(moveName, "Acid Armor", "Barrier", "Cotton Guard", "Harden", "Iron Defense",
-                "Stockpile", "Cosmic Power")) {
+                "Stockpile", "Cosmic Power") || isDefensiveSetup) {
                 // this may need updating this is off my memory
                 const boostsDefAndSpDef = isNamed(moveName, "Stockpile", "Cosmic Power");
                 
                 let initialDefensiveScore = 6;
-                if (!aiFaster && aiTwoHitKOd) {
+                if ((!aiFaster && aiTwoHitKOd) && !isContrary) {
                     initialDefensiveScore -= 5;
                 }
 
@@ -1997,8 +2027,6 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                     rate: 1
                 });
             }
-
-            // Contrary edge cases
 
             // Meteor Beam
             // +9 if holding Power Herb, -20 otherwise

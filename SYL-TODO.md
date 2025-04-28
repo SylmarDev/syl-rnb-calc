@@ -25,17 +25,18 @@ TODO:
   - Triple Axel
   - Protect
   - Shell Smash
+  - Coil, Bulk Up, Calm Mind, Quiver Dance, non-Ghost Curse
+  - Contrary
 
 STATUS NAME: 
 export type StatusName = 'slp' | 'psn' | 'brn' | 'frz' | 'par' | 'tox';
+sets are kept in gen8.js
 
 In general
 - Someday make a test suite to verify this all works
 - Finish off special move cases
-  - Coil, Bulk Up, Calm Mind, Quiver Dance, non-Ghost Curse
-  - Contrary Edge Cases
   - Sun based recovery
-  - Flame Charge (no, there's no docs or consensus on the score, but they can click it sometimes)
+  - Flame Charge (no, there's no docs or consensus on the score, but they can click it sometimes when its slower. I'd assume similar AI for speed control)
 - Clean up TODO's
   - +6/+8's are happening on all the same entry. If Move1 and Move2 are both highest damage, they create one entry that's "Move1:6/Move2:6..." and one entry that's "Move1:8/Move2:8...". That needs to be changed for edge cases to break down into all possible lines. (i.e. it should look like 4 entries where Move1:6/Move2:6, Move1:6/Move2:8, Move1:8/Move2:6, Move1:8/Move2:8)
   - Grass Whistle (and probably many similar status applying moves) still get +6 if their target is statused. Use playerHasStatusCond to filter those moves out that apply non-volatile status conditions
