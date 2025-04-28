@@ -1949,6 +1949,9 @@ $(document).ready(function () {
 		if ($(`#crit${idSuffix}`).is(":checked") != this.checked) {
 			$(`#crit${idSuffix}`).click();
 		}
+
+		// click result
+		$(`#resultMove${idSuffix}`).click();
 	});
 
 	$(".move-crit").change(function() {
