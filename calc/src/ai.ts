@@ -159,6 +159,42 @@ function getTripleAxelDamage(res: Result) {
     return tripleAxelDamage;
 }
 
+function getAIDeadAfterShellSmash(res: any[], playerMaxDamage: number) {
+    const aiCurrentHp = res[1][0].attacker.originalCurHP;
+    const aiItem = res[1][0].attacker.item;
+    const aiSlower = res[0][0].attacker.spe > res[0][0].defender.spe;
+
+    const playerMoves = res[0];
+
+    if (aiItem == "White Herb" || aiSlower) {
+        return playerMaxDamage >= aiCurrentHp;
+    }
+
+    let playerMaxDamageAfterSS: number = 0;
+    let defender = playerMoves[0].defender.clone();
+    defender.boosts.atk += 2;
+    defender.boosts.spa += 2;
+    defender.boosts.spe += 2;
+
+    defender.boosts.def -= 1;
+    defender.boosts.spd -= 1;
+
+    for (const move of playerMoves) {
+        const maxRoll = Math.max(...calculateSMSSSV(Generations.get(8),
+        move.attacker.clone(),
+        defender.clone(),
+        move.move,
+        move.field ? move.field.clone() : new Field())
+        .damageRolls());
+
+        if (maxRoll > playerMaxDamageAfterSS) {
+            playerMaxDamageAfterSS = maxRoll;
+        }
+    }
+    
+    return playerMaxDamageAfterSS >= aiCurrentHp;
+}
+
 function getMoveIsStatus(moveName: string, moveBp: number) {
     return moveBp <= 0 &&
             !isNamed(moveName, ...zeroBPButNotStatus)
@@ -1738,7 +1774,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                     playerAbility == "Unaware")) { 
                         moveStringsToAdd.push({
                             move: moveName,
-                            score: -20,
+                            score: -40,
                             rate: 1
                         });
                     }
@@ -1871,11 +1907,14 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
 
                 if (playerIncapacitated) { score += 3; }
 
+                const aiDeadAfterShellSmash = getAIDeadAfterShellSmash(damageResults, playerHighestRoll);
+
                 // if player cannot KO AI if Shell Smash is used this turn +2
-
-                // if player mon can KO AI mon if Shell Smash is used this turn -2
-
-                // TODO: these checks take white herb into account and will need to call the calc itself to reroll that info
+                if (!aiDeadAfterShellSmash) {
+                    score += 2;
+                } else { // if player mon can KO AI mon if Shell Smash is used this turn -2
+                    score -= 2;
+                }
 
                 if (moves[0].attacker.boosts.atk >= 1 || moves[0].attacker.boosts.spatk >= 6) {
                     score -= 20;
