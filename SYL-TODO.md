@@ -24,6 +24,7 @@ TODO:
   - Super Fang / Nature's Madness
   - Triple Axel
   - Protect
+  - Shell Smash
 
 STATUS NAME: 
 export type StatusName = 'slp' | 'psn' | 'brn' | 'frz' | 'par' | 'tox';
@@ -32,13 +33,12 @@ In general
 - Someday make a test suite to verify this all works
 - Finish off special move cases
   - Coil, Bulk Up, Calm Mind, Quiver Dance, non-Ghost Curse
-  - Shell Smash needs revision
-    - needs to call the calc to see if it lives after white herb
   - Contrary Edge Cases
   - Sun based recovery
   - Flame Charge (no, there's no docs or consensus on the score, but they can click it sometimes)
 - Clean up TODO's
   - +6/+8's are happening on all the same entry. If Move1 and Move2 are both highest damage, they create one entry that's "Move1:6/Move2:6..." and one entry that's "Move1:8/Move2:8...". That needs to be changed for edge cases to break down into all possible lines. (i.e. it should look like 4 entries where Move1:6/Move2:6, Move1:6/Move2:8, Move1:8/Move2:6, Move1:8/Move2:8)
+  - Grass Whistle (and probably many similar status applying moves) still get +6 if their target is statused. Use playerHasStatusCond to filter those moves out that apply non-volatile status conditions
   - Damaging Speed Reduction and Damaging Atk/SpAtk go if score is 0, but they can get kill bonuses so that's not always true. Look into how to fix that
 - Make switch % chance underneath all the moves (only make it show if its above 0, it should be a very rare case)
 - Make a <span> tag that shows up to explain certain decisions in small italics when certain moves are on the enemy side to easier understand
