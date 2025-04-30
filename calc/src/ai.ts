@@ -1769,21 +1769,12 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             let isContrary = aiAbility == "Contrary";
             let actAsBulkUp = false;
 
-            // Contrary edge cases
-            if (isContrary && moveScore == 0) {
-                if (isNamed(moveName, "Overheat", "Leaf Storm")) {
-                    isOffensiveSetup = true;
-                } else if (moveName == "Superpower") {
-                    actAsBulkUp = true;
-                }
-            }
-
             // General Setup
             if (isNamed(moveName, "Power-Up Punch", "Swords Dance", "Howl",
                 "Stuff Cheeks", "Barrier", "Acid Armor", "Iron Defense", "Cotton Guard",
                 "Charge Beam", "Tail Glow", "Nasty Plot", "Cosmic Power",
                 "Bulk Up", "Calm Mind", "Dragon Dance", "Coil", "Hone Claws", "Quiver Dance",
-                "Shift Gear", "Shell Smash", "Growth", "Work Up", "Curse", "No Retreat") && !isContrary) {
+                "Shift Gear", "Shell Smash", "Growth", "Work Up", "Curse", "No Retreat")) {
                 if (aiDeadToPlayer || 
                     ((moveName != "Power-Up Punch" && moveName != "Swords Dance" && moveName != "Howl") &&
                     playerAbility == "Unaware")) {
@@ -1792,6 +1783,15 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                         score: -40,
                         rate: 1
                     });
+                }
+            }
+
+            // Contrary edge cases
+            if (isContrary && moveScore == 0) {
+                if (isNamed(moveName, "Overheat", "Leaf Storm")) {
+                    isOffensiveSetup = true;
+                } else if (moveName == "Superpower") {
+                    actAsBulkUp = true;
                 }
             }
 
@@ -1806,15 +1806,19 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                 if (isNamed(moveName, "Coil", "Bulk Up", "No Retreat", "Curse") || actAsBulkUp) {
                     if (playerMoves.some(x => x.move.category == "Physical" && !getMoveIsStatus(x.move.name, x.move.bp)) &&
                         !playerMoves.some(x => x.move.category == "Special" && !getMoveIsStatus(x.move.name, x.move.bp))) {
+                        console.log("is defensive setup");
                         isDefensiveSetup = true;
                     } else {
+                        console.log("is offensive setup");
                         isOffensiveSetup = true;
                     }
                 } else { // special
                     if (playerMoves.some(x => x.move.category == "Special" && !getMoveIsStatus(x.move.name, x.move.bp)) &&
                         !playerMoves.some(x => x.move.category == "Physical" && !getMoveIsStatus(x.move.name, x.move.bp))) {
+                        console.log("is defensive setup");
                         isDefensiveSetup = true;
                     } else {
+                        console.log("is offensive setup");
                         isOffensiveSetup = true;
                     }
                 }
