@@ -584,8 +584,7 @@ function calculateHighestDamage(moves: any[]): KVP[] {
        for (const key of keys) {
           if (moves[i].move.category === "Status" || 
             isNamed(moves[i].move.name, "Explosion", "Final Gambit", "Rollout", "Misty Explosion",
-                "Relic Song", "Meteor Beam", "Future Sight"
-            ) ||
+            "Relic Song", "Meteor Beam", "Future Sight") ||
             isTrapping(moves[i].move))
             {
                 i++;
