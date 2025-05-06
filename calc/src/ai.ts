@@ -807,7 +807,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             if (isNamed(moveName, "Skitter Smack", "Trop Kick", "Snarl") && moveScore == 0) {
                 const affectedMoveType = moveName == "Trop Kick" ? "Physical" : "Special";
                 if (playerAbility != "Contrary" && playerAbility != "Clear Body" && playerAbility != "White Smoke" &&
-                    playerMoves.findIndex((x: { move: { category: string; }; }) => x.move.category === affectedMoveType))
+                    playerMoves.findIndex((x: { move: { category: string; }; }) => x.move.category === affectedMoveType) != -1)
                 {
                     moveStringsToAdd.push({
                         move: moveName,
