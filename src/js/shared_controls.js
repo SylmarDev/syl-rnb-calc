@@ -410,7 +410,7 @@ $(".move-selector").change(function () {
 	$(this).attr('data-prev', moveName);
 	moveGroupObj.children(".move-type").val(move.type);
 	moveGroupObj.children(".move-cat").val(move.category);
-	moveGroupObj.children(".move-crit").prop("checked", move.willCrit === true);
+	moveGroupObj.children(".move-crit").prop("checked", move.willCrit === true).change();
 
 	var stat = move.category === 'Special' ? 'spa' : 'atk';
 	var dropsStats =
@@ -862,6 +862,8 @@ function createPokemon(pokeInfo) {
 		// FIXME the Pokemon constructor expects non-dynamaxed HP
 		if (isDynamaxed) curHP = Math.floor(curHP / 2);
 		var types = [pokeInfo.find(".type1").val(), pokeInfo.find(".type2").val()];
+		var status = $("#statusR1").val();
+
 		return new calc.Pokemon(gen, name, {
 			level: ~~pokeInfo.find(".level").val(),
 			ability: ability,
@@ -1483,9 +1485,9 @@ function setAiOptionVisibility(side) {
 
 	hideAiOptions();
 	
-	// if Stealth Rocks, Spikes, Toxic Spikes, Sticky Web, Protect, King's Shield, Fake Out, Or Encore
+	// if Stealth Rocks, Spikes, Toxic Spikes, Sticky Web, Fake Out, Or Encore
 	// first turn out checkbox needs made available
-	if (hasMove(["Stealth Rock", "Spikes", "Toxic Spikes", "Sticky Web", "Protect", "King's Shield", "Fake Out", "Encore"], moveNames)) {
+	if (hasMove(["Stealth Rock", "Spikes", "Toxic Spikes", "Sticky Web", "Fake Out", "Encore"], moveNames)) {
 		showAiOptionsDiv();
 		$("#firstTurnOutOpt").show();
 	}
@@ -1540,6 +1542,15 @@ function setAiOptionVisibility(side) {
 	if (isNamed("Magnet Rise", ...moveNames)) {
 		showAiOptionsDiv();
 		$("#magnetRiseOpt").show();
+	}
+
+	if (hasMove(["Protect", "King's Shield", "Baneful Bunker", "Spiky Shield", "Detect"], moveNames)) {
+		showAiOptionsDiv();
+		$("#firstTurnOutOpt").show();
+		$("#protectIncentiveOpt").show();
+		$("#protectDisincentiveOpt").show();
+		$("#protectLastOpt").show();
+		$("#protectLastTwoOpt").show();
 	}
 }
 
@@ -1938,6 +1949,9 @@ $(document).ready(function () {
 		if ($(`#crit${idSuffix}`).is(":checked") != this.checked) {
 			$(`#crit${idSuffix}`).click();
 		}
+
+		// click result
+		$(`#resultMove${idSuffix}`).click();
 	});
 
 	$(".move-crit").change(function() {

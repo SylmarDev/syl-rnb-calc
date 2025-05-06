@@ -175,6 +175,22 @@
                 <label class="unselectable" for="magnetRiseAiOpt">AI Magnet Risen:</label>
                 <input class="calc-trigger" type="checkbox" name="magnetRiseAiOpt" id="magnetRiseAiOpt" aria-describedby="aiOption" />
             </div>
+            <div class="col" id="protectIncentiveOpt">
+                <label class="unselectable" for="protectIncentiveAiOpt">Protect Incentive:</label>
+                <input class="calc-trigger" type="checkbox" name="protectIncentiveAiOpt" id="protectIncentiveAiOpt" aria-describedby="aiOption" />
+            </div>
+            <div class="col" id="protectDisincentiveOpt">
+                <label class="unselectable" for="protectDisincentiveAiOpt">Protect Disincentive:</label>
+                <input class="calc-trigger" type="checkbox" name="protectDisincentiveAiOpt" id="protectDisincentiveAiOpt" aria-describedby="aiOption" />
+            </div>
+            <div class="col" id="protectLastOpt">
+                <label class="unselectable" for="protectLastAiOpt">Protect Last Turn:</label>
+                <input class="calc-trigger" type="checkbox" name="protectLastAiOpt" id="protectLastAiOpt" aria-describedby="aiOption" />
+            </div>
+            <div class="col" id="protectLastTwoOpt">
+                <label class="unselectable" for="protectLastTwoAiOpt">Protect Last Two Turns:</label>
+                <input class="calc-trigger" type="checkbox" name="protectLastTwoAiOpt" id="protectLastTwoAiOpt" aria-describedby="aiOption" />
+            </div>
         </div>
     </div>
     <div aria-label="Calculation results" class="main-result-group" role="region">
@@ -1665,15 +1681,10 @@
                 <legend align="center"> OPPOSING TEAM</legend>
                 <div class="trainer-poks">
                     <div class="trainer-pok-list-opposing">
-                        <div class="trainer-pok-container">
-                            <img class="trainer-pok-opposing" src="https://play.pokemonshowdown.com/sprites/gen5/charizard.png" title="Focus Blast 120">
+                        <div class="trainer-pok-container"> 
+                            <img class="trainer-pok-opposing" src="https://raw.githubusercontent.com/May8th1995/sprites/master/charizard.png" title="Focus Blast 120">
                         </div>
                     </div>
-                    <!--div class="trainer-pok-list-opposing2" hidden>
-                        <div class="trainer-pok-container2">
-                            
-                        </div>
-                    </div-->
                 </div>
                 <!--hr>
                 <button id="set-double-opp">Set in doubles</button-->
@@ -1756,7 +1767,7 @@
 
 <div class="credits">Run and Bun AI % work done by SylmarDev. Modified by dekzeh, ForwardFeed, Originaly Created by Honko, maintained by Austin and Kris, Special thanks to Hzla
     <ul>
-        <li><p>Hosted by SylmarDev. This project is MIT Licensed</p></li>
+        <li><p class="p-noPadding">Hosted by SylmarDev. This project is MIT Licensed.</p></li>
         <li><a href="https://github.com/SylmarDev/syl-rnb-calc/tree/main" class="links-lighten" target="_blank">Modification Repository</a></li>
         <li><a href="https://github.com/SylmarDev/syl-rnb-calc/issues/new" class="links-lighten" target="_blank">Report an issue</a></li>
         <li>
@@ -1767,11 +1778,8 @@
             <label class="unselectable" for="disableAiMovePercentage">Disable AI Move %</label>
             <input class="" type="checkbox" name="disableAiMovePercentage" id="disableAiMovePercentage" aria-describedby="aiOption" />
         </li>
-    </ul>
-    <ul>
-        <li><a href="https://github.com/smogon/damage-calc/contributors" class="links-lighten" target="_blank">Smogon Contributors</a></li>
-        <li><a href="https://www.smogon.com/forums/threads/pok%C3%A9mon-showdown-damage-calculator.3593546/" class="links-lighten" target="_blank">Smogon Bug Reports</a></li>
-        <li><a href="https://github.com/smogon/damage-calc" class="links-lighten" target="_blank">Smogon GitHub repository</a></li>
+        <li><a href="https://twitch.tv/princesssylmar" class="links-lighten" target="_blank">My twitch :3</a></li>
+        <li><p>Shoutouts to the original <a href="https://github.com/smogon/damage-calc/contributors" class="links-lighten" target="_blank">Smogon Contributors</a></p></li>
     </ul>    
         <button type="button" id="dark-theme-toggle"></button>
         <script type="text/javascript" src="./js/dark-theme-toggle.js?"></script>

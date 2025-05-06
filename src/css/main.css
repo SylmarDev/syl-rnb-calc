@@ -717,3 +717,7 @@ table.field {
     -ms-user-select: none;
     user-select: none;
 }
+
+.p-noPadding {
+    margin-bottom: 0px;
+}

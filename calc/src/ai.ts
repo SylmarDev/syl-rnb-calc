@@ -1,7 +1,11 @@
 import { Result } from './result';
 import { Move } from './move';
-import { Pokemon } from '.';
+import { Generations, Pokemon } from '.';
+import { Field } from './field';
+import { MoveName } from './data/interface';
 import { getMoveEffectiveness } from './mechanics/util';
+import { calculateSMSSSV } from './mechanics/gen789';
+
 import * as I from './data/interface';
 
 // interfaces
@@ -31,6 +35,14 @@ const zeroBPButNotStatus: string[] = ["(No Move)", "Electro Ball", "Metal Burst"
       "Heavy Slam", "Present", "Natural Gift", "Beat Up", "Fissure", "Guillotine", "Horn Drill", "Super Fang",
       "Low Kick", "Sheer Cold", "Final Gambit", "Mirror Coat", "Nature's Madness", "Psywave", "Night Shade", "Dragon Rage",
       "Sonic Boom", "Spit Up", "Trump Card", "Grass Knot", "Wring Out"];
+const soundMoves: string[] = ["Boomburst", "Bug Buzz", "Chatter",
+        "Clanging Scales", "Clangorous Soul", "Clangorous Soulblaze",
+       "Confide", "Disarming Voice", "Echoed Voice", "Eerie Spell",
+       "Grass Whistle", "Growl", "Heal Bell", "Howl", "Hyper Voice",
+       "Metal Sound", "Noble Roar", "Overdrive", "Parting Shot",
+       "Perish Song", "Psychic Noise", "Relic Song", "Roar",
+       "Round", "Screech", "Sing", "Snarl", "Snore", "Sparkling Aria",
+       "Supersonic","Uproar"];
 
 // move functions
 function isNamed(moveName: string, ...names: string[]) {
@@ -75,14 +87,7 @@ function movesetHasMoves(moves: any[], ...moveNames: string[]) {
 }
 
 function movesetHasSoundMove(moves: any[]) {
-    return movesetHasMoves(moves, "Boomburst", "Bug Buzz", "Chatter",
-        "Clanging Scales", "Clangorous Soul", "Clangorous Soulblaze",
-       "Confide", "Disarming Voice", "Echoed Voice", "Eerie Spell",
-       "Grass Whistle", "Growl", "Heal Bell", "Howl", "Hyper Voice",
-       "Metal Sound", "Noble Roar", "Overdrive", "Parting Shot",
-       "Perish Song", "Psychic Noise", "Relic Song", "Roar",
-       "Round", "Screech", "Sing", "Snarl", "Snore", "Sparkling Aria",
-       "Supersonic","Uproar");
+    return movesetHasMoves(moves, ...soundMoves);
 }
 
 function movesetHasHighCritRatioMove(moves: any[]) {
@@ -120,13 +125,79 @@ function getMultiHitCount(move: Move) {
     return 1;
 }
 
-function getTripleAxelDamage(damageRolls: number[]) {
-    return damageRolls.map(x => Math.trunc(x / 2) + x + Math.trunc(x * 1.5));
+function getTripleAxelDamage(res: Result) {
+    let tripleAxelDamageRolls: number[][] = [];
+    let tripleAxelDamage: number[] = [];
+
+    let i = 0;
+    for (const bp of [20, 40, 60]) {
+        let move: Move = res.move.clone();
+        move.bp = bp;
+        move.hits = 1;
+        move.name = "Ice Punch" as MoveName;
+        move.originalName = "Ice Punch";
+        move.overrides = {
+            basePower: bp,
+            type: "Ice",
+            category: "Physical"
+        };
+
+        tripleAxelDamageRolls[i] = calculateSMSSSV(Generations.get(8),
+        res.attacker.clone(),
+        res.defender.clone(),
+        move,
+        res.field ? res.field.clone() : new Field())
+        .damageRolls();
+
+        i++;
+    }
+
+    tripleAxelDamage = tripleAxelDamageRolls.reduce((acc, curr) =>
+        acc.map((val, i) => val + curr[i])
+    );
+
+    return tripleAxelDamage;
+}
+
+function getAIDeadAfterShellSmash(res: any[], playerMaxDamage: number) {
+    const aiCurrentHp = res[1][0].attacker.originalCurHP;
+    const aiItem = res[1][0].attacker.item;
+    const aiSlower = res[0][0].attacker.spe > res[0][0].defender.spe;
+
+    const playerMoves = res[0];
+
+    if (aiItem == "White Herb" || aiSlower) {
+        return playerMaxDamage >= aiCurrentHp;
+    }
+
+    let playerMaxDamageAfterSS: number = 0;
+    let defender = playerMoves[0].defender.clone();
+    defender.boosts.atk += 2;
+    defender.boosts.spa += 2;
+    defender.boosts.spe += 2;
+
+    defender.boosts.def -= 1;
+    defender.boosts.spd -= 1;
+
+    for (const move of playerMoves) {
+        const maxRoll = Math.max(...calculateSMSSSV(Generations.get(8),
+        move.attacker.clone(),
+        defender.clone(),
+        move.move,
+        move.field ? move.field.clone() : new Field())
+        .damageRolls());
+
+        if (maxRoll > playerMaxDamageAfterSS) {
+            playerMaxDamageAfterSS = maxRoll;
+        }
+    }
+    
+    return playerMaxDamageAfterSS >= aiCurrentHp;
 }
 
 function getMoveIsStatus(moveName: string, moveBp: number) {
     return moveBp <= 0 &&
-            !isNamed(moveName, ...zeroBPButNotStatus)
+        !isNamed(moveName, ...zeroBPButNotStatus)
 }
 
 function computeDistribution(array: number[]): { [key: number]: number } {
@@ -275,6 +346,69 @@ function getAISeesKill(moveScores: string[], attackerAbility: string) {
     }
 
     return false;
+}
+
+function getAiDeadToSecondaryDamage(result: any)
+{
+    const currentHP = result.attacker.originalCurHP;
+    const maxHP = result.attacker.stats.hp;
+    const types = result.attacker.types;
+    const ability = result.move.ability;
+    const item = result.move.item;
+    const status = result.attacker.status;
+    const toxCounter = result.attacker.toxicCounter;
+    const weather = result.field.weather;
+
+    let statusDamage = 0;
+
+    switch (status) {
+        case "brn":
+            statusDamage = Math.trunc(maxHP / 16);
+            break;
+        case "psn":
+            statusDamage = Math.trunc(maxHP / 8);
+            break;
+        case "tox":
+            statusDamage = Math.trunc(maxHP / 16) * toxCounter;
+            break;
+        default:
+            break;
+    }
+
+    let weatherDamage = 0;
+
+    switch (weather) {
+        case "Sand":
+            const immuneToSand = (types.includes("Rock") ||
+                types.includes("Steel") ||
+                types.includes("Ground")) ||
+            (ability == "Sand Force" || ability == "Sand Rush" ||
+                ability == "Sand Veil" || ability == "Magic Guard" ||
+                ability == "Overcoat") ||
+            item == "Safety Goggles";
+
+            if (immuneToSand) { break; }
+
+            weatherDamage = Math.trunc(maxHP / 16);
+            
+            break;
+        case "Hail":
+            const immuneToHail = types.includes("Ice") || 
+                (ability == "Ice Body" || ability == "Snow Cloak" ||
+                ability == "Magic Guard" || ability == "Overcoat") ||
+                item == "Safety Goggles";
+
+            if (immuneToHail) { break; }
+
+            weatherDamage = Math.trunc(maxHP / 16);
+
+            break;
+        default:
+            break;
+    }
+
+    let damageTaken = statusDamage + weatherDamage;
+    return damageTaken >= currentHP;
 }
 
 // should AI recover function
@@ -449,8 +583,8 @@ function calculateHighestDamage(moves: any[]): KVP[] {
        let i = 0;
        for (const key of keys) {
           if (moves[i].move.category === "Status" || 
-            isNamed(moves[i].move.name, "Explosion", "Final Gambit", "Rollout") ||
-            isNamed(moves[i].move.name, "Relic Song", "Meteor Beam", "Future Sight") ||
+            isNamed(moves[i].move.name, "Explosion", "Final Gambit", "Rollout", "Misty Explosion",
+            "Relic Song", "Meteor Beam", "Future Sight") ||
             isTrapping(moves[i].move))
             {
                 i++;
@@ -495,7 +629,7 @@ function calculateHighestDamage(moves: any[]): KVP[] {
 
                // skip these moves entirely
                if (moves[i].move.category === "Status" ||
-                isNamed(moves[i].move.name, "Explosion", "Final Gambit", "Rollout"))
+                isNamed(moves[i].move.name, "Explosion", "Final Gambit", "Rollout", "Misty Explosion"))
                 {
                     keyString += `${moveName}:0`;
                     i++;
@@ -623,12 +757,12 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
 
             // handle triple axel and update damage numbers
             if (move.move.name == "Triple Axel" && Array.isArray(move.damage)) {
-                move.damage = getTripleAxelDamage(move.damage);
+                move.damage = getTripleAxelDamage(move);
             }
         });
     }
 
-    // console.log(moves); // DEBUG
+    //console.log(moves); // DEBUG
     
     let damagingMoveDist = calculateHighestDamage(moves);
 
@@ -660,6 +794,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
     const aiTwoHitKOd = playerHighestRoll * 2 >= moves[0].attacker.originalCurHP;
     const aiThreeHitKOd = playerHighestRoll * 3 >= moves[0].attacker.originalCurHP;
     const playerHasStatusCond = playerMon.status != "";
+    const aiStatusCond = moves[0].attacker.status ?? "";
     const playerTypes: string[] = playerMon.types;
     const playerAbility = moves[0].defender.moves[0].ability; // ugly but works
     const aiAbility = moves[0].move.ability;
@@ -701,6 +836,12 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
     const encoreIncentive = aiOptions["encoreAiOpt"];
     const playerFirstTurnOut = aiOptions["playerFirstTurnOutAiOpt"]; // or encored
     const aiMagnetRisen = aiOptions["magnetRiseAiOpt"];
+
+    // protect yayyy
+    const protectIncentive = aiOptions["protectIncentiveAiOpt"];
+    const protectDisincentive = aiOptions["protectDisincentiveAiOpt"];
+    const aiProtectLastTurn = aiOptions["protectLastAiOpt"];
+    const aiProtectLastTwoTurns = aiOptions["protectLastTwoAiOpt"];
 
     // debug logging
     const debugLogging = aiOptions["enableDebugLogging"];
@@ -1052,7 +1193,62 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                 })
             }
 
-            // Protect, King's Shield, Spiky Shield
+            // Protect, King's Shield, Spiky Shield, Baneful Bunker
+            if (moveName == "Protect" || moveName == "King's Shield" ||
+                moveName == "Spiky Shield" || moveName == "Baneful Bunker" ||
+                moveName == "Detect") {
+                const aiDeadToSecondaryDamage = getAiDeadToSecondaryDamage(moves[0]);
+                if (aiProtectLastTwoTurns || aiDeadToSecondaryDamage) {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: -20,
+                        rate: 1
+                    });
+                } else {
+                    let protectScore = 6;
+                    let playerBurnedOrPoisoned = false;
+                    let aiBurnedOrPoisoned = false;
+
+                    if (aiStatusCond == "brn" || 
+                        aiStatusCond == "psn" ||
+                        aiStatusCond == "tox") {
+                        aiBurnedOrPoisoned = true;
+                    }
+
+                    if (playerMon.status == "brn" || 
+                        playerMon.status == "psn" ||
+                        playerMon.status == "tox") {
+                        playerBurnedOrPoisoned = true;
+                    }
+
+                    if (protectDisincentive || aiBurnedOrPoisoned) {
+                        protectScore -= 2;
+                    }
+
+                    if (protectIncentive || playerBurnedOrPoisoned) {
+                        protectScore++;
+                    }
+
+                    // TODO: doubles update
+                    if (firstTurnOut) {
+                        protectScore--;
+                    }
+
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: protectScore,
+                        rate: 1
+                    });
+
+                    if (aiProtectLastTurn) {
+                        moveStringsToAdd.push({
+                            move: moveName,
+                            score: -20,
+                            rate: 0.5
+                        });
+                    }
+                }
+            }
 
             // Fling, Role Play, doubles weakness policy, magnitude, eq is just for doubles, so leave it for now
 
@@ -1567,32 +1763,70 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                 }
             }
 
+            // variables to handle setup moves
+            let isOffensiveSetup = false;
+            let isDefensiveSetup = false;
+            let isContrary = aiAbility == "Contrary";
+            let actAsBulkUp = false;
+
             // General Setup
-            if (isNamed(moveName, "Power-up Punch", "Swords Dance", "Howl",
+            if (isNamed(moveName, "Power-Up Punch", "Swords Dance", "Howl",
                 "Stuff Cheeks", "Barrier", "Acid Armor", "Iron Defense", "Cotton Guard",
                 "Charge Beam", "Tail Glow", "Nasty Plot", "Cosmic Power",
                 "Bulk Up", "Calm Mind", "Dragon Dance", "Coil", "Hone Claws", "Quiver Dance",
                 "Shift Gear", "Shell Smash", "Growth", "Work Up", "Curse", "No Retreat")) {
                 if (aiDeadToPlayer || 
-                    ((moveName != "Power-up Punch" && moveName != "Swords Dance" && moveName != "Howl") &&
-                    playerAbility == "Unaware")) { 
-                        moveStringsToAdd.push({
-                            move: moveName,
-                            score: -20,
-                            rate: 1
-                        });
-                    }
+                    ((moveName != "Power-Up Punch" && moveName != "Swords Dance" && moveName != "Howl") &&
+                    playerAbility == "Unaware")) {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: -40,
+                        rate: 1
+                    });
+                }
+            }
+
+            // Contrary edge cases
+            if (isContrary && moveScore == 0) {
+                if (isNamed(moveName, "Overheat", "Leaf Storm")) {
+                    isOffensiveSetup = true;
+                } else if (moveName == "Superpower") {
+                    actAsBulkUp = true;
+                }
             }
 
             // Coil, Bulk Up, Calm Mind, Quiver Dance, Non-Ghost Curse
             // (above Offensive and Defensive so we can decide where to send it)
-            // TODO: requires status move designation
+            if (isNamed(moveName, "Coil", "Bulk Up", "Quiver Dance", "No Retreat", "Calm Mind") ||
+                moveName == "Curse" && !moves[0].attacker.types.includes("Ghost") ||
+                actAsBulkUp)
+            {
+                // physical
+                // (just leaving curse because we did the ghost type check earlier)
+                if (isNamed(moveName, "Coil", "Bulk Up", "No Retreat", "Curse") || actAsBulkUp) {
+                    if (playerMoves.some(x => x.move.category == "Physical" && !getMoveIsStatus(x.move.name, x.move.bp)) &&
+                        !playerMoves.some(x => x.move.category == "Special" && !getMoveIsStatus(x.move.name, x.move.bp))) {
+                        console.log("is defensive setup");
+                        isDefensiveSetup = true;
+                    } else {
+                        console.log("is offensive setup");
+                        isOffensiveSetup = true;
+                    }
+                } else { // special
+                    if (playerMoves.some(x => x.move.category == "Special" && !getMoveIsStatus(x.move.name, x.move.bp)) &&
+                        !playerMoves.some(x => x.move.category == "Physical" && !getMoveIsStatus(x.move.name, x.move.bp))) {
+                        console.log("is defensive setup");
+                        isDefensiveSetup = true;
+                    } else {
+                        console.log("is offensive setup");
+                        isOffensiveSetup = true;
+                    }
+                }
+            }
 
             // Offensive Setup
-            // TODO: funnel some moves to this sometimes
-            // i.e. Coil, Bulk Up, Calm Mind, Quiver Dance, Curse (non ghost type)
             if (isNamed(moveName, "Dragon Dance", "Shift Gear", "Swords Dance", "Howl",
-                "Sharpen", "Meditate", "Hone Claws")) {
+                "Sharpen", "Meditate", "Hone Claws") || isOffensiveSetup) {
                 let offensiveScore = 6;
 
                 if (playerIncapacitated) { 
@@ -1604,7 +1838,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                     if (aiFaster) { offensiveScore++; }
                 } */
 
-                if (!aiFaster && aiTwoHitKOd) {
+                if ((!aiFaster && aiTwoHitKOd) && !isContrary) {
                     offensiveScore -= 5;
                 }
 
@@ -1622,17 +1856,13 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             }
 
             // Defensive Setup
-            // TODO: funnel some moves to this sometimes
-            // i.e. Coil, Bulk Up, Calm Mind, Quiver Dance, Curse (non ghost type)
-            // Coil, Bulk Up, Calm Mind, Quiver Dance, Curse (falls under setups above, see doc)
-            // (moveName == "Curse" && !moves[0].attacker.types.includes("Ghost"))
             if (isNamed(moveName, "Acid Armor", "Barrier", "Cotton Guard", "Harden", "Iron Defense",
-                "Stockpile", "Cosmic Power")) {
+                "Stockpile", "Cosmic Power") || isDefensiveSetup) {
                 // this may need updating this is off my memory
                 const boostsDefAndSpDef = isNamed(moveName, "Stockpile", "Cosmic Power");
                 
                 let initialDefensiveScore = 6;
-                if (!aiFaster && aiTwoHitKOd) {
+                if ((!aiFaster && aiTwoHitKOd) && !isContrary) {
                     initialDefensiveScore -= 5;
                 }
 
@@ -1711,11 +1941,14 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
 
                 if (playerIncapacitated) { score += 3; }
 
+                const aiDeadAfterShellSmash = getAIDeadAfterShellSmash(damageResults, playerHighestRoll);
+
                 // if player cannot KO AI if Shell Smash is used this turn +2
-
-                // if player mon can KO AI mon if Shell Smash is used this turn -2
-
-                // TODO: these checks take white herb into account and will need to call the calc itself to reroll that info
+                if (!aiDeadAfterShellSmash) {
+                    score += 2;
+                } else { // if player mon can KO AI mon if Shell Smash is used this turn -2
+                    score -= 2;
+                }
 
                 if (moves[0].attacker.boosts.atk >= 1 || moves[0].attacker.boosts.spatk >= 6) {
                     score -= 20;
@@ -1798,8 +2031,6 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                     rate: 1
                 });
             }
-
-            // Contrary edge cases
 
             // Meteor Beam
             // +9 if holding Power Herb, -20 otherwise
