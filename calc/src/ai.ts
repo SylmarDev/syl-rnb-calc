@@ -34,7 +34,7 @@ const zeroBPButNotStatus: string[] = ["(No Move)", "Electro Ball", "Metal Burst"
      "Seismic Toss", "Punishment", "Flail", "Reversal", "Gyro Ball", "Magnitude", "Heat Crash",
       "Heavy Slam", "Present", "Natural Gift", "Beat Up", "Fissure", "Guillotine", "Horn Drill", "Super Fang",
       "Low Kick", "Sheer Cold", "Final Gambit", "Mirror Coat", "Nature's Madness", "Psywave", "Night Shade", "Dragon Rage",
-      "Sonic Boom", "Spit Up", "Trump Card", "Grass Knot", "Wring Out"];
+      "Sonic Boom", "Spit Up", "Trump Card", "Grass Knot", "Wring Out", "Nature Power"];
 const soundMoves: string[] = ["Boomburst", "Bug Buzz", "Chatter",
         "Clanging Scales", "Clangorous Soul", "Clangorous Soulblaze",
        "Confide", "Disarming Voice", "Echoed Voice", "Eerie Spell",
@@ -1806,19 +1806,19 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                 if (isNamed(moveName, "Coil", "Bulk Up", "No Retreat", "Curse") || actAsBulkUp) {
                     if (playerMoves.some(x => x.move.category == "Physical" && !getMoveIsStatus(x.move.name, x.move.bp)) &&
                         !playerMoves.some(x => x.move.category == "Special" && !getMoveIsStatus(x.move.name, x.move.bp))) {
-                        console.log("is defensive setup");
+                        // console.log("is defensive setup"); // DEBUG
                         isDefensiveSetup = true;
                     } else {
-                        console.log("is offensive setup");
+                        // console.log("is offensive setup"); // DEBUG
                         isOffensiveSetup = true;
                     }
                 } else { // special
                     if (playerMoves.some(x => x.move.category == "Special" && !getMoveIsStatus(x.move.name, x.move.bp)) &&
                         !playerMoves.some(x => x.move.category == "Physical" && !getMoveIsStatus(x.move.name, x.move.bp))) {
-                        console.log("is defensive setup");
+                        // console.log("is defensive setup"); // DEBUG
                         isDefensiveSetup = true;
                     } else {
-                        console.log("is offensive setup");
+                        // console.log("is offensive setup"); // DEBUG
                         isOffensiveSetup = true;
                     }
                 }
