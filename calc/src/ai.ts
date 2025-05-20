@@ -44,6 +44,16 @@ const soundMoves: string[] = ["Boomburst", "Bug Buzz", "Chatter",
        "Perish Song", "Psychic Noise", "Relic Song", "Roar",
        "Round", "Screech", "Sing", "Snarl", "Snore", "Sparkling Aria",
        "Supersonic","Uproar"];
+const offensiveSetup: string[] = [
+    "Dragon Dance", "Shift Gear", "Swords Dance", "Howl",
+    "Sharpen", "Meditate", "Hone Claws", "Charge Beam", "Power-Up Punch",
+    "Swords Dance", "Howl", "Tail Glow", "Nasty Plot", "Dragon Dance", "Hone Claws",
+    "Growth", "Work Up"
+];
+const defensiveSetup: string[] = [
+    "Acid Armor", "Barrier", "Cotton Guard", "Harden", "Iron Defense",
+    "Stockpile", "Cosmic Power"
+];
 
 // move functions
 function isNamed(moveName: string, ...names: string[]) {
@@ -1788,12 +1798,22 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             }
 
             // Contrary edge cases
-            if (isContrary && moveScore == 0) {
-                if (isNamed(moveName, "Overheat", "Leaf Storm")) {
-                    isOffensiveSetup = true;
-                } else if (moveName == "Superpower") {
-                    actAsBulkUp = true;
+            if (moveScore == 0 && isContrary) {
+                if (isContrary) {
+                    if (isNamed(moveName, "Overheat", "Leaf Storm")) {
+                        isOffensiveSetup = true;
+                    } else if (moveName == "Superpower") {
+                        actAsBulkUp = true;
+                    }
                 }
+            } else if (moveScore == 0) {
+                // all others that aren't contrary
+                if (isNamed(moveName, ...offensiveSetup)) {
+                    isOffensiveSetup = true;
+                } else if (isNamed(moveName, ...defensiveSetup)) {
+                    isDefensiveSetup = true;
+                }
+                // this else-if is not nessesary, but it will help me sleep better
             }
 
             // Coil, Bulk Up, Calm Mind, Quiver Dance, Non-Ghost Curse
@@ -1826,8 +1846,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             }
 
             // Offensive Setup
-            if (isNamed(moveName, "Dragon Dance", "Shift Gear", "Swords Dance", "Howl",
-                "Sharpen", "Meditate", "Hone Claws") || isOffensiveSetup) {
+            if (isOffensiveSetup) {
                 let offensiveScore = 6;
 
                 if (playerIncapacitated) { 
@@ -1857,8 +1876,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             }
 
             // Defensive Setup
-            if (isNamed(moveName, "Acid Armor", "Barrier", "Cotton Guard", "Harden", "Iron Defense",
-                "Stockpile", "Cosmic Power") || isDefensiveSetup) {
+            if (isDefensiveSetup) {
                 // this may need updating this is off my memory
                 const boostsDefAndSpDef = isNamed(moveName, "Stockpile", "Cosmic Power");
                 
