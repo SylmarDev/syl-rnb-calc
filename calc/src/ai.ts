@@ -585,7 +585,7 @@ function calculateHighestDamage(moves: any[]): KVP[] {
        for (const key of keys) {
           if (moves[i].move.category === "Status" || 
             isNamed(moves[i].move.name, "Explosion", "Final Gambit", "Rollout", "Misty Explosion",
-            "Relic Song", "Meteor Beam", "Future Sight") ||
+            "Self-Destruct", "Relic Song", "Meteor Beam", "Future Sight") ||
             isTrapping(moves[i].move))
             {
                 i++;
@@ -630,7 +630,7 @@ function calculateHighestDamage(moves: any[]): KVP[] {
 
                // skip these moves entirely
                if (moves[i].move.category === "Status" ||
-                isNamed(moves[i].move.name, "Explosion", "Final Gambit", "Rollout", "Misty Explosion"))
+                isNamed(moves[i].move.name, "Explosion", "Final Gambit", "Rollout", "Misty Explosion", "Self-Destruct"))
                 {
                     keyString += `${moveName}:0`;
                     i++;
@@ -1493,7 +1493,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             }
 
             // Explosion, Self Destruct, Misty Explosion
-            if (moveName == "Explosion" || moveName == "Self Destruct" || moveName == "Misty Explosion") {
+            if (moveName == "Explosion" || moveName == "Self-Destruct" || moveName == "Misty Explosion") {
                 const boomUseless = !anyValidDamageRolls || (aiLastMonOut && !playerLastMonOut);
                 const aiHealthPercentage = Math.trunc((moves[0].attacker.originalCurHP / moves[0].attacker.stats.hp) * 100);
 
