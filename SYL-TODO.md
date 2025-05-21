@@ -36,6 +36,9 @@ In general
 - Someday make a test suite to verify this all works
 - On Highest Damage calcs, ties go to the higher ranked move based on the order of moves
 - Finish off special move cases
+  - Setup
+    - Offensive setup (Power Up Punch, Charge Beam) is highest damage if it's highest damage, otherwise is treated as setup
+  - Tiebreaks go to the higher rated move
   - Sun based recovery
   - Flame Charge (no, there's no docs or consensus on the score, but they can click it sometimes when its slower. I'd assume similar AI for speed control)
 - Clean up TODO's

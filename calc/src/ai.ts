@@ -44,6 +44,16 @@ const soundMoves: string[] = ["Boomburst", "Bug Buzz", "Chatter",
        "Perish Song", "Psychic Noise", "Relic Song", "Roar",
        "Round", "Screech", "Sing", "Snarl", "Snore", "Sparkling Aria",
        "Supersonic","Uproar"];
+const offensiveSetup: string[] = [
+    "Dragon Dance", "Shift Gear", "Swords Dance", "Howl",
+    "Sharpen", "Meditate", "Hone Claws", "Charge Beam", "Power-Up Punch",
+    "Swords Dance", "Howl", "Tail Glow", "Nasty Plot", "Dragon Dance", "Hone Claws",
+    "Growth", "Work Up"
+];
+const defensiveSetup: string[] = [
+    "Acid Armor", "Barrier", "Cotton Guard", "Harden", "Iron Defense",
+    "Stockpile", "Cosmic Power"
+];
 
 // move functions
 function isNamed(moveName: string, ...names: string[]) {
@@ -276,32 +286,64 @@ function addOrUpdateProbability(probabilities: KVP[], newKey: string, value: num
     }
 }
 
-function updateProbabilityWithVariance(probabilities: KVP[], key: string, prob: number, factor: number, replacement: string[]) {
-    const newProb = prob * factor;
+function processHighestDamage(key: string, prob: number, probabilities: KVP[]) {
+    const hdIndex = key.indexOf("HD+");
 
-    while (key.includes(`${replacement[0]}+`)) {
-        key = key.replace(`${replacement[0]}+`, `${replacement[1]}+`);
+    if (hdIndex === -1) {
+        addOrUpdateProbability(probabilities, key, prob);
+        return;
+    }
+
+    const sixKey = key.slice(0, hdIndex) + "6+" + key.slice(hdIndex + 3);
+    processHighestDamage(sixKey, prob * 0.8, probabilities);
+
+    const eightKey = key.slice(0, hdIndex) + "8+" + key.slice(hdIndex + 3);
+    processHighestDamage(eightKey, prob * 0.2, probabilities);
+}
+
+// handle Highest Damage
+function updateProbabilityWithVariance(probabilities: KVP[], key: string, prob: number) {
+    // regex gets "HD+"
+    const matches = Array.from(key.matchAll(/HD\+\d+/g));
+
+    // this is just a failsafe
+    if (matches.length === 0) {
+        addOrUpdateProbability(probabilities, key, prob);
+        return;
     }
     
-    let keyChanged = false;
-    let newKeyValues = key.split("/");
-    //console.log(newKeyValues);
-    for (let i = 0; i < newKeyValues.length; i++) {
-        let newKeyValue = newKeyValues[i];
-        const score = newKeyValue.split(":")[1];
-        if (score.includes('+')) {
-            const parts = score.split('+').map(Number);
-            const sum = parts.reduce((acc, val) => acc + val, 0);
-            newKeyValues[i] = newKeyValue.split(":")[0] + ":" + sum.toString();
-            keyChanged = true;
+    const combinations: KVP[] = [];
+
+    processHighestDamage(key, 1, combinations);
+
+    // DEBUG
+    //console.log(`Sum of Combinations: ${combinations.reduce((acc, item) =>acc + item.value, 0)}`);
+    //console.log(combinations);
+
+    for (const combination of combinations) {
+        let newKey = combination.key;
+        const combinationFactor = combination.value;
+
+        // add totals
+        let keyChanged = false;
+        let newKeyValues = newKey.split("/");
+        for (let i = 0; i < newKeyValues.length; i++) {
+            let newKeyValue = newKeyValues[i];
+            const score = newKeyValue.split(":")[1];
+            if (score.includes('+')) {
+                const parts = score.split('+').map(Number);
+                const sum = parts.reduce((acc, val) => acc + val, 0);
+                newKeyValues[i] = newKeyValue.split(":")[0] + ":" + sum.toString();
+                keyChanged = true;
+            }
         }
-    }
 
-    if (keyChanged) {
-        key = newKeyValues.join("/");
-    }
+        if (keyChanged) {
+            newKey = newKeyValues.join("/");
+        }
 
-    addOrUpdateProbability(probabilities, key, newProb);
+        addOrUpdateProbability(probabilities, newKey, prob * combinationFactor);
+    }
 }
 
 // returns bool based on if this damagingKVP sees a kill
@@ -555,7 +597,6 @@ function calculateHighestDamage(moves: any[]): KVP[] {
 
     // But ^^^ is how you would change a moves damage if you artificially needed to set it to 0.
     // TODO: consider using above code to turn off crits except for cases where Crit should be turned on
-    // And for calculating the new damage values of multi hit moves (i.e Pin Missile)
 
     // console.log(moves); // DEBUG
 
@@ -585,7 +626,7 @@ function calculateHighestDamage(moves: any[]): KVP[] {
        for (const key of keys) {
           if (moves[i].move.category === "Status" || 
             isNamed(moves[i].move.name, "Explosion", "Final Gambit", "Rollout", "Misty Explosion",
-            "Relic Song", "Meteor Beam", "Future Sight") ||
+            "Self-Destruct", "Relic Song", "Meteor Beam", "Future Sight") ||
             isTrapping(moves[i].move))
             {
                 i++;
@@ -614,7 +655,7 @@ function calculateHighestDamage(moves: any[]): KVP[] {
            
            // if damaging move kills
            if (key >= p1CurrentHealth) {
-               if (aiFaster || moves[i].priority > 0) {
+               if (aiFaster || moves[i].move.priority > 0) {
                    moveBonus += 6;
                } else {
                    moveBonus += 3;
@@ -630,7 +671,7 @@ function calculateHighestDamage(moves: any[]): KVP[] {
 
                // skip these moves entirely
                if (moves[i].move.category === "Status" ||
-                isNamed(moves[i].move.name, "Explosion", "Final Gambit", "Rollout", "Misty Explosion"))
+                isNamed(moves[i].move.name, "Explosion", "Final Gambit", "Rollout", "Misty Explosion", "Self-Destruct"))
                 {
                     keyString += `${moveName}:0`;
                     i++;
@@ -662,7 +703,7 @@ function calculateHighestDamage(moves: any[]): KVP[] {
         keyStrings = setKeyStrings(keyString, ["HD"]);
 
         for (const keyString of keyStrings) {
-            //console.log(keyStrings); // Debug
+            // console.log(keyStrings); // Debug
             const probabilityToAdd = probabilityOfChoice / keyStrings.length;
             addOrUpdateProbability(probabilities, keyString, probabilityToAdd);
         }
@@ -673,8 +714,7 @@ function calculateHighestDamage(moves: any[]): KVP[] {
     
     for (const probability of probabilities) {
         if (probability.key.includes("HD")) {
-            updateProbabilityWithVariance(probabilitiesWithVariance, probability.key, probability.value, 0.8, ["HD", "6"]);
-            updateProbabilityWithVariance(probabilitiesWithVariance, probability.key, probability.value, 0.2, ["HD", "8"]);
+            updateProbabilityWithVariance(probabilitiesWithVariance, probability.key, probability.value);
         } else {
             addOrUpdateProbability(probabilitiesWithVariance, probability.key, probability.value);
         }
@@ -1493,7 +1533,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             }
 
             // Explosion, Self Destruct, Misty Explosion
-            if (moveName == "Explosion" || moveName == "Self Destruct" || moveName == "Misty Explosion") {
+            if (moveName == "Explosion" || moveName == "Self-Destruct" || moveName == "Misty Explosion") {
                 const boomUseless = !anyValidDamageRolls || (aiLastMonOut && !playerLastMonOut);
                 const aiHealthPercentage = Math.trunc((moves[0].attacker.originalCurHP / moves[0].attacker.stats.hp) * 100);
 
@@ -1788,12 +1828,22 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             }
 
             // Contrary edge cases
-            if (isContrary && moveScore == 0) {
-                if (isNamed(moveName, "Overheat", "Leaf Storm")) {
-                    isOffensiveSetup = true;
-                } else if (moveName == "Superpower") {
-                    actAsBulkUp = true;
+            if (moveScore == 0 && isContrary) {
+                if (isContrary) {
+                    if (isNamed(moveName, "Overheat", "Leaf Storm")) {
+                        isOffensiveSetup = true;
+                    } else if (moveName == "Superpower") {
+                        actAsBulkUp = true;
+                    }
                 }
+            } else if (moveScore == 0) {
+                // all others that aren't contrary
+                if (isNamed(moveName, ...offensiveSetup)) {
+                    isOffensiveSetup = true;
+                } else if (isNamed(moveName, ...defensiveSetup)) {
+                    isDefensiveSetup = true;
+                }
+                // this else-if is not nessesary, but it will help me sleep better
             }
 
             // Coil, Bulk Up, Calm Mind, Quiver Dance, Non-Ghost Curse
@@ -1826,8 +1876,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             }
 
             // Offensive Setup
-            if (isNamed(moveName, "Dragon Dance", "Shift Gear", "Swords Dance", "Howl",
-                "Sharpen", "Meditate", "Hone Claws") || isOffensiveSetup) {
+            if (isOffensiveSetup) {
                 let offensiveScore = 6;
 
                 if (playerIncapacitated) { 
@@ -1857,8 +1906,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             }
 
             // Defensive Setup
-            if (isNamed(moveName, "Acid Armor", "Barrier", "Cotton Guard", "Harden", "Iron Defense",
-                "Stockpile", "Cosmic Power") || isDefensiveSetup) {
+            if (isDefensiveSetup) {
                 // this may need updating this is off my memory
                 const boostsDefAndSpDef = isNamed(moveName, "Stockpile", "Cosmic Power");
                 
