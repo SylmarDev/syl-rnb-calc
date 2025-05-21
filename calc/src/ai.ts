@@ -547,7 +547,7 @@ function calculateHighestDamage(moves: any[]): KVP[] {
     // TODO: multi-hit moves (i.e. Pin Missile) need their damage calculations updated
     let p1CurrentHealth = moves[0].defender.curHP();
 
-    // console.log(moves); // DEBUG
+    console.log(moves); // DEBUG
     
     // Damaging Trapping Moves should always come back as -1 damage
     // TODO: use this for later if you need to iterate on other things, but for now this isn't nessesary
@@ -565,7 +565,6 @@ function calculateHighestDamage(moves: any[]): KVP[] {
 
     // But ^^^ is how you would change a moves damage if you artificially needed to set it to 0.
     // TODO: consider using above code to turn off crits except for cases where Crit should be turned on
-    // And for calculating the new damage values of multi hit moves (i.e Pin Missile)
 
     // console.log(moves); // DEBUG
 
@@ -624,7 +623,7 @@ function calculateHighestDamage(moves: any[]): KVP[] {
            
            // if damaging move kills
            if (key >= p1CurrentHealth) {
-               if (aiFaster || moves[i].priority > 0) {
+               if (aiFaster || moves[i].move.priority > 0) {
                    moveBonus += 6;
                } else {
                    moveBonus += 3;
@@ -672,7 +671,7 @@ function calculateHighestDamage(moves: any[]): KVP[] {
         keyStrings = setKeyStrings(keyString, ["HD"]);
 
         for (const keyString of keyStrings) {
-            //console.log(keyStrings); // Debug
+            console.log(keyStrings); // Debug
             const probabilityToAdd = probabilityOfChoice / keyStrings.length;
             addOrUpdateProbability(probabilities, keyString, probabilityToAdd);
         }
