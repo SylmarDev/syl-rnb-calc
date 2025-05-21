@@ -286,32 +286,67 @@ function addOrUpdateProbability(probabilities: KVP[], newKey: string, value: num
     }
 }
 
-function updateProbabilityWithVariance(probabilities: KVP[], key: string, prob: number, factor: number, replacement: string[]) {
-    const newProb = prob * factor;
+// handle Highest Damage
+function updateProbabilityWithVariance(probabilities: KVP[], key: string, prob: number) {
+    // regex gets "HD+"
+    const matches = Array.from(key.matchAll(/HD\+\d+/g));
 
-    while (key.includes(`${replacement[0]}+`)) {
-        key = key.replace(`${replacement[0]}+`, `${replacement[1]}+`);
+    // this is just a failsafe
+    if (matches.length === 0) {
+        addOrUpdateProbability(probabilities, key, prob);
+        return;
     }
     
-    let keyChanged = false;
-    let newKeyValues = key.split("/");
-    //console.log(newKeyValues);
-    for (let i = 0; i < newKeyValues.length; i++) {
-        let newKeyValue = newKeyValues[i];
-        const score = newKeyValue.split(":")[1];
-        if (score.includes('+')) {
-            const parts = score.split('+').map(Number);
-            const sum = parts.reduce((acc, val) => acc + val, 0);
-            newKeyValues[i] = newKeyValue.split(":")[0] + ":" + sum.toString();
-            keyChanged = true;
+    const combinations: { key: string, factor: number }[] = [];
+
+    // generate binary combinations of all choices for each "HD+"
+    const total = 1 << matches.length; // 2^n combinations
+
+    for (let i = 0; i < total; i++) {
+        let modifiedKey = key;
+        let factor = prob;
+        let offset = 0;
+
+        for (let j = 0; j < matches.length; j++) {
+            // 0 is 6+, 1 is 8+ 
+            // we love bit shifts
+            const choice = (i >> j) & 1; // 0 or 1
+            const replacement = choice === 0 ? "6+" : "8+";
+            factor *= choice === 0 ? 0.8 : 0.2;
+
+            // Replace ONLY the jth occurrence of "HD+"
+            const index = modifiedKey.indexOf("HD+", offset);
+            modifiedKey = modifiedKey.substring(0, index) + replacement + modifiedKey.substring(index + 3);
+            offset = index + replacement.length;
         }
+
+        combinations.push({ key: modifiedKey, factor });
     }
 
-    if (keyChanged) {
-        key = newKeyValues.join("/");
-    }
+    for (const combination of combinations) {
+        let newKey = combination.key;
+        const combinationFactor = combination.factor;
 
-    addOrUpdateProbability(probabilities, key, newProb);
+        // add totals
+        let keyChanged = false;
+        let newKeyValues = newKey.split("/");
+        for (let i = 0; i < newKeyValues.length; i++) {
+            let newKeyValue = newKeyValues[i];
+            const score = newKeyValue.split(":")[1];
+            if (score.includes('+')) {
+                const parts = score.split('+').map(Number);
+                const sum = parts.reduce((acc, val) => acc + val, 0);
+                newKeyValues[i] = newKeyValue.split(":")[0] + ":" + sum.toString();
+                keyChanged = true;
+            }
+        }
+
+        if (keyChanged) {
+            newKey = newKeyValues.join("/");
+        }
+
+        addOrUpdateProbability(probabilities, newKey, prob * combinationFactor);
+    }
 }
 
 // returns bool based on if this damagingKVP sees a kill
@@ -547,7 +582,7 @@ function calculateHighestDamage(moves: any[]): KVP[] {
     // TODO: multi-hit moves (i.e. Pin Missile) need their damage calculations updated
     let p1CurrentHealth = moves[0].defender.curHP();
 
-    console.log(moves); // DEBUG
+    // console.log(moves); // DEBUG
     
     // Damaging Trapping Moves should always come back as -1 damage
     // TODO: use this for later if you need to iterate on other things, but for now this isn't nessesary
@@ -671,7 +706,7 @@ function calculateHighestDamage(moves: any[]): KVP[] {
         keyStrings = setKeyStrings(keyString, ["HD"]);
 
         for (const keyString of keyStrings) {
-            console.log(keyStrings); // Debug
+            // console.log(keyStrings); // Debug
             const probabilityToAdd = probabilityOfChoice / keyStrings.length;
             addOrUpdateProbability(probabilities, keyString, probabilityToAdd);
         }
@@ -682,8 +717,7 @@ function calculateHighestDamage(moves: any[]): KVP[] {
     
     for (const probability of probabilities) {
         if (probability.key.includes("HD")) {
-            updateProbabilityWithVariance(probabilitiesWithVariance, probability.key, probability.value, 0.8, ["HD", "6"]);
-            updateProbabilityWithVariance(probabilitiesWithVariance, probability.key, probability.value, 0.2, ["HD", "8"]);
+            updateProbabilityWithVariance(probabilitiesWithVariance, probability.key, probability.value);
         } else {
             addOrUpdateProbability(probabilitiesWithVariance, probability.key, probability.value);
         }
