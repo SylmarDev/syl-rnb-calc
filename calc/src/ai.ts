@@ -286,6 +286,21 @@ function addOrUpdateProbability(probabilities: KVP[], newKey: string, value: num
     }
 }
 
+function processHighestDamage(key: string, prob: number, probabilities: KVP[]) {
+    const hdIndex = key.indexOf("HD+");
+
+    if (hdIndex === -1) {
+        addOrUpdateProbability(probabilities, key, prob);
+        return;
+    }
+
+    const sixKey = key.slice(0, hdIndex) + "6+" + key.slice(hdIndex + 3);
+    processHighestDamage(sixKey, prob * 0.8, probabilities);
+
+    const eightKey = key.slice(0, hdIndex) + "8+" + key.slice(hdIndex + 3);
+    processHighestDamage(eightKey, prob * 0.2, probabilities);
+}
+
 // handle Highest Damage
 function updateProbabilityWithVariance(probabilities: KVP[], key: string, prob: number) {
     // regex gets "HD+"
@@ -297,35 +312,17 @@ function updateProbabilityWithVariance(probabilities: KVP[], key: string, prob: 
         return;
     }
     
-    const combinations: { key: string, factor: number }[] = [];
+    const combinations: KVP[] = [];
 
-    // generate binary combinations of all choices for each "HD+"
-    const total = 1 << matches.length; // 2^n combinations
+    processHighestDamage(key, 1, combinations);
 
-    for (let i = 0; i < total; i++) {
-        let modifiedKey = key;
-        let factor = prob;
-        let offset = 0;
-
-        for (let j = 0; j < matches.length; j++) {
-            // 0 is 6+, 1 is 8+ 
-            // we love bit shifts
-            const choice = (i >> j) & 1; // 0 or 1
-            const replacement = choice === 0 ? "6+" : "8+";
-            factor *= choice === 0 ? 0.8 : 0.2;
-
-            // Replace ONLY the jth occurrence of "HD+"
-            const index = modifiedKey.indexOf("HD+", offset);
-            modifiedKey = modifiedKey.substring(0, index) + replacement + modifiedKey.substring(index + 3);
-            offset = index + replacement.length;
-        }
-
-        combinations.push({ key: modifiedKey, factor });
-    }
+    // DEBUG
+    //console.log(`Sum of Combinations: ${combinations.reduce((acc, item) =>acc + item.value, 0)}`);
+    //console.log(combinations);
 
     for (const combination of combinations) {
         let newKey = combination.key;
-        const combinationFactor = combination.factor;
+        const combinationFactor = combination.value;
 
         // add totals
         let keyChanged = false;
