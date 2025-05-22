@@ -1729,8 +1729,8 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                 }
             }
 
-            // Yawn, Dark Void, Grasswhistle, Sing
-            if (moveName == "Yawn" || moveName == "Dark Void" || moveName == "Grasswhistle" || moveName == "Sing" || moveName == "Hypnosis") {
+            // Yawn, Dark Void, Grass Whistle, Sing
+            if (moveName == "Yawn" || moveName == "Dark Void" || moveName == "Grass Whistle" || moveName == "Sing" || moveName == "Hypnosis") {
                 const sleepPreventingAbility = playerAbility == "Insomnia" || playerAbility == "Vital Spirit" || playerAbility == "Sweet Veil";
                 if (sleepPreventingAbility || playerHasStatusCond || terrain == "Electric" || terrain == "Misty") { 
                     moveStringsToAdd.push({
@@ -2347,6 +2347,17 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                         });
                     }
                 }
+            }
+
+            // ad hoc stuff that comes up
+            
+            // Sleep Talk
+            if (moveName == "Sleep Talk" && aiStatusCond != "slp") {
+                moveStringsToAdd.push({
+                    move: moveName,
+                    score: -40,
+                    rate: 1
+                });
             }
             // end of the hell loop
         });
