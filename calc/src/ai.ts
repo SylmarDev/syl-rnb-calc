@@ -34,7 +34,8 @@ const zeroBPButNotStatus: string[] = ["(No Move)", "Electro Ball", "Metal Burst"
      "Seismic Toss", "Punishment", "Flail", "Reversal", "Gyro Ball", "Magnitude", "Heat Crash",
       "Heavy Slam", "Present", "Natural Gift", "Beat Up", "Fissure", "Guillotine", "Horn Drill", "Super Fang",
       "Low Kick", "Sheer Cold", "Final Gambit", "Mirror Coat", "Nature's Madness", "Psywave", "Night Shade", "Dragon Rage",
-      "Sonic Boom", "Spit Up", "Trump Card", "Grass Knot", "Wring Out", "Nature Power", "Pain Split"
+      "Sonic Boom", "Spit Up", "Trump Card", "Grass Knot", "Wring Out", "Nature Power", "Pain Split",
+      "Return"
 ];
 const soundMoves: string[] = ["Boomburst", "Bug Buzz", "Chatter",
         "Clanging Scales", "Clangorous Soul", "Clangorous Soulblaze",

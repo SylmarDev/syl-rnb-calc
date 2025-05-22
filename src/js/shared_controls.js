@@ -1,3 +1,10 @@
+var zeroBPButNotStatus = ["Electro Ball", "Metal Burst", "Endeavor", "Bide",
+     "Seismic Toss", "Punishment", "Flail", "Reversal", "Gyro Ball", "Magnitude", "Heat Crash",
+      "Heavy Slam", "Present", "Natural Gift", "Beat Up", "Fissure", "Guillotine", "Horn Drill", "Super Fang",
+      "Low Kick", "Sheer Cold", "Final Gambit", "Mirror Coat", "Nature's Madness", "Psywave", "Night Shade", "Dragon Rage",
+      "Sonic Boom", "Spit Up", "Trump Card", "Grass Knot", "Wring Out", "Nature Power", "Pain Split", "Return"
+];
+
 if (!Array.prototype.indexOf) {
 	Array.prototype.indexOf = function (searchElement, fromIndex) { // eslint-disable-line no-extend-native
 		var k;
@@ -654,7 +661,7 @@ function formatMovePool(moves) {
 
 function isKnownDamagingMove(move) {
 	var m = GENERATION.moves.get(calc.toID(move));
-	return m && m.basePower;
+	return m && (m.basePower || isNamed(m.name, ...zeroBPButNotStatus));
 }
 
 function selectMovesFromRandomOptions(moves) {
