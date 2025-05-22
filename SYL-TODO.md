@@ -36,11 +36,9 @@ In general
 - Someday make a test suite to verify this all works
 - On Highest Damage calcs, ties go to the higher ranked move based on the order of moves
 - Finish off special move cases
-  - Setup
-    - Offensive setup (Power Up Punch, Charge Beam) is highest damage if it's highest damage, otherwise is treated as setup
-  - Tiebreaks go to the higher rated move
   - Sun based recovery
   - Flame Charge (no, there's no docs or consensus on the score, but they can click it sometimes when its slower. I'd assume similar AI for speed control)
+  - Sleep Talk (-20 if awake, no idea what it is if asleep. I guess I assume +6)
 - Clean up TODO's
   - Grass Whistle (and probably many similar status applying moves) still get +6 if their target is statused. Use playerHasStatusCond to filter those moves out that apply non-volatile status conditions
   - Damaging Speed Reduction and Damaging Atk/SpAtk go if score is 0, but they can get kill bonuses so that's not always true. Look into how to fix that
