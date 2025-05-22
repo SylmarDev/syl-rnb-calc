@@ -2359,6 +2359,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                     rate: 1
                 });
             }
+            
             // end of the hell loop
         });
 

@@ -3,6 +3,7 @@
 import json
 import re
 import csv
+import sys
 
 class Record:
     monName = ""
@@ -20,12 +21,15 @@ class Record:
         return [self.monName, self.trainerName, str(self.level),
                 self.move1, self.move2, self.move3, self.move4]
 
+#if __name__ != "__main__()":
+    #sys.exit()
+
 # thanks dek
 def removeTrailingCommas(json_string):
     json_string = re.sub(r',\s*([]}])', r'\1', json_string)
     return json_string
 
-with open("scripts/sets.json", "r", encoding="utf-8") as f:
+with open("scripts/data/sets.json", "r", encoding="utf-8") as f:
     json_content = f.read()
     correctedJson = removeTrailingCommas(json_content)
     data = json.loads(correctedJson)

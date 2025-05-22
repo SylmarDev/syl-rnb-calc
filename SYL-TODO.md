@@ -1,5 +1,5 @@
-5/21
-TODO:
+# TODO:
+(last updated 5/22)
 - Test The Following:
   - Future Sight
   - Stealth Rock
@@ -28,10 +28,6 @@ TODO:
   - Coil, Bulk Up, Calm Mind, Quiver Dance, non-Ghost Curse
   - Contrary
 
-STATUS NAME: 
-export type StatusName = 'slp' | 'psn' | 'brn' | 'frz' | 'par' | 'tox';
-sets are kept in gen8.js
-
 In general
 - Someday make a test suite to verify this all works
 - On Highest Damage calcs, ties go to the higher ranked move based on the order of moves
@@ -49,12 +45,27 @@ In general
   - Maybe show the crit rate of each move as a percentage next to the crit toggle, that way the button isn't as big. Take focus energy and high crit ratio moves into account
 - Add post-ko switch in order to display (this is deterministic EXCEPT for guaranteed crit cases, then it rolls for that instead of going off of max roll)
 - Add a pie chart (chart.js perhaps?) that reloads and visualizes the everything for visual learners
+- In between the two calcs show what the screen would look like
+  - will require backsprites, etc
 - Add in the survival chance calculator that I have the python program for (that'll take a while)
+- Code cleanup for maintainability
+  - remove scripts folder
+  - refactor the pushes to moveStringsToAdd all throughout ``ai.ts``, sub that for a function 
 
-Community suggestions
+## COMMUNITY SUGGESTIONS
 - Remove items button (set your box to have all items (none))
 - Toggleable button group for...
   - Sitrus berry button, burn tick button, poison tick button
 - A way to show min roll and max rolls (draw more attention to them?)
 - A way to show crit rolls along with noncrit rolls together
 - All stat boosts being horizontal and closer to the top so its easier to press
+
+
+## IMPORTANT NOTES:
+
+STATUS NAME: 
+export type StatusName = 'slp' | 'psn' | 'brn' | 'frz' | 'par' | 'tox';
+
+sets are kept in gen8.js
+
+sets in gen8.js and Trainer Battles.txt have the same move order in every case I could see. (testing this was done in scripts folder, that can safely be deleted or backed up somewhere)

@@ -3,7 +3,7 @@ Abomasnow,Winstrate Victoria,43,Wood Hammer,Ice Beam,Ice Shard,Earthquake
 Abomasnow,Bug Catcher Davis,95,Wood Hammer,Ice Shard,Earthquake,Swords Dance
 Abomasnow-Mega,Elite Four Glacia,100,Blizzard,Giga Drain,Focus Blast,Aurora Veil
 Abomasnow-Mega,Elite Four GlaciaDouble,100,Blizzard,Giga Drain,Earth Power,Aurora Veil
-Abra,Twins Gina And Mia,20,Psybeam,Dazzling Gleam
+Abra,Twins Gina And Mia,20,Psybeam,Dazzling Gleam,,
 Absol,Triathlete Alyssa,36,Knock Off,Close Combat,Play Rough,Counter
 Absol,Team Magma Grunt Magma Hideout #4,76,Night Slash,Stone Edge,Psycho Cut,Fire Blast
 Absol-Mega,Magma Admin Tabitha Mt Chimney,54,Knock Off,Psycho Cut,Fire Blast,Ice Beam
@@ -62,7 +62,7 @@ Arcanine,Swimmer♂ Reed,87,Flamethrower,Solar Beam,Scorching Sands,Roar
 Arcanine-Hisui,Team Magma Grunt Magma Hideout #1,73,Head Smash,Flare Blitz,Reversal,Howl
 Arcanine-Hisui,Cool Trainer Felix,94,Head Smash,Flare Blitz,Close Combat,Extreme Speed
 Arcanine-Hisui,Twins Miu And Yuki,96,Flare Blitz,Rock Slide,Extreme Speed,Howl
-Archen,Youngster Josh,23,Rock Slide
+Archen,Youngster Josh,23,Rock Slide,,,
 Archeops,Bird Keeper Jared,68,Stone Edge,Dual Wingbeat,Endeavor,Stealth Rock
 Archeops,Cool Trainer Tammy & Cale,70,Head Smash,Rock Slide,Dual Wingbeat,Earthquake
 Archeops,Swimmer♂ Reed,87,Meteor Beam,Air Slash,Heat Wave,Endeavor
@@ -103,11 +103,11 @@ Barbaracle,Team Aqua Grunt Weather Inst #1,60,Stone Edge,Liquidation,Aerial Ace,
 Barraskewda,Fisherman Andrew,39,Liquidation,Drill Run,Throat Chop,Ice Fang
 Barraskewda,Fisherman Kai,47,Liquidation,Flip Turn,Aqua Jet,Close Combat
 Barraskewda,Parasol Lady Koko,60,Liquidation,Flip Turn,Close Combat,Psychic Fangs
-Barraskewda,Champion Wallace,100,Liquidation,Flip Turn
+Barraskewda,Champion Wallace,100,Liquidation,Flip Turn,,
 Basculegion,Leader Juan,92,Aqua Tail,Spirit Shackle,Aqua Jet,Protect
 Basculegion,Bug Catcher Davis,95,Aqua Tail,Spirit Shackle,Head Smash,Destiny Bond
-Basculin,Fisherman Barny,59,Liquidation,Flip Turn
-Basculin,Team Aqua Grunt Mt Pyre #5 & GruntMtPyre6,73,Liquidation
+Basculin,Fisherman Barny,59,Liquidation,Flip Turn,,
+Basculin,Team Aqua Grunt Mt Pyre #5 & GruntMtPyre6,73,Liquidation,,,
 Bastiodon,Hiker Trent,54,Heavy Slam,Metal Burst,Stealth Rock,Roar
 Beartic,Cool Trainer Brooke,44,Icicle Spear,Superpower,Rock Slide,Aqua Jet
 Beartic,Fisherman Barny,59,Icicle Crash,Liquidation,Low Kick,Swords Dance
@@ -138,15 +138,15 @@ Blastoise,Swimmer♂ Rodney,89,Scald,Body Press,Iron Defense,Protect
 Blastoise,Cool Trainer Caroline,94,Scald,Earthquake,Ice Beam,Shell Smash
 Blastoise,Elite Four PhoebeDouble,99,Muddy Water,Focus Blast,Follow Me,Fake Out
 Blastoise-Mega,Aqua Admin Shelly Weather Institute,65,Surf,Dragon Pulse,Dark Pulse,Shell Smash
-Blaziken,Trainer Rival Cycling Road Blaziken,38,Overheat,Close Combat,Blaze Kick,Stone Edge
 Blaziken,Cool Trainer Randall,38,Blaze Kick,Reversal,Thunder Punch,Night Slash
+Blaziken,Trainer Rival Cycling Road Blaziken,38,Overheat,Close Combat,Blaze Kick,Stone Edge
 Blaziken,Battle Girl Danielle,55,Overheat,Close Combat,Brave Bird,Knock Off
 Blaziken,Bird Keeper Jared,68,Close Combat,Flare Blitz,Acrobatics,Swords Dance
 Blaziken,Black Belt Koichi,96,Close Combat,Blaze Kick,Knock Off,Swords Dance
 Blaziken-Mega,Trainer Rival Bridge Blaziken,66,Close Combat,Brave Bird,Thunder Punch,Swords Dance
 Blaziken-Mega,Trainer Rival Lilycove Blaziken,73,Close Combat,Flare Blitz,Knock Off,Swords Dance
 Blaziken-Mega,Cool Trainer Samuel,95,Close Combat,Flare Blitz,Stone Edge,Swords Dance
-Blipbug,Fisherman Bill,16,Struggle Bug
+Blipbug,Fisherman Bill,16,Struggle Bug,,,
 Blissey,Kindler Keegan,55,Hyper Voice,Fire Blast,Psychic,Counter
 Boldore,Hiker Marc,23,Rock Slide,Stomping Tantrum,Sand Tomb,Sandstorm
 Boltund,Breeder Corgi,27,Thunder Fang,Psychic Fangs,Crunch,Howl
@@ -164,7 +164,7 @@ Breloom,Team Aqua Grunt Weather Inst #1,60,Mach Punch,Bullet Seed,Rock Tomb,Spor
 Breloom,Breeder Gabrielle,74,Force Palm,Mach Punch,Bullet Seed,Swords Dance
 Breloom,Cool Trainer Specter,94,Close Combat,Mach Punch,Bullet Seed,Rock Tomb
 Breloom,Expert Timothy,96,Mach Punch,Bullet Seed,Rock Tomb,Swords Dance
-Brionne,Lass Janice,22,Echoed Voice
+Brionne,Lass Janice,22,Echoed Voice,,,
 Bronzong,Expert Nancy,50,Gyro Ball,Explosion,Earthquake,Trick
 Bronzong,Hiker Brice,53,Future Sight,Gyro Ball,Explosion,Trick Room
 Bronzong,Psychic Kayla,73,Gyro Ball,Body Press,Payback,Iron Defense
@@ -172,13 +172,13 @@ Bronzong,Psychic Blake & Samantha,85,Heavy Slam,Body Press,Metal Sound,Trick Roo
 Bruxish,Fisherman Andrew,39,Psychic Fangs,Aqua Jet,Crunch,Poison Fang
 Bruxish,Twins Tori And Tia,45,Psychic Fangs,Liquidation,Crunch,Bulk Up
 Bruxish,Beauty Johanna,58,Aqua Tail,Psychic Fangs,Crunch,Screech
-Bruxish,Bird Keeper Aidan & Athena,89,Liquidation,Psychic Fangs,Icy Wind,Super Fang
 Bruxish,Team Aqua Grunt Seafloor Cavern #2,88,Aqua Tail,Psychic Fangs,Aqua Jet,Crunch
 Bruxish,Triathlete Chase & Allison,88,Psychic Fangs,Aqua Jet,Light Screen,Reflect
+Bruxish,Bird Keeper Aidan & Athena,89,Liquidation,Psychic Fangs,Icy Wind,Super Fang
 Bruxish,Lady Daphne,91,Liquidation,Psychic Fangs,Crunch,Swords Dance
 Buizel,Sailor Edmond,15,Water Pulse,Aqua Jet,Pursuit,Sonic Boom
-Buneary,Black Belt Takao,19,Fake Out,Jump Kick,Triple Axel
-Butterfree,Picnicker Bianca,33,Hurricane,Bug Buzz
+Buneary,Black Belt Takao,19,Fake Out,Jump Kick,Triple Axel,
+Butterfree,Picnicker Bianca,33,Hurricane,Bug Buzz,,
 Buzzwole,Magma Admin Courtney Space center,87,Leech Life,Drain Punch,Stone Edge,Ice Punch
 Cacturne,Ninja Boy Jinra,43,Seed Bomb,Payback,Focus Punch,Substitute
 Cacturne,Team Magma Grunt Magma Hideout  #12,75,Dark Pulse,Seed Bomb,Drain Punch,Growth
@@ -196,7 +196,7 @@ Carracosta,Leader Roxanne,24,Razor Shell,Ancient Power,Aqua Jet,Zen Headbutt
 Carracosta,Team Aqua Grunt Aqua Hideout #7,80,Hydro Pump,Stone Edge,Ice Beam,Stealth Rock
 Carvanha,Team Aqua Grunt Petalburg Woods,11,Bite,Water Pulse,Aqua Jet,Poison Fang
 Castform,Ninja Boy Yasu & Fabian,64,Thunder,Hurricane,Weather Ball,Icy Wind
-Caterpie,Fisherman Bill,15,Bug Bite
+Caterpie,Fisherman Bill,15,Bug Bite,,,
 Celesteela,Leader Winona,69,Heavy Slam,Earthquake,Flamethrower,Rock Slide
 Centiskorch,Winstrate Victoria,44,Fire Lash,Skitter Smack,Coil,Protect
 Centiskorch,Kindler Axle,55,Fire Lash,Leech Life,Thunder Fang,Coil
@@ -243,8 +243,8 @@ Clefable,Team Aqua Grunt Aqua Hideout #4,79,Moonblast,Stored Power,Cosmic Power,
 Clefable,Beauty Bridget,91,Blizzard,Fire Blast,Psychic,Stealth Rock
 Clefable,Cool Trainer Felix,93,Moonblast,Flamethrower,Calm Mind,Soft-Boiled
 Clefable,Old Couple John And Jay,95,Moonblast,Fire Blast,Knock Off,Follow Me
-Clefairy,Twins Gina And Mia,21,Follow Me,Helping Hand
-Clobbopus,Triathlete Mikey,9,Rock Smash,Bind,Detect
+Clefairy,Twins Gina And Mia,21,Follow Me,Helping Hand,,
+Clobbopus,Triathlete Mikey,9,Rock Smash,Bind,Detect,
 Cloyster,Ruin Maniac Rigger,44,Liquidation,Frost Breath,Weather Ball,Shell Smash
 Cloyster,Team Aqua Grunt Mt Pyre #4,74,Liquidation,Icicle Spear,Rock Blast,Shell Smash
 Cloyster,Team Aqua Grunt Seafloor Cavern #3,87,Hydro Pump,Explosion,Toxic Spikes,Shell Smash
@@ -260,13 +260,13 @@ Conkeldurr,Cool Trainer Jody,40,Close Combat,Mach Punch,Thunder Punch,Ice Punch
 Conkeldurr,Cool Trainer Gustavo,70,Drain Punch,Mach Punch,Ice Punch,Counter
 Conkeldurr,Psychic Hannah & Sylvia,85,Hammer Arm,Mach Punch,Poison Jab,Ice Punch
 Conkeldurr,Black Belt Koichi,96,Mach Punch,Ice Punch,Thunder Punch,Bulk Up
-Copperajah,Collector John,45,Heavy Slam
+Copperajah,Collector John,45,Heavy Slam,,,
 Copperajah,Swimmer♀ Tisha,87,Heavy Slam,Power Whip,Earthquake,Stealth Rock
 Copperajah,Pokéfan Bethany,90,Iron Head,Earthquake,Rock Slide,Stealth Rock
 Corsola,Youngster Tommy,24,Scald,Ancient Power,Calm Mind,Recover
 Corsola-Galar,Psychic Kayla,74,Night Shade,Strength Sap,Toxic,Will-O-Wisp
-Corviknight,Twins Amy And Liv,40,Pluck,Light Screen,Reflect,Roost
 Corviknight,Cool Trainer Alexia,39,Iron Head,Dual Wingbeat,Body Press,Bulk Up
+Corviknight,Twins Amy And Liv,40,Pluck,Light Screen,Reflect,Roost
 Corviknight,Bird Keeper Jared,68,Dual Wingbeat,Body Press,Bulk Up,Roost
 Corviknight,Team Magma Grunt Space Center #1,84,Body Press,Power Trip,Iron Defense,Agility
 Corviknight,Fisherman Roger & Koji,89,Dual Wingbeat,Body Press,Bulk Up,Roost
@@ -303,20 +303,20 @@ Darkrai,Elite Four SidneyDouble,100,Dark Pulse,Sludge Bomb,Aura Sphere,Dark Void
 Darmanitan,Kindler Keegan,52,Flare Blitz,Zen Headbutt,Rock Slide,Earthquake
 Darmanitan,Team Magma Grunt Space Center #2,86,Flare Blitz,Earthquake,Rock Slide,Reversal
 Darmanitan,Cool Trainer Michelle,94,Flare Blitz,Earthquake,Zen Headbutt,Rock Slide
-Darmanitan-Galar,Aqua Admin ShellySeafloorCavern,88,Icicle Crash,U-turn
+Darmanitan-Galar,Aqua Admin ShellySeafloorCavern,88,Icicle Crash,U-turn,,
 Decidueye,Ranger Catherine,60,Poltergeist,Leaf Blade,Sucker Punch,Swords Dance
 Decidueye,Picnicker Ashley,69,Leaf Blade,Shadow Ball,Brave Bird,Substitute
 Decidueye,Ninja Boy Jonas & Fredrick,95,Energy Ball,Shadow Ball,Hidden Power Fire,Tailwind
-Decidueye-Hisui,Swimmer♀ Carlee & Harrison,90,Close Combat,Leaf Blade,Knock Off,Tailwind
 Decidueye-Hisui,Lass Andrea & Connie,90,Leaf Storm,Close Combat,Leaf Blade,Knock Off
+Decidueye-Hisui,Swimmer♀ Carlee & Harrison,90,Close Combat,Leaf Blade,Knock Off,Tailwind
 Decidueye-Hisui,Elite Four PhoebeDouble,99,Close Combat,Leaf Blade,Knock Off,Tailwind
-Dedenne,Twins Gina And Mia,22,Dazzling Gleam,Electroweb
+Dedenne,Twins Gina And Mia,22,Dazzling Gleam,Electroweb,,
 Dedenne,Guitarist Shawn & Angelo,34,Thunderbolt,Dazzling Gleam,Rising Voltage,Grass Knot
 Dedenne,Pokéfan Miguel,39,Thunderbolt,Dazzling Gleam,Super Fang,Electric Terrain
 Dedenne,Tuber Simon,58,Thunderbolt,Dazzling Gleam,Grass Knot,Endure
-Delcatty,Trainer Chelle Daycare,32,Last Resort,Fake Out
-Delcatty,Trainer Chelle Mt Pyre,75,Last Resort,Fake Out
-Delibird,Bird Keeper Robert,69,Dual Wingbeat,Triple Axel
+Delcatty,Trainer Chelle Daycare,32,Last Resort,Fake Out,,
+Delcatty,Trainer Chelle Mt Pyre,75,Last Resort,Fake Out,,
+Delibird,Bird Keeper Robert,69,Dual Wingbeat,Triple Axel,,
 Delphox,Collector John,45,Psyshock,Mystical Fire,Foul Play,Switcheroo
 Delphox,Hiker Eli,55,Flamethrower,Psychic,Grass Knot,Hypnosis
 Delphox,Hex Maniac Leah,73,Flamethrower,Psychic,Stored Power,Calm Mind
@@ -333,18 +333,18 @@ Dialga,Trainer Steven Space Center,90,Dragon Pulse,Flamethrower,Aura Sphere,Tric
 Diggersby,Leader Norman,40,Earthquake,Body Slam,Quick Attack,Foul Play
 Diggersby,Hiker Trent,52,High Horsepower,Body Slam,Quick Attack,Swords Dance
 Diggersby,Team Magma Grunt Space Center #3,85,Double-Edge,Earthquake,Fire Punch,Knock Off
-Ditto,Picnicker Charlotte,54,Transform
-Ditto,Ninja Boy Gren,69,Transform
-Ditto,Ninja Boy Jack,100,Transform
+Ditto,Picnicker Charlotte,54,Transform,,,
+Ditto,Ninja Boy Gren,69,Transform,,,
+Ditto,Ninja Boy Jack,100,Transform,,,
 Dodrio,Triathlete Dylan,30,Drill Peck,Double Hit,Quick Attack,Drill Run
-Dodrio,Picnicker Charlotte,48,Brave Bird,Double-Edge
+Dodrio,Picnicker Charlotte,48,Brave Bird,Double-Edge,,
 Donphan,Picnicker Angelina,48,Earthquake,Stone Edge,Knock Off,Endeavor
 Donphan,Magma Grunt Magma Hideout #7 & Grunt 8,76,High Horsepower,Stone Edge,Flail,Natural Gift
 Donphan,Cool Trainer Hope & Albert,93,Earthquake,Stone Edge,Knock Off,Endeavor
 Donphan,Ninja Boy Jonas & Fredrick,95,High Horsepower,Stone Edge,Ice Shard,Endeavor
 Doublade,Cool Trainer Mary,39,Iron Head,Shadow Claw,Head Smash,Sacred Sword
 Dracovish,Team Aqua Grunt Mt Pyre #5 & GruntMtPyre6,72,Dragon Rush,Fishious Rend,Psychic Fangs,Crunch
-Dracovish,Aqua Admin Matt Aqua Hideout,80,Fishious Rend
+Dracovish,Aqua Admin Matt Aqua Hideout,80,Fishious Rend,,,
 Dracozolt,Cool Trainer Cristin,70,Draco Meteor,Dragon Rush,Bolt Beak,Earthquake
 Dracozolt,Team Magma Grunt Magma Hideout #6,75,Bolt Beak,Dragon Claw,Iron Tail,Fire Blast
 Dragalge,Ranger Lydian,60,Draco Meteor,Sludge Wave,Hydro Pump,Flip Turn
@@ -373,7 +373,7 @@ Drapion,Camper Merc,52,Cross Poison,Pursuit,Earthquake,Rock Slide
 Drapion,Team Aqua Grunt Mt Pyre #4,74,Cross Poison,Night Slash,Aqua Tail,Swords Dance
 Drednaw,Hiker Devan,25,Razor Shell,Rock Slide,Crunch,Rock Polish
 Drednaw,Team Aqua Grunt Seafloor Cavern #4,86,Liquidation,Stone Edge,Jaw Lock,Stealth Rock
-Drednaw,Swimmer♀ Katie,89,Head Smash,Liquidation
+Drednaw,Swimmer♀ Katie,89,Head Smash,Liquidation,,
 Drifblim,Guitarist Kirk,33,Hex,Acrobatics,Thunderbolt,Strength Sap
 Drifblim,Cool Trainer Gian,69,Air Slash,Explosion,Thunder,Weather Ball
 Drifblim,Psychic Preston & Maura,85,Shadow Ball,Acrobatics,Explosion,Silver Wind
@@ -391,7 +391,7 @@ Dugtrio,Magma Admin Courtney Space center,86,Earthquake,Final Gambit,Memento,Ste
 Dugtrio,Expert Mollie & Conor,90,Earthquake,Stone Edge,Pursuit,Reversal
 Dugtrio,Cool Trainer Katelynn,94,Earthquake,Stone Edge,Night Slash,Pursuit
 Dugtrio,Triathlete Kyra,95,Earthquake,Night Slash,Reversal,Screech
-Dugtrio,Dumbass Soupercell,100,Memento,Stealth Rock
+Dugtrio,Dumbass Soupercell,100,Memento,Stealth Rock,,
 Dugtrio-Alola,Hiker Clark,25,Earthquake,Iron Head,Stone Edge,Reversal
 Dunsparce,Pokémaniac Wyatt,46,Headbutt,Coil,Glare,Roost
 Duraludon,Cool Trainer Gian,68,Draco Meteor,Dragon Tail,Heavy Slam,Body Press
@@ -415,8 +415,8 @@ Eldegoss,Expert Nancy,49,Leaf Storm,Pollen Puff,Leech Seed,Sleep Powder
 Electivire,Battle Girl Luna,27,Discharge,Cross Chop,Ice Punch,Fire Punch
 Electivire,Psychic Cedric,74,Wild Charge,Psychic,Ice Punch,Hidden Power Grass
 Electivire,Team Magma Grunt Magma Hideout #2,75,Wild Charge,Cross Chop,Ice Punch,Magnet Rise
-Electivire,Swimmer♂ Zappator,90,Wild Charge,Earthquake,Ice Punch,Weather Ball
 Electivire,Lass Pearl,88,Thunderbolt,Focus Blast,Weather Ball,Magnet Rise
+Electivire,Swimmer♂ Zappator,90,Wild Charge,Earthquake,Ice Punch,Weather Ball
 Electrode,Breeder Isaac,30,Electro Ball,Foul Play,Flash Cannon,Hidden Power Ice
 Electrode,Youngster Ben,34,Explosion,Tri Attack,Signal Beam,Hidden Power Grass
 Electrode,Team Magma Grunt Magma Hideout #9,75,Thunderbolt,Explosion,Foul Play,Swagger
@@ -424,7 +424,7 @@ Electrode-Hisui,Pokéfan Bethany,90,Thunder,Energy Ball,Explosion,Hidden Power I
 Elekid,Tuber Chandler,14,Shock Wave,Fire Punch,Ice Punch,Quick Attack
 Emboar,Cool Trainer Berke,40,Flare Blitz,Head Smash,Double-Edge,Wild Charge
 Emboar,Battle Girl Danielle,55,Flare Blitz,Superpower,Head Smash,Wild Charge
-Emolga,Sr. And Jr. Anna And Meg,30,Discharge
+Emolga,Sr. And Jr. Anna And Meg,30,Discharge,,,
 Emolga,Winstrate Victor,43,Thunderbolt,Dual Wingbeat,Iron Tail,Roost
 Empoleon,Fisherman Claude,48,Waterfall,Flash Cannon,Earthquake,Protect
 Empoleon,Bird Keeper Colin,68,Iron Head,Aqua Jet,Drill Peck,Swords Dance
@@ -449,7 +449,7 @@ Exeggutor-Alola,Aroma Lady Daisy,38,Wood Hammer,Dragon Hammer,Sleep Powder,Trick
 Exeggutor-Alola,Trainer Rival Bridge Swampert,66,Wood Hammer,Dragon Hammer,Low Kick,Terrain Pulse
 Exeggutor-Alola,Team Aqua Grunt Seafloor Cavern #1,86,Wood Hammer,Explosion,Knock Off,Low Kick
 Exeggutor-Alola,Bug Catcher Davis,95,Leaf Storm,Dragon Hammer,Explosion,Low Kick
-Exploud,Guitarist Brian,37,Boomburst
+Exploud,Guitarist Brian,37,Boomburst,,,
 Falinks,Swimmer♀ Tisha,88,Close Combat,Poison Jab,Throat Chop,No Retreat
 Farfetch’d,Camper Tyron & Celina,32,Brave Bird,Slash,Leaf Blade,Night Slash
 Farfetch’d-Galar,Sailor Brenden,18,Rock Smash,Knock Off,Dual Wingbeat,Quick Attack
@@ -463,8 +463,8 @@ Ferrothorn,Hiker Lenny,50,Power Whip,Gyro Ball,Knock Off,Thunder Wave
 Ferrothorn,Hiker Eric & Autumn,53,Power Whip,Gyro Ball,Thunder Wave,Stealth Rock
 Ferrothorn,Team Aqua Grunt Weather Inst #2,61,Power Whip,Iron Head,Explosion,Bulldoze
 Ferrothorn,Team Aqua Grunt Aqua Hideout #6,80,Gyro Ball,Explosion,Body Press,Curse
-Ferrothorn,Magma Admin Tabitha Space Center,88,Power Whip,Body Press,Knock Off,Leech Seed
 Ferrothorn,Team Aqua Grunt Seafloor Cavern #5,87,Gyro Ball,Explosion,Spikes,Stealth Rock
+Ferrothorn,Magma Admin Tabitha Space Center,88,Power Whip,Body Press,Knock Off,Leech Seed
 Ferrothorn,Cool Trainer Caroline,94,Power Whip,Gyro Ball,Spikes,Stealth Rock
 Ferrothorn,Ninja Boy Jack,96,Power Whip,Explosion,Knock Off,Curse
 Flaaffy,Tuber Hailey,14,Shock Wave,Fire Punch,Confuse Ray,Thunder Wave
@@ -474,13 +474,13 @@ Flapple,Triathlete Aubrey,83,Dragon Claw,Grav Apple,Hidden Power Fire,Dragon Dan
 Flapple,Psychic Virgil & Nate,85,Dragon Claw,Grav Apple,Sucker Punch,Substitute
 Flareon,Kindler Jeff,56,Flare Blitz,Solar Beam,Facade,Stomping Tantrum
 Flareon,Team Magma Grunt Magma Hideout #6,75,Flare Blitz,Flame Charge,Superpower,Facade
-Fletchinder,Tuber Lola,14,Aerial Ace,Flame Charge,Steel Wing
+Fletchinder,Tuber Lola,14,Aerial Ace,Flame Charge,Steel Wing,
 Floatzel,Triathlete Jacob,35,Hydro Pump,Aqua Jet,Focus Blast,Ice Beam
 Floatzel,Tuber Simon,58,Aqua Tail,Ice Beam,Knock Off,Switcheroo
 Floatzel,Team Aqua Grunt Mt Pyre #2,73,Hydro Pump,Waterfall,Ice Beam,Low Kick
 Floatzel,Team Aqua Grunt Aqua Hideout #1,77,Liquidation,Crunch,Ice Punch,Power-Up Punch
 Floatzel,Beauty Bridget,90,Hydro Pump,Blizzard,Focus Blast,Taunt
-Floette-Eternal,Cool Trainer Berke,40,Light of Ruin
+Floette-Eternal,Cool Trainer Berke,40,Light of Ruin,,,
 Floette-Eternal,Cool Trainer Halle,94,Light of Ruin,Psychic,Hidden Power Fire,Calm Mind
 Florges,Aroma Lady Daisy,39,Dazzling Gleam,Psychic,Giga Drain,Synthesis
 Florges,Beauty Jessica,70,Moonblast,Psychic,Double Team,Protect
@@ -499,7 +499,7 @@ Froslass,Team Aqua Grunt Seafloor Cavern #3,86,Freeze-Dry,Hex,Nasty Plot,Sing
 Froslass,Guitarist Fernando & Jazmyn,95,Blizzard,Shadow Ball,Hex,Lovely Kiss
 Frosmoth,Bug Catcher Greg,61,Ice Beam,Hurricane,Weather Ball,Substitute
 Frosmoth,Sr. And Jr. Kim And Iris,84,Blizzard,Icy Wind,Infestation,Aurora Veil
-Furfrou,Rich Boy Winston,21,Headbutt,Covet,Rock Smash
+Furfrou,Rich Boy Winston,21,Headbutt,Covet,Rock Smash,
 Furfrou,Breeder Corgi,28,Return,Iron Tail,Play Rough,Attract
 Furret,Breeder Myles,72,Double-Edge,Sucker Punch,Baton Pass,Swords Dance
 Gallade,Psychic Jaclyn,33,Drain Punch,Psycho Cut,Shadow Sneak,Bulk Up
@@ -511,16 +511,16 @@ Galvantula,Battle Girl Vivian,32,Thunderbolt,Signal Beam,Giga Drain,Hidden Power
 Galvantula,Bug Catcher Greg,62,Thunder,Bug Buzz,Disable,Sticky Web
 Galvantula,Team Magma Grunt Magma Hideout#15,76,Thunder,Bug Buzz,Energy Ball,Sticky Web
 Garbodor,Breeder Pat,70,Gunk Shot,Explosion,Seed Bomb,Drain Punch
-Garchomp,Trainer Rival Lilycove Sceptile,72,Earthquake,Dual Chop,Fire Blast,Stealth Rock
 Garchomp,Trainer Rival Lilycove Blaziken,72,Earthquake,Dual Chop,Fire Blast,Stealth Rock
+Garchomp,Trainer Rival Lilycove Sceptile,72,Earthquake,Dual Chop,Fire Blast,Stealth Rock
 Garchomp,Trainer Rival Lilycove Swampert,72,Earthquake,Dual Chop,Fire Blast,Stealth Rock
 Garchomp,Magma Leader Maxie Magma Hideout,78,Earthquake,Scale Shot,Stone Edge,Swords Dance
 Garchomp,Cool Trainer Samuel,93,Scale Shot,Earthquake,Stone Edge,Stealth Rock
 Garchomp,Dragon Tamer Nicolas,95,Dual Chop,Iron Tail,Substitute,Swords Dance
 Garchomp-Mega,Magma Leader Maxie Space Center,89,High Horsepower,Scale Shot,Stone Edge,Protect
 Gardevoir,Trainer Rival Cycling Road Swampert,36,Moonblast,Psyshock,Icy Wind,Destiny Bond
-Gardevoir,Ruin Maniac Garrison & Jani,64,Moonblast,Psychic,Calm Mind,Trick Room
 Gardevoir,Ninja Boy Takashi & Dayton,62,Psychic,Dazzling Gleam,Energy Ball,Trick Room
+Gardevoir,Ruin Maniac Garrison & Jani,64,Moonblast,Psychic,Calm Mind,Trick Room
 Gardevoir,Psychic Preston & Maura,85,Moonblast,Icy Wind,Shadow Sneak,Helping Hand
 Gardevoir-Mega,Trainer Wally VR,95,Psychic,Hyper Voice,Mystical Fire,Calm Mind
 Gardevoir-Mega,Psychic Alix,97,Hyper Voice,Aura Sphere,Destiny Bond,Will-O-Wisp
@@ -564,7 +564,7 @@ Golem,Cool Trainer Halle,95,Earthquake,Stone Edge,Explosion,Stealth Rock
 Golem,Guitarist Fernando & Jazmyn,95,Earthquake,Stone Edge,Rock Slide,Explosion
 Golem-Alola,Youngster Ben,34,Earthquake,Explosion,Body Slam,Fire Punch
 Golem-Alola,Camper Drew,44,Head Smash,Wild Charge,Explosion,Earthquake
-Golett,Battle Girl Jocelyn,19,Shadow Punch,Mega Punch,Drain Punch
+Golett,Battle Girl Jocelyn,19,Shadow Punch,Mega Punch,Drain Punch,
 Golisopod,Cool Trainer Wilton,43,First Impression,Liquidation,Leech Life,Rock Slide
 Golisopod,Fisherman Kai,48,First Impression,Liquidation,Leech Life,Aqua Jet
 Golisopod,Ranger Lorenzo,69,First Impression,Liquidation,Leech Life,Knock Off
@@ -602,7 +602,7 @@ Granbull,Twins Miu And Yuki,95,Play Rough,Close Combat,Stomping Tantrum,Thunder 
 Grapploct,Battle Girl Luna,27,Revenge,Payback,Liquidation,Pain Split
 Grapploct,Battle Girl Cyndy,51,Drain Punch,Skitter Smack,Octolock,Protect
 Grapploct,Team Aqua Grunt Aqua Hideout #1,78,Revenge,Ice Punch,Payback,Whirlpool
-Graveler,Hiker Marc,23,Bulldoze,Rock Tomb,Stealth Rock
+Graveler,Hiker Marc,23,Bulldoze,Rock Tomb,Stealth Rock,
 Graveler-Alola,Hiker Marc,24,Wild Charge,Rock Tomb,Take Down,Submission
 Greedent,Parasol Lady Clarissa,66,Body Slam,Earthquake,Crunch,Swords Dance
 Greedent,Cool Trainer Wendy & Braxton,95,Return,Body Press,Crunch,Stuff Cheeks
@@ -620,16 +620,16 @@ Grimmsnarl,Breeder Gabrielle,73,Play Rough,Sucker Punch,Body Press,Bulk Up
 Grimmsnarl,Team Magma Grunt Magma Hideout #4teen,76,Play Rough,Darkest Lariat,Fake Out,Scary Face
 Grimmsnarl,Fisherman Roger & Koji,89,Foul Play,Fake Out,Swagger,Thunder Wave
 Groudon,Magma Leader Maxie Magma Hideout,80,Precipice Blades,Stone Edge,Heat Crash,Rock Polish
-Grubbin,Bug Catcher Rick,6,Bug Bite,Spark,Vise Grip
+Grubbin,Bug Catcher Rick,6,Bug Bite,Spark,Vise Grip,
 Grumpig,Psychic Jaclyn,33,Extrasensory,Focus Blast,Power Gem,Reflect
 Gumshoos,Team Aqua Grunt Mt Pyre #1,74,Frustration,Earthquake,Crunch,Endeavor
 Gurdurr,Black Belt Cristian,18,Low Sweep,Mach Punch,Bulldoze,Rock Throw
 Guzzlord,Team Magma Grunt Space Center #7,86,Dragon Rush,Knock Off,Heavy Slam,Earthquake
-Gyarados,Rich Boy Dawson,23,Dragon Rage
+Gyarados,Rich Boy Dawson,23,Dragon Rage,,,
 Gyarados,Camper Lawrence,44,Aqua Tail,Bounce,Dragon Dance,Substitute
 Gyarados,Sailor Dwayne,58,Waterfall,Earthquake,Lash Out,Thunder Wave
-Gyarados,Cool Trainer Carolina & Cory,64,Waterfall,Power Whip,Ice Fang,Dragon Dance
 Gyarados,Swimmer♀ Rose & Deandre,58,Hurricane,Waterfall,Crunch,Ice Fang
+Gyarados,Cool Trainer Carolina & Cory,64,Waterfall,Power Whip,Ice Fang,Dragon Dance
 Gyarados,Trainer Rival Bridge Swampert,65,Hurricane,Muddy Water,Waterfall,Thunder
 Gyarados,Expert Kevin,67,Waterfall,Earthquake,Dragon Dance,Thunder Wave
 Gyarados,Team Aqua Grunt Mt Pyre #2,72,Aqua Tail,Crunch,Ice Fang,Dragon Dance
@@ -658,8 +658,8 @@ Hawlucha,Aqua Admin ShellySeafloorCavern,88,Close Combat,Acrobatics,Stone Edge,S
 Hawlucha,Winstrate Vito VR,95,Close Combat,Acrobatics,Stone Edge,Swords Dance
 Hawlucha,Battle Girl Helene,96,Close Combat,Acrobatics,Baton Pass,Swords Dance
 Haxorus,Team Aqua Grunt Weather Inst #3,61,Dual Chop,Aqua Tail,Iron Head,Dragon Dance
-Haxorus,Fisherman Roger & Koji,89,Dual Chop,Earthquake,Aqua Tail,Swords Dance
 Haxorus,Team Aqua Grunt Seafloor Cavern #2,86,Outrage,Iron Tail,Aqua Tail,Dragon Dance
+Haxorus,Fisherman Roger & Koji,89,Dual Chop,Earthquake,Aqua Tail,Swords Dance
 Heatmor,Kindler Hayden,33,Fire Lash,Giga Drain,Stomping Tantrum,Rock Tomb
 Heatmor,Collector Hector,52,Flare Blitz,Focus Blast,Thunder Punch,Grass Knot
 Heatran,Magma Leader Maxie Space Center,88,Magma Storm,Heat Wave,Flash Cannon,Earth Power
@@ -670,7 +670,7 @@ Heliolisk,Trainer Rival Bridge Blaziken,65,Thunder,Hyper Voice,Weather Ball,Gras
 Heliolisk,Team Aqua Grunt Aqua Hideout #6,78,Hyper Voice,Thunderbolt,Weather Ball,Glare
 Heliolisk,Triathlete Chase & Allison,87,Thunderbolt,Dragon Pulse,Weather Ball,Grass Knot
 Heliolisk,Old Couple John And Jay,96,Thunder,Electroweb,Hyper Voice,Grass Knot
-Heracross,Sailor Brenden,19,Pin Missile,Rock Smash
+Heracross,Sailor Brenden,19,Pin Missile,Rock Smash,,
 Heracross,Black Belt Rhett & Marcos,38,Leech Life,Brick Break,Facade,Protect
 Heracross,Black Belt Daisuke,45,Close Combat,Megahorn,Retaliate,Facade
 Heracross,Young Couple Brian And Casey,70,Close Combat,Megahorn,Rock Slide,Smart Strike
@@ -707,18 +707,18 @@ Hydreigon,Lass Crissy,90,Draco Meteor,Earthquake,Iron Tail,Aqua Tail
 Hydreigon,Cool Trainer Hope & Albert,94,Dragon Pulse,Dark Pulse,Heat Wave,Tailwind
 Hydreigon,Cool Trainer Michelle,95,Dragon Pulse,Dark Pulse,Flamethrower,Nasty Plot
 Hypno,Psychic Brandi & Aisha,27,Psychic,Dazzling Gleam,Calm Mind,Dark Void
-Hypno,Twins Amy And Liv,39,Dream Eater,Nightmare,Dark Void
-Illumise,Bug Catcher Doug,61,Bug Buzz
+Hypno,Twins Amy And Liv,39,Dream Eater,Nightmare,Dark Void,
+Illumise,Bug Catcher Doug,61,Bug Buzz,,,
 Incineroar,Leader Flannery,57,Overheat,Blaze Kick,Darkest Lariat,Fake Out
 Incineroar,Team Magma Grunt Magma Hideout #4teen,75,Blaze Kick,Knock Off,Earthquake,Fake Out
 Incineroar,Bird Keeper Aidan & Athena,89,Flare Blitz,Throat Chop,Low Kick,Fake Out
 Incineroar,Elite Four SidneyDouble,99,Flare Blitz,Knock Off,Fire Spin,Fake Out
-Indeedee,Trainer Rival Cycling Road Sceptile,37,Hyper Voice,Expanding Force,Light Screen,Reflect
 Indeedee,Trainer Rival Cycling Road Blaziken,37,Hyper Voice,Expanding Force,Light Screen,Reflect
+Indeedee,Trainer Rival Cycling Road Sceptile,37,Hyper Voice,Expanding Force,Light Screen,Reflect
 Indeedee,Trainer Rival Cycling Road Swampert,37,Hyper Voice,Expanding Force,Light Screen,Reflect
 Indeedee,Triathlete Aubrey,82,Expanding Force,Dazzling Gleam,Mystical Fire,Calm Mind
 Indeedee,Winstrate Vito VR,96,Future Sight,Expanding Force,Dazzling Gleam,Mystical Fire
-Indeedee-F,Magma Grunt Mt Chimney #2 & Grunt One,52,Hyper Voice,Expanding Force
+Indeedee-F,Magma Grunt Mt Chimney #2 & Grunt One,52,Hyper Voice,Expanding Force,,
 Indeedee-F,Psychic Cameron & Kindra,95,Expanding Force,Encore,Reflect,Light Screen
 Infernape,Kindler Axle,54,Fire Blast,Focus Blast,Grass Knot,Fake Out
 Infernape,Black Belt Atsushi,72,Flamethrower,Vacuum Wave,Grass Knot,Nasty Plot
@@ -737,8 +737,8 @@ Jolteon,Battle Girl Vivian,33,Thunderbolt,Hyper Voice,Magnet Rise,Sing
 Jolteon,Ninja Boy Yasu & Fabian,65,Thunder,Hyper Voice,Weather Ball,Detect
 Jolteon,Swimmer♂ Reed,87,Thunderbolt,Volt Switch,Hidden Power Grass,Weather Ball
 Jumpluff,Triathlete Benjamin,36,Seed Bomb,Acrobatics,Spore,Swords Dance
-Jumpluff,Magma Grunt Magma Hideout #7 & Grunt 8,78,Solar Beam,Air Slash,Growth,Spore
 Jumpluff,Team Magma Grunt Magma Hideout #4teen,75,Air Slash,Leech Seed,Spore,Substitute
+Jumpluff,Magma Grunt Magma Hideout #7 & Grunt 8,78,Solar Beam,Air Slash,Growth,Spore
 Jumpluff,Dumbass Soupercell,100,Light Screen,Memento,Reflect,Spore
 Jynx,Twins Amy And Liv,39,Dream Eater,Ice Beam,Nightmare,Lovely Kiss
 Jynx,Parasol Lady Koko,61,Psychic,Freeze-Dry,Lovely Kiss,Substitute
@@ -760,34 +760,34 @@ Kecleon,Pokémaniac Wyatt,45,Drain Punch,Knock Off,Power-Up Punch,Shadow Sneak
 Kecleon,Ninja Boy Jack,95,Drain Punch,Sucker Punch,Knock Off,Power-Up Punch
 Keldeo,Leader Juan,92,Hydro Pump,Secret Sword,Muddy Water,Coaching
 Kingdra,Fisherman Dale,33,Waterfall,Breaking Swipe,Double-Edge,Rain Dance
-Kingdra,Trainer Rival Cycling Road Sceptile,36,Liquidation,Breaking Swipe,Iron Head,Dragon Dance
 Kingdra,Trainer Rival Cycling Road Blaziken,36,Liquidation,Scale Shot,Iron Head,Dragon Dance
+Kingdra,Trainer Rival Cycling Road Sceptile,36,Liquidation,Breaking Swipe,Iron Head,Dragon Dance
 Kingdra,Ranger Lydian,59,Liquidation,Dragon Pulse,Octazooka,Hurricane
 Kingdra,Team Aqua Grunt Mt Pyre #1,73,Draco Meteor,Liquidation,Octazooka,Focus Energy
-Kingdra,Triathlete Pablo,89,Outrage,Waterfall,Facade,Dragon Dance
 Kingdra,Team Aqua Grunt Seafloor Cavern #1,85,Draco Meteor,Octazooka,Agility,Focus Energy
 Kingdra,Swimmer♀ Katie,89,Hydro Pump,Dragon Pulse,Hurricane,Ice Beam
+Kingdra,Triathlete Pablo,89,Outrage,Waterfall,Facade,Dragon Dance
 Kingdra,Bug Catcher Davis,95,Dragon Pulse,Octazooka,Flip Turn,Hurricane
 Kingler,Ranger Jackson,61,Crabhammer,High Horsepower,X-Scissor,Knock Off
 Kingler,Team Aqua Grunt Aqua Hideout #1,78,Liquidation,X-Scissor,Rock Slide,Agility
 Kleavor,Bird Keeper Presley & Auron,84,Rock Slide,Skitter Smack,Close Combat,Tailwind
 Kleavor,Battle Girl Helene,95,Rock Slide,Skitter Smack,Agility,Baton Pass
-Klefki,Sr. And Jr. Tyra And Ivy,50,Foul Play,Swagger
+Klefki,Sr. And Jr. Tyra And Ivy,50,Foul Play,Swagger,,
 Klinklang,Breeder Isaac,29,Gear Grind,Return,Wild Charge,Autotomize
 Klinklang,Guitarist Shawn & Angelo,34,Steel Beam,Thunderbolt,Rising Voltage,Electric Terrain
 Klinklang,Triathlete Julio,51,Gear Grind,Return,Wild Charge,Shift Gear
-Klinklang,Team Magma Grunt Space Center #3,86,Gear Grind
+Klinklang,Team Magma Grunt Space Center #3,86,Gear Grind,,,
 Komala,Rich Boy Dawson,22,Body Slam,Wood Hammer,Brick Break,Sucker Punch
 Komala,Triathlete Xayah,90,Return,Wood Hammer,Earthquake,Play Rough
 Kommo-o,Magma Leader Maxie Mt Chimney,54,Body Press,Dragon Tail,Poison Jab,Iron Defense
 Kommo-o,Beauty Tiffany & Olivia,89,Clanging Scales,Aura Sphere,Flash Cannon,Protect
 Kommo-o,Cool Trainer Quincy,94,Close Combat,Dragon Claw,Poison Jab,Dragon Dance
-Kommo-o,Guitarist Fernando & Jazmyn,96,Dragon Pulse,Aura Sphere,Boomburst
 Kommo-o,Psychic Alix,95,Dragon Claw,Drain Punch,Iron Tail,Dragon Dance
-Krabby,Triathlete Mikey,9,Aqua Jet,Stomp,Mud Shot
+Kommo-o,Guitarist Fernando & Jazmyn,96,Dragon Pulse,Aura Sphere,Boomburst,
+Krabby,Triathlete Mikey,9,Aqua Jet,Stomp,Mud Shot,
 Kricketune,Bug Catcher Lyle,21,Bug Bite,Fell Stinger,Rock Smash,Aerial Ace
-Krookodile,Winstrate Vicky,44,Earthquake,Crunch,Pursuit,Aqua Tail
 Krookodile,Ruin Maniac Rigger,44,Earthquake,Power Trip,Rock Slide,Bulk Up
+Krookodile,Winstrate Vicky,44,Earthquake,Crunch,Pursuit,Aqua Tail
 Krookodile,Black Belt Atsushi,73,Earthquake,Foul Play,Close Combat,Rock Tomb
 Krookodile,Psychic Virgil & Nate,85,High Horsepower,Knock Off,Close Combat,Fling
 Krookodile,Black Belt Hawk,95,Earthquake,Pursuit,Stone Edge,Aqua Tail
@@ -806,8 +806,8 @@ Lanturn,Team Aqua Grunt Aqua Hideout #3,78,Hydro Pump,Thunder,Confuse Ray,Thunde
 Lanturn,Sis And Bro Lila And Roy,86,Hydro Pump,Thunder,Ice Beam,Protect
 Lapras,Trainer Chelle Daycare,30,Frost Breath,Thunderbolt,Body Press,Sing
 Lapras,Beauty Johanna,58,Freeze-Dry,Thunderbolt,Protect,Roar
-Lapras,Swimmer♀ Carlee & Harrison,91,Blizzard,Scald,Freeze-Dry,Sheer Cold
 Lapras,Triathlete Chase & Allison,88,Ice Beam,Freeze-Dry,Solar Beam,Weather Ball
+Lapras,Swimmer♀ Carlee & Harrison,91,Blizzard,Scald,Freeze-Dry,Sheer Cold
 Larvesta,Bug Maniac James,21,Skitter Smack,Flame Charge,Roost,Will-O-Wisp
 Latias,Leader Liza,85,Dragon Pulse,Aura Sphere,Mystical Fire,Calm Mind
 Latias-Mega,Dragon Tamer Nicolas,96,Psychic,Mystical Fire,Calm Mind,Recover
@@ -819,18 +819,18 @@ Ledian,Battle Girl Lilith,19,Drain Punch,Thunder Punch,Ice Punch,Mach Punch
 Lickilicky,Picnicker Sophie,45,Double-Edge,Power Whip,Brick Break,Knock Off
 Lickilicky,Kindler Jeff,53,Explosion,Body Slam,Fire Blast,Power Whip
 Lickilicky,Ninja Boy Keigo,69,Explosion,Body Slam,Power Whip,Knock Off
-Lickilicky,Team Magma Grunt Magma Hideout #4teen,75,Explosion
+Lickilicky,Team Magma Grunt Magma Hideout #4teen,75,Explosion,,,
 Liepard,Aqua Grunt Weather Inst #4 & Grunt 5,64,Assurance,Psycho Cut,Fake Out,Fake Tears
 Lileep,Youngster Tommy,23,Giga Drain,Ancient Power,Infestation,Recover
 Lilligant,Ranger Jenna,69,Petal Dance,Sleep Powder,Synthesis,Quiver Dance
 Lilligant,Old Couple John And Jay,95,Energy Ball,Hidden Power Fire,Quiver Dance,Sleep Powder
 Lilligant-Hisui,Cool Trainer Edgar,95,Solar Blade,Close Combat,Acrobatics,Sleep Powder
-Lillipup,Youngster Calvin,6,Tackle,Bite,Sand Attack
+Lillipup,Youngster Calvin,6,Tackle,Bite,Sand Attack,
 Linoone,Ranger Catherine,60,Extreme Speed,Stomping Tantrum,Throat Chop,Belly Drum
 Linoone-Galar,Youngster Joey,23,Retaliate,Slash,Night Slash,Seed Bomb
-Litleo,Youngster Allen,6,Headbutt,Ember,Work Up
+Litleo,Youngster Allen,6,Headbutt,Ember,Work Up,
 Lombre,Fisherman Elliot,13,Giga Drain,Bubble Beam,Seismic Toss,Teeter Dance
-Lopunny,Leader Brawly,19,Retaliate,Headbutt,Drain Punch
+Lopunny,Leader Brawly,19,Retaliate,Headbutt,Drain Punch,
 Lopunny-Mega,Cool Trainer Carolina & Cory,65,Return,Facade,Fake Out,Close Combat
 Lucario,Breeder Corgi,27,Aura Sphere,Flash Cannon,Shadow Ball,Magnet Rise
 Lucario,Cool Trainer Berke,40,Steel Beam,Aura Sphere,Vacuum Wave,Stone Edge
@@ -844,16 +844,16 @@ Ludicolo,Trainer Rival Bridge Blaziken,65,Energy Ball,Zen Headbutt,Weather Ball,
 Ludicolo,Team Aqua Grunt Aqua Hideout #8,78,Waterfall,Grassy Glide,Zen Headbutt,Swords Dance
 Ludicolo,Sis And Bro Lila And Roy,86,Energy Ball,Scald,Icy Wind,Fake Out
 Ludicolo,Cool Trainer Katelynn,94,Leaf Storm,Scald,Knock Off,Icy Wind
-Lumineon,Lass Haley,22,Surf,Air Slash,Icy Wind
+Lumineon,Lass Haley,22,Surf,Air Slash,Icy Wind,
 Lumineon,Camper Lawrence,45,Hydro Pump,Ice Beam,Air Slash,Flail
 Lunala,Elite Four Phoebe,100,Moongeist Beam,Meteor Beam,Moonblast,Roost
 Lunala,Elite Four PhoebeDouble,100,Moongeist Beam,Meteor Beam,Dazzling Gleam,Tailwind
 Lunatone,Leader Roxanne,25,Stored Power,Ancient Power,Icy Wind,Hypnosis
 Lunatone,Hiker Brice,52,Psychic,Power Gem,Explosion,Trick Room
 Lurantis,Aroma Lady Daisy,39,Leaf Storm,Superpower,Leaf Blade,Facade
-Luvdisc,Fisherman Phil,70,Hydro Pump,Sweet Kiss
-Luvdisc, Fisherman Phil,80,Hydro Pump,Sweet Kiss
-Luvdisc,  Fisherman Phil,90,Hydro Pump
+Luvdisc,Fisherman Phil,70,Hydro Pump,Sweet Kiss,,
+Luvdisc, Fisherman Phil,80,Hydro Pump,Sweet Kiss,,
+Luvdisc,  Fisherman Phil,90,Hydro Pump,,,
 Luxio,Tuber Ricky,14,Spark,Double Kick,Bite,Howl
 Luxray,Triathlete Anthony,34,Zing Zap,Play Rough,Crunch,Agility
 Luxray,Team Aqua Grunt Mt Pyre #4,75,Zing Zap,Superpower,Crunch,Facade
@@ -866,15 +866,15 @@ Lycanroc-Midnight,Cool Trainer Mary,39,Stone Edge,Mega Kick,Iron Tail,Fire Fang
 Lycanroc-Midnight,Old Couple John And Jay,94,Stone Edge,Rock Slide,Close Combat,Endeavor
 Machamp,Cool Trainer Mary,39,Dynamic Punch,Mega Kick,Stone Edge,Bulk Up
 Machamp,Sailor Dwayne,59,Dynamic Punch,Stone Edge,Poison Jab,Knock Off
-Machamp,Trainer Rival Lilycove Sceptile,72,Dynamic Punch,Stone Edge,Knock Off,Substitute
 Machamp,Trainer Rival Lilycove Blaziken,72,Dynamic Punch,Stone Edge,Knock Off,Substitute
+Machamp,Trainer Rival Lilycove Sceptile,72,Dynamic Punch,Stone Edge,Knock Off,Substitute
 Machamp,Team Magma Grunt Space Center #6,85,Dynamic Punch,Stone Edge,Knock Off,Bulk Up
 Machoke,Black Belt Cristian,18,Vital Throw,Facade,Bulk Up,Protect
 Magby,Tuber Chandler,14,Incinerate,Brick Break,Mach Punch,Confuse Ray
 Magcargo,Hiker Trent,52,Flamethrower,Power Gem,Earth Power,Shell Smash
 Magearna,Elite Four GlaciaDouble,100,Flash Cannon,Dazzling Gleam,Encore,Trick Room
-Magikarp,Fisherman Darian,12,Bounce
-Magikarp, Fisherman Darian,12,Hydro Pump,Tackle,Flail
+Magikarp, Fisherman Darian,12,Hydro Pump,Tackle,Flail,
+Magikarp,Fisherman Darian,12,Bounce,,,
 Magmortar,Cool Trainer Brooke,44,Flamethrower,Fire Spin,Scorching Sands,Weather Ball
 Magmortar,Kindler Cole,54,Flamethrower,Solar Beam,Belch,Earthquake
 Magmortar,Team Magma Grunt Magma Hideout#15,75,Flamethrower,Psychic,Thunderbolt,Scorching Sands
@@ -907,13 +907,13 @@ Manectric,Team Magma Grunt Magma Hideout #4,76,Thunderbolt,Flamethrower,Hidden P
 Manectric,Expert Mollie & Conor,90,Thunderbolt,Flamethrower,Hidden Power Grass,Protect
 Manectric-Mega,Bird Keeper Presley & Auron,85,Thunderbolt,Flamethrower,Hidden Power Grass,Protect
 Mankey,Battle Girl Laura,17,Outrage,Thrash,Stomping Tantrum,Smelling Salts
-Mankey,Battle Girl Lilith,19,Power-Up Punch,Reversal
+Mankey,Battle Girl Lilith,19,Power-Up Punch,Reversal,,
 Mantine,Bird Keeper Hugh,60,Hurricane,Scald,Hidden Power Grass,Roost
 Mantine,Trainer Rival Bridge Sceptile,65,Hydro Pump,Hurricane,Surf,Helping Hand
 Mantine,Swimmer♂ Rodney,89,Hydro Pump,Hurricane,Ice Beam,Roost
 Maractus,Ruin Maniac Bryan & Celia,45,Energy Ball,Hidden Power Fire,Weather Ball,Spiky Shield
 Mareanie,Team Aqua Grunt Museum #2,16,Venoshock,Baneful Bunker,Soak,Toxic
-Marill,Gentleman Clifford & Macey,1,Misty Explosion
+Marill,Gentleman Clifford & Macey,1,Misty Explosion,,,
 Marowak,Sr. And Jr. Anna And Meg,31,Bone Rush,Flamethrower,Ice Beam,Ancient Power
 Marowak,Cool Trainer Jody,40,Bonemerang,Double-Edge,Retaliate,Knock Off
 Marowak,Team Magma Grunt Magma Hideout #5,76,Earthquake,Stone Edge,Fire Punch,Knock Off
@@ -926,7 +926,7 @@ Marshadow,Elite Four Phoebe,100,Close Combat,Shadow Sneak,Knock Off,Bulk Up
 Masquerain,School Kid Jerry & Johnson,24,Bug Buzz,Air Cutter,Ice Beam,Giga Drain
 Masquerain,Expert Kevin,68,Bug Buzz,Hydro Pump,Sticky Web,Stun Spore
 Masquerain,Swimmer♂ Rodney,88,Bug Buzz,Air Slash,Hydro Pump,Stun Spore
-Mawile,Ruin Maniac Georgie,13,Covet,Metal Claw,Fire Fang
+Mawile,Ruin Maniac Georgie,13,Covet,Metal Claw,Fire Fang,
 Mawile-Mega,Cool Trainer Halle,96,Play Rough,Iron Head,Sucker Punch,Swords Dance
 Medicham,Cool Trainer Jody,40,High Jump Kick,Zen Headbutt,Reversal,Counter
 Medicham,Sr. And Jr. Kim And Iris,84,Close Combat,Zen Headbutt,Rock Slide,Fake Out
@@ -935,8 +935,8 @@ Medicham,Psychic Jacki & Alberto,96,Close Combat,Zen Headbutt,Reversal,Thunder P
 Medicham-Mega,Winstrate Vicky,44,High Jump Kick,Zen Headbutt,Thunder Punch,Fake Out
 Meditite,Black Belt Cristian,19,Brick Break,Rock Throw,Fake Out,Detect
 Meganium,Collector Edwin,39,Seed Bomb,Earthquake,Body Slam,Swords Dance
-Melmetal,Trainer Rival Lilycove Sceptile,72,Double Iron Bash,Body Press,Ice Punch,Thunder Punch
 Melmetal,Trainer Rival Lilycove Blaziken,72,Double Iron Bash,Body Press,Ice Punch,Thunder Punch
+Melmetal,Trainer Rival Lilycove Sceptile,72,Double Iron Bash,Body Press,Ice Punch,Thunder Punch
 Melmetal,Trainer Rival Lilycove Swampert,72,Double Iron Bash,Body Press,Ice Punch,Thunder Punch
 Meloetta,Leader Norman,41,Close Combat,Body Slam,Zen Headbutt,Relic Song
 Meowstic,Young Couple Dez And Luke,73,Psychic,Shadow Ball,Light Screen,Reflect
@@ -946,12 +946,12 @@ Meowstic-F,Psychic Hannah & Sylvia,85,Psychic,Thunderbolt,Fake Out,Imprison
 Metagross,Trainer Rival Bridge Blaziken,65,Meteor Mash,Zen Headbutt,Bullet Punch,Thunder Punch
 Metagross,Cool Trainer Jennifer & Callie,69,Meteor Mash,Zen Headbutt,Thunder Punch,Icy Wind
 Metagross,Psychic Preston & Maura,85,Meteor Mash,Zen Headbutt,Bullet Punch,Explosion
-Metagross,Trainer Steven Space Center,89,Meteor Mash,Hammer Arm,Ice Punch,Trick Room
 Metagross,Team Aqua Grunt Seafloor Cavern #5,87,Meteor Mash,Earthquake,Thunder Punch,Agility
 Metagross,Swimmer♂ Herman,89,Meteor Mash,Earthquake,Thunder Punch,Power-Up Punch
+Metagross,Trainer Steven Space Center,89,Meteor Mash,Hammer Arm,Ice Punch,Trick Room
 Metagross,Cool Trainer Specter,95,Meteor Mash,Body Press,Stored Power,Cosmic Power
-Metagross,Psychic Jacki & Alberto,95,Meteor Mash,Zen Headbutt,Earthquake,Ice Punch
 Metagross,Dragon Tamer Nicolas,95,Meteor Mash,Zen Headbutt,Explosion,Ice Punch
+Metagross,Psychic Jacki & Alberto,95,Meteor Mash,Zen Headbutt,Earthquake,Ice Punch
 Metagross-Mega,Leader Liza,85,Meteor Mash,Zen Headbutt,Earthquake,Pursuit
 Mew,Magma Leader Maxie Magma Hideout,79,Psychic Fangs,Flare Blitz,Dragon Dance,Soft-Boiled
 Mienfoo,Tuber Hailey,14,Force Palm,Reversal,Rock Tomb,Helping Hand
@@ -964,8 +964,8 @@ Mienshao,Psychic Cameron & Kindra,95,Close Combat,Rock Slide,Knock Off,Detect
 Mightyena,Rich Boy Winston,22,Crunch,Ice Fang,Fire Fang,Covet
 Milotic,Fisherman Nolan,49,Scald,Ice Beam,Mirror Coat,Recover
 Milotic,Beauty Johanna,58,Aqua Tail,Dragon Tail,Coil,Rest
-Milotic,Cool Trainer Carolina & Cory,64,Hydro Pump,Muddy Water,Ice Beam,Hypnosis
 Milotic,Ranger Lydian,60,Scald,Flip Turn,Hypnosis,Recover
+Milotic,Cool Trainer Carolina & Cory,64,Hydro Pump,Muddy Water,Ice Beam,Hypnosis
 Milotic,Psychic Hannah & Sylvia,85,Muddy Water,Coil,Hypnosis,Recover
 Milotic,Lass Andrea & Connie,91,Muddy Water,Icy Wind,Hypnosis,Recover
 Miltank,Ranger Lorenzo,70,Body Slam,Body Press,Zen Headbutt,Curse
@@ -978,7 +978,7 @@ Mimikyu,Ruin Maniac Garrison & Jani,64,Play Rough,Shadow Claw,Destiny Bond,Trick
 Mimikyu,Pokéfan Vanessa,72,Play Rough,Shadow Claw,Swords Dance,Trick Room
 Mimikyu,Sis And Bro Reli And Ian,89,Play Rough,Shadow Claw,Shadow Sneak,Swords Dance
 Mimikyu,Psychic Cameron & Kindra,96,Play Rough,Shadow Claw,Drain Punch,Swords Dance
-Minccino,Lady Cindy,10,Swift,Attract,Thunder Wave
+Minccino,Lady Cindy,10,Swift,Attract,Thunder Wave,
 Minior,Swimmer♂ Dean,86,Stone Edge,Acrobatics,Earthquake,Shell Smash
 Minun,Guitarist Shawn & Angelo,34,Thunderbolt,Electroweb,Electric Terrain,Helping Hand
 Mismagius,Parasol Lady Angelica,69,Shadow Ball,Dazzling Gleam,Mystical Fire,Nasty Plot
@@ -1003,8 +1003,8 @@ Muk-Alola,Ninja Boy Lao,45,Gunk Shot,Knock Off,Ice Punch,Curse
 Muk-Alola,Hex Maniac Tasha,73,Poison Jab,Payback,Brick Break,Curse
 Muk-Alola,Team Magma Grunt Magma Hideout #11,77,Gunk Shot,Knock Off,Pursuit,Explosion
 Muk-Alola,Team Aqua Grunt Seafloor Cavern #2,86,Poison Jab,Knock Off,Explosion,Focus Punch
-Munchlax,Ruin Maniac Georgie,13,Headbutt,Belly Drum
-Murkrow,Team Aqua Grunt Museum #1,15,Wing Attack,Payback,Night Shade
+Munchlax,Ruin Maniac Georgie,13,Headbutt,Belly Drum,,
+Murkrow,Team Aqua Grunt Museum #1,15,Wing Attack,Payback,Night Shade,
 Musharna,Parasol Lady Angelica,69,Psychic,Moonblast,Calm Mind,Dark Void
 Naganadel,Magma Leader Maxie Magma Hideout,79,Sludge Wave,Dragon Pulse,Flamethrower,U-turn
 Necrozma,Elite Four Sidney,99,Photon Geyser,Heat Wave,Knock Off,Stealth Rock
@@ -1029,8 +1029,8 @@ Ninetales-Alola,Aqua Grunt Weather Inst #4 & Grunt 5,64,Moonblast,Freeze-Dry,Hyp
 Ninetales-Alola,Team Aqua Grunt Aqua Hideout #4,79,Moonblast,Freeze-Dry,Aurora Veil,Nasty Plot
 Ninetales-Alola,Sr. And Jr. Kim And Iris,85,Blizzard,Moonblast,Icy Wind,Aurora Veil
 Ninetales-Alola,Cool Trainer Edgar,94,Moonblast,Freeze-Dry,Weather Ball,Nasty Plot
-Ninjask,Bug Catcher Lyle,21,Leech Life,Dual Wingbeat,Giga Drain
-Ninjask,Triathlete Abigail,33,U-turn
+Ninjask,Bug Catcher Lyle,21,Leech Life,Dual Wingbeat,Giga Drain,
+Ninjask,Triathlete Abigail,33,U-turn,,,
 Ninjask,Cool Trainer Randall,39,X-Scissor,Dual Wingbeat,Dig,Swords Dance
 Ninjask,Team Magma Grunt Magma Hideout  #12,76,Dual Wingbeat,Leech Life,Protect,Swords Dance
 Noctowl,Cool Trainer Wilton,43,Hurricane,Hyper Voice,Heat Wave,Hypnosis
@@ -1064,21 +1064,21 @@ Oricorio-Pom-Pom,Camper Flint & Edwardo,67,Revelation Dance,Air Slash,Icy Wind,F
 Oricorio-Sensu,Kindler Hayden,33,Revelation Dance,Air Slash,Calm Mind,Teeter Dance
 Overqwil,Cool Trainer Carolina & Cory,64,Gunk Shot,Throat Chop,Liquidation,Icy Wind
 Overqwil,Aqua Leader Archie Seafloor Cavern,89,Gunk Shot,Throat Chop,Waterfall,Swords Dance
-Overqwil,Swimmer♂ Zappator,90,Throat Chop,Explosion,Spikes,Toxic Spikes
 Overqwil,Pokéfan Bethany,90,Gunk Shot,Throat Chop,Liquidation,Destiny Bond
+Overqwil,Swimmer♂ Zappator,90,Throat Chop,Explosion,Spikes,Toxic Spikes
 Overqwil,Elite Four SidneyDouble,99,Gunk Shot,Crunch,Fell Stinger,Icy Wind
 Pachirisu,Triathlete Benjamin,35,Nuzzle,Super Fang,Light Screen,Reflect
 Palkia,Champion Wallace,100,Draco Meteor,Hydro Pump,Earth Power,Focus Energy
 Palossand,Camper Beau,44,Scorching Sands,Hex,Ancient Power,Shore Up
 Palpitoad,Sailor Edmond,14,Bubble Beam,Mud Shot,Sludge,Rain Dance
-Pangoro,Ranger Jenna,69,Close Combat,Knock Off,Gunk Shot
+Pangoro,Ranger Jenna,69,Close Combat,Knock Off,Gunk Shot,
 Pangoro,Team Aqua Grunt Aqua Hideout #1,76,Close Combat,Crunch,Gunk Shot,Stone Edge
 Parasect,Bug Maniac Taylor,61,Leech Life,Knock Off,Double Team,Spore
 Passimian,Black Belt Daisuke,45,Close Combat,Rock Slide,Knock Off,Acrobatics
 Passimian,Breeder Myles,70,Close Combat,Iron Tail,Knock Off,Rock Slide
 Passimian,Gentleman Clifford & Macey,85,Close Combat,Rock Slide,Poison Jab,Detect
 Pelipper,Fisherman Barny,61,Hurricane,U-turn,Knock Off,Weather Ball
-Pelipper,Picnicker Ashley,68,Hurricane,Weather Ball
+Pelipper,Picnicker Ashley,68,Hurricane,Weather Ball,,
 Pelipper,Cool Trainer Shannon,94,Hydro Pump,Hurricane,Icy Wind,Detect
 Pelipper,Psychic Jacki & Alberto,95,Hurricane,Weather Ball,Detect,Tailwind
 Perrserker,Lady Sarah,24,Iron Tail,Bullet Punch,Thunder,Hone Claws
@@ -1089,7 +1089,7 @@ Persian,Twins Amy And Liv,39,Fake Out,Flail,Dream Eater,Hypnosis
 Persian,Tuber Simon,58,Hyper Voice,Hypnosis,Nasty Plot,Substitute
 Persian-Alola,Triathlete Dylan,29,Snarl,Shock Wave,Icy Wind,Nasty Plot
 Persian-Alola,Team Aqua Grunt Aqua Hideout #1,77,Night Slash,Gunk Shot,Play Rough,Hypnosis
-Phanpy,Lady Cindy,10,Stomp,Attract
+Phanpy,Lady Cindy,10,Stomp,Attract,,
 Pheromosa,Winstrate Vito VR,96,Close Combat,Bug Buzz,Ice Beam,Throat Chop
 Pidgeot-Mega,Leader Norman,42,Hurricane,Hyper Voice,Heat Wave,Hidden Power Grass
 Pidgeotto,Youngster Joey,23,Air Slash,Swift,Heat Wave,Steel Wing
@@ -1101,8 +1101,8 @@ Piloswine,Camper Travis,45,Earthquake,Icicle Spear,Curse,Rest
 Pincurchin,Guitarist Kirk,32,Rising Voltage,Liquidation,Poison Jab,Toxic Spikes
 Pincurchin,Swimmer♀ Grace & Declan,82,Rising Voltage,Self-Destruct,Muddy Water,Thunder Wave
 Pincurchin,Lass Crissy,91,Rising Voltage,Self-Destruct,Hydro Pump,Toxic Spikes
-Pincurchin,Dumbass Soupercell,100,Memento,Spikes,Toxic Spikes
-Pineco,Bug Catcher Rick,6,Pin Missile,Iron Defense
+Pincurchin,Dumbass Soupercell,100,Memento,Spikes,Toxic Spikes,
+Pineco,Bug Catcher Rick,6,Pin Missile,Iron Defense,,
 Pinsir,Bug Catcher Jose,24,X-Scissor,Rock Slide,Storm Throw,Bulk Up
 Pinsir-Mega,Bird Keeper Aidan & Athena,90,Close Combat,Return,Feint,Swords Dance
 Pinsir-Mega,Cool Trainer Katelynn,95,Earthquake,Frustration,Quick Attack,Swords Dance
@@ -1119,17 +1119,17 @@ Poliwrath,Swimmer♀ Tisha,88,Liquidation,Drain Punch,Belly Drum,Hypnosis
 Polteageist,Pokémaniac Steve,50,Shadow Ball,Giga Drain,Stored Power,Shell Smash
 Polteageist,Psychic Cedric,73,Shadow Ball,Self-Destruct,Stored Power,Shell Smash
 Polteageist,Swimmer♂ Dean,86,Shadow Ball,Giga Drain,Stored Power,Shell Smash
-Ponyta,Camper Gavi,17,Flame Wheel,Play Rough,Double Kick
-Poochyena,Youngster Calvin,5,Bite,Quick Attack,Sand Attack
+Ponyta,Camper Gavi,17,Flame Wheel,Play Rough,Double Kick,
+Poochyena,Youngster Calvin,5,Bite,Quick Attack,Sand Attack,
 Porygon,Youngster Ben,33,Discharge,Ice Beam,Recover,Thunder Wave
-Porygon-Z,Team Aqua Grunt Weather Inst #3,63,Tri Attack,Ice Beam,Dark Pulse,Hidden Power Fire
-Porygon-Z,Swimmer♂ Herman,90,Tri Attack,Thunder,Dark Pulse,Nasty Plot
 Porygon2,Leader Norman,41,Tri Attack,Ice Beam,Recover,Thunder Wave
 Porygon2,Expert Kevin,67,Tri Attack,Ice Beam,Recover,Thunder Wave
 Porygon2,Breeder Pat,69,Tri Attack,Psychic,Dark Pulse,Agility
 Porygon2,Psychic Blake & Samantha,85,Tri Attack,Thunder,Psychic,Trick Room
 Porygon2,Black Belt Koichi,95,Tri Attack,Blizzard,Thunder,Foul Play
 Porygon2,Elite Four GlaciaDouble,99,Tri Attack,Blizzard,Psychic,Trick Room
+Porygon-Z,Team Aqua Grunt Weather Inst #3,63,Tri Attack,Ice Beam,Dark Pulse,Hidden Power Fire
+Porygon-Z,Swimmer♂ Herman,90,Tri Attack,Thunder,Dark Pulse,Nasty Plot
 Primarina,Beauty Johanna,58,Scald,Draining Kiss,Calm Mind,Protect
 Primarina,Triathlete Aubrey,83,Hyper Voice,Draining Kiss,Psychic,Sing
 Primarina,Triathlete Xayah,90,Moonblast,Psychic,Weather Ball,Calm Mind
@@ -1138,7 +1138,7 @@ Primeape,Hiker Devan,25,Cross Chop,Stone Edge,Night Slash,Focus Energy
 Primeape,Camper Merc,51,Close Combat,Stone Edge,Earthquake,Poison Jab
 Probopass,Hiker Mike,26,Power Gem,Flash Cannon,Earth Power,Thunderbolt
 Probopass,Camper Beau,46,Flash Cannon,Power Gem,Explosion,Zap Cannon
-Psyduck,Youngster Allen,7,Bubble Beam,Psywave
+Psyduck,Youngster Allen,7,Bubble Beam,Psywave,,
 Purugly,School Kid Jerry & Johnson,23,Fake Out,Super Fang,Fake Tears,Hypnosis
 Purugly,Picnicker Angelina,49,Double-Edge,Stomping Tantrum,Super Fang,Hypnosis
 Purugly,Psychic Hannah & Sylvia,85,Return,Fake Out,Throat Chop,Leer
@@ -1161,7 +1161,7 @@ Raichu-Alola,Team Aqua Grunt Aqua Hideout #5,79,Psychic,Discharge,Grass Knot,Nas
 Raichu-Alola,Lass Crissy,90,Rising Voltage,Surf,Grass Knot,Nasty Plot
 Raikou,Aqua Admin Matt Aqua Hideout,82,Thunderbolt,Scald,Signal Beam,Calm Mind
 Rampardos,Cool Trainer Jody,41,Rock Slide,Crunch,Zen Headbutt,Fire Punch
-Rampardos,Psychic Blake & Samantha,85,Head Smash,Rock Slide
+Rampardos,Psychic Blake & Samantha,85,Head Smash,Rock Slide,,
 Rapidash,Triathlete Maria,29,Flare Blitz,Megahorn,High Horsepower,Hypnosis
 Rapidash-Galar,Triathlete Jasmine,36,Play Rough,Zen Headbutt,Hypnosis,Will-O-Wisp
 Rapidash-Galar,Kindler Keegan,54,Play Rough,Zen Headbutt,Mystical Fire,Will-O-Wisp
@@ -1187,13 +1187,13 @@ Ribombee,Team Magma Grunt Space Center #3,85,Moonblast,Bug Buzz,Hidden Power Fir
 Ribombee,Lady Daphne,90,Moonblast,Bug Buzz,Psychic,Sticky Web
 Rillaboom,Cool Trainer George,39,Grassy Glide,Knock Off,U-turn,Protect
 Rillaboom,Picnicker Diana,53,Wood Hammer,Grassy Glide,High Horsepower,Knock Off
-Rillaboom,Guitarist Dalton,59,Wood Hammer,Grassy Glide,U-turn
+Rillaboom,Guitarist Dalton,59,Wood Hammer,Grassy Glide,U-turn,
 Rillaboom,Team Aqua Grunt Aqua Hideout #8,79,Wood Hammer,Grassy Glide,High Horsepower,Endeavor
 Rillaboom,Swimmer♀ Grace & Declan,82,Grassy Glide,High Horsepower,Darkest Lariat,Fake Out
 Rillaboom,Bird Keeper Presley & Auron,84,Wood Hammer,Grassy Glide,Acrobatics,Swords Dance
 Rillaboom,Cool Trainer Felix,94,Grassy Glide,Knock Off,Low Sweep,Endeavor
-Riolu,Battle Girl Laura,18,Force Palm,Body Slam
-Rookidee,Youngster Calvin,6,Wing Attack,Sand Attack,Swagger
+Riolu,Battle Girl Laura,18,Force Palm,Body Slam,,
+Rookidee,Youngster Calvin,6,Wing Attack,Sand Attack,Swagger,
 Roserade,Parasol Lady Koko,60,Sludge Bomb,Grass Knot,Weather Ball,Sleep Powder
 Roserade,Team Aqua Grunt Seafloor Cavern #2,86,Energy Ball,Sludge Bomb,Hidden Power Fire,Sleep Powder
 Roserade,Lady Daphne,90,Sludge Bomb,Grass Knot,Extrasensory,Sleep Powder
@@ -1236,7 +1236,7 @@ Sawk,Magma Grunt Mt Chimney #2 & Grunt One,52,Close Combat,Reversal,Zen Headbutt
 Sawk,Cool Trainer Jennifer & Callie,70,Close Combat,Throat Chop,Coaching,Protect
 Sawk,Black Belt Zander,73,Close Combat,Reversal,Knock Off,Counter
 Sawsbuck,Triathlete Jacob,35,Headbutt,Jump Kick,Bounce,Swords Dance
-Scatterbug,Fisherman Bill,16,Bug Bite
+Scatterbug,Fisherman Bill,16,Bug Bite,,,
 Sceptile,Trainer Rival Cycling Road Sceptile,38,Leaf Storm,Leaf Blade,Acrobatics,Nature Power
 Sceptile,Expert Donald,61,Leaf Blade,Earthquake,Dual Chop,Swords Dance
 Sceptile,Ninja Boy Jonas & Fredrick,95,Energy Ball,Focus Blast,Rock Slide,Acrobatics
@@ -1258,7 +1258,7 @@ Scrafty,Cool Trainer Gustavo,71,Close Combat,Crunch,Poison Jab,Dragon Dance
 Scrafty,Team Magma Grunt Space Center #2,85,Close Combat,Knock Off,Stone Edge,Counter
 Scrafty,Swimmer♂ Herman,89,Close Combat,Crunch,Iron Tail,Dragon Dance
 Scraggy,Leader Brawly,21,Feint Attack,Power-Up Punch,Rock Tomb,Rest
-Scyther,Youngster Jaylen,45,U-turn,Dual Wingbeat
+Scyther,Youngster Jaylen,45,U-turn,Dual Wingbeat,,
 Scyther,Camper Merc,52,Dual Wingbeat,Bug Bite,Brick Break,Swords Dance
 Seadra,Fisherman Ivan,21,Brine,Headbutt,Aurora Beam,Focus Energy
 Seaking,Sr. And Jr. Anna And Meg,31,Hydro Pump,Muddy Water,Ice Beam,Flail
@@ -1268,7 +1268,7 @@ Seismitoad,Winstrate Victoria,43,Earth Power,Muddy Water,Venoshock,Toxic
 Seismitoad,Team Magma Grunt Magma Hideout #9,75,Earthquake,Muddy Water,Sludge Wave,Stealth Rock
 Seismitoad,Swimmer♂ Clarence,88,Earth Power,Power Whip,Sludge Bomb,Weather Ball
 Seismitoad,Pokéfan Bethany,90,Earth Power,Power Whip,Sludge Bomb,Weather Ball
-Serperior,Hiker Eric & Autumn,52,Leaf Storm
+Serperior,Hiker Eric & Autumn,52,Leaf Storm,,,
 Serperior,Team Aqua Grunt Aqua Hideout #2,77,Leaf Storm,Dragon Pulse,Glare,Leech Seed
 Serperior,Aqua Leader Archie Seafloor Cavern,89,Leaf Storm,Glare,Leech Seed,Substitute
 Serperior,Pokémaniac Hambino,94,Leaf Storm,Dragon Pulse,Hidden Power Fire,Glare
@@ -1285,13 +1285,13 @@ Sharpedo-Mega,Aqua Leader Archie Mt Pyre,77,Waterfall,Crunch,Close Combat,Ice Fa
 Shaymin,Magma Admin Courtney Space center,87,Seed Flare,Earth Power,Hidden Power Ice,Grass Whistle
 Shaymin-Sky,Leader Winona,68,Seed Flare,Air Slash,Earth Power,Aromatherapy
 Shedinja,Bug Maniac James,22,X-Scissor,Hex,Shadow Sneak,Will-O-Wisp
-Shedinja,Dumbass Soupercell,100,Swords Dance
+Shedinja,Dumbass Soupercell,100,Swords Dance,,,
 Shelgon,Ruin Maniac Rigger,45,Dragon Rush,Brick Break,Facade,Dragon Dance
 Shiftry,Rich Boy Santos,44,Solar Blade,Dark Pulse,Explosion,Heat Wave
-Shiftry,Ninja Boy Takashi & Dayton,62,Explosion,Fake Out
+Shiftry,Ninja Boy Takashi & Dayton,62,Explosion,Fake Out,,
 Shiftry,Team Magma Grunt Magma Hideout #5,75,Leaf Storm,Leaf Blade,Night Slash,Low Kick
 Shiinotic,Bug Maniac Taylor,61,Moonblast,Pollen Puff,Spore,Strength Sap
-Shuckle,Bug Catcher Doug,61,Rock Tomb,Final Gambit,Sticky Web
+Shuckle,Bug Catcher Doug,61,Rock Tomb,Final Gambit,Sticky Web,
 Shuckle,Swimmer♂ Dean,86,Infestation,Knock Off,Rest,Shell Smash
 Sigilyph,Camper Travis,44,Psychic,Air Slash,Heat Wave,Energy Ball
 Sigilyph,Lass Pearl,89,Air Slash,Stored Power,Calm Mind,Roost
@@ -1306,20 +1306,20 @@ Simipour,Triathlete Kyra,95,Hydro Pump,Ice Beam,Grass Knot,Nasty Plot
 Simisage,Picnicker Bianca,33,Leaf Storm,Superpower,Rock Slide,Acrobatics
 Simisear,Kindler Bernie,49,Fire Blast,Focus Blast,Acrobatics,Substitute
 Simisear,Team Magma Grunt Space Center #1,85,Flamethrower,Hidden Power Ice,Grass Knot,Nasty Plot
-Sirfetch’d,Triathlete Jasmine,35,Close Combat
+Sirfetch’d,Triathlete Jasmine,35,Close Combat,,,
 Sirfetch’d,Expert Nancy,49,Meteor Assault,Brick Break,Leaf Blade,Night Slash
 Sirfetch’d,Bird Keeper Jared,69,Close Combat,Dual Wingbeat,Poison Jab,Quick Attack
 Sirfetch’d,Cool Trainer Julie & Dianne,94,Close Combat,Poison Jab,Knock Off,Detect
-Sizzlipede,Bug Catcher Rick,7,Bug Bite,Ember,Wrap
+Sizzlipede,Bug Catcher Rick,7,Bug Bite,Ember,Wrap,
 Skarmory,Camper Branden,45,Dual Wingbeat,Body Press,Spikes,Stealth Rock
 Skarmory,Bird Keeper Hugh,63,Brave Bird,Whirlwind,Spikes,Stealth Rock
-Skiddo,Youngster Allen,7,Vine Whip,Tackle,Synthesis
+Skiddo,Youngster Allen,7,Vine Whip,Tackle,Synthesis,
 Skrelp,Team Aqua Grunt Museum #1,16,Water Pulse,Acid,Protect,Toxic
 Skuntank,Kindler Bernie,48,Sludge Bomb,Knock Off,Explosion,Fire Blast
 Skuntank,Kindler Jeff,54,Poison Jab,Knock Off,Explosion,Fire Blast
-Skuntank,Team Aqua Grunt Mt Pyre #3,75,Sludge Bomb,Dark Pulse,Explosion,Nasty Plot
 Skuntank,Team Magma Grunt Magma Hideout #10,74,Sludge Bomb,Dark Pulse,Explosion,Fire Blast
-Slaking,Cool Trainer Jody,40,Giga Impact
+Skuntank,Team Aqua Grunt Mt Pyre #3,75,Sludge Bomb,Dark Pulse,Explosion,Nasty Plot
+Slaking,Cool Trainer Jody,40,Giga Impact,,,
 Slaking,Cool Trainer Tammy & Cale,70,Return,Earthquake,Fire Punch,Knock Off
 Slaking,Team Magma Grunt Magma Hideout #3,75,Double-Edge,Retaliate,Earthquake,Crunch
 Slowbro,Team Magma Grunt Magma Hideout #9,74,Psychic,Flamethrower,Grass Knot,Calm Mind
@@ -1341,7 +1341,7 @@ Slurpuff,Swimmer♂ Zappator,89,Dazzling Gleam,Flamethrower,Psychic,Calm Mind
 Slurpuff,Cool Trainer Michelle,94,Misty Explosion,Fire Blast,Endeavor,Sticky Web
 Smeargle,Young Couple Dez And Luke,73,Psywave,Dark Void,Protect,Substitute
 Smeargle,Swimmer♂ Dean,87,Boomburst,Dark Pulse,Shell Smash,Spore
-Smoochum,Tuber Chandler,14,Aurora Beam,Psybeam,Lovely Kiss
+Smoochum,Tuber Chandler,14,Aurora Beam,Psybeam,Lovely Kiss,
 Sneasel,School Kid Jerry & Johnson,23,Ice Punch,Knock Off,Ice Shard,Brick Break
 Sneasler,Triathlete Pablo,89,Close Combat,Gunk Shot,Knock Off,Swords Dance
 Sneasler,Leader Juan,91,Close Combat,Poison Jab,Icy Wind,Fake Out
@@ -1356,7 +1356,7 @@ Solrock,Leader Roxanne,25,Rock Slide,Psycho Cut,Stomping Tantrum,Morning Sun
 Solrock,Hiker Brice,52,Stone Edge,Earthquake,Acrobatics,Trick Room
 Solrock,Cool Trainer Gerald,54,Zen Headbutt,Rock Slide,Overheat,Rock Polish
 Solrock,Team Magma Grunt Magma Hideout #6,75,Stone Edge,Zen Headbutt,Explosion,Will-O-Wisp
-Spinda,Lass Tiana,8,Fake Out,Metronome
+Spinda,Lass Tiana,8,Fake Out,Metronome,,
 Spinda,Picnicker Carol,53,Dizzy Punch,Superpower,Psycho Cut,Hypnosis
 Spiritomb,Hex Maniac Tasha,74,Dark Pulse,Shadow Ball,Pursuit,Calm Mind
 Spiritomb,Fisherman Roger & Koji,89,Foul Play,Hex,Psychic,Hypnosis
@@ -1384,8 +1384,8 @@ Stonjourner,Hiker Eric & Autumn,53,Stone Edge,Rock Slide,Stomping Tantrum,Protec
 Stoutland,Hiker Mike,26,Body Slam,Play Rough,Submission,Howl
 Stoutland,Picnicker Irene,45,Retaliate,Body Slam,Play Rough,Stomping Tantrum
 Stoutland,Cool Trainer Cristin,71,Return,Retaliate,Close Combat,Play Rough
-Stoutland,Sis And Bro Lila And Roy,86,Last Resort,Retaliate
-Stufful,Battle Girl Laura,17,Body Slam,Force Palm,Bulk Up
+Stoutland,Sis And Bro Lila And Roy,86,Last Resort,Retaliate,,
+Stufful,Battle Girl Laura,17,Body Slam,Force Palm,Bulk Up,
 Stunfisk,Parasol Lady Angelica,70,Earthquake,Discharge,Scald,Stealth Rock
 Stunfisk,Swimmer♂ Reed,89,Earth Power,Discharge,Foul Play,Stealth Rock
 Sudowoodo,Youngster Tommy,23,Rock Slide,Take Down,Submission,Stomping Tantrum
@@ -1409,11 +1409,11 @@ Swellow,Triathlete Maria,29,Brave Bird,Hyper Voice,Heat Wave,Steel Wing
 Swellow,Winstrate Vito Fallarbor,47,Boomburst,Brave Bird,Heat Wave,Quick Attack
 Swellow,Guitarist Dalton,59,Brave Bird,Facade,Endeavor,Protect
 Swellow,Hex Maniac Gongas,95,Boomburst,Brave Bird,Heat Wave,U-turn
-Swellow,Triathlete Kyra,96,Boomburst,Hurricane,U-turn
-Swirlix,Lass Tiana,7,Fairy Wind,Metronome
+Swellow,Triathlete Kyra,96,Boomburst,Hurricane,U-turn,
+Swirlix,Lass Tiana,7,Fairy Wind,Metronome,,
 Swoobat,Psychic Edward,34,Extrasensory,Air Slash,Stored Power,Calm Mind
 Sylveon,Ranger Catherine,61,Hyper Voice,Psyshock,Weather Ball,Quick Attack
-Sylveon,Psychic Preston & Maura,85,Misty Explosion,Hyper Voice,Protect
+Sylveon,Psychic Preston & Maura,85,Misty Explosion,Hyper Voice,Protect,
 Sylveon,Psychic Alix,96,Misty Explosion,Hyper Voice,Mystical Fire,Calm Mind
 Talonflame,Youngster Jaylen,45,Flare Blitz,Acrobatics,Swords Dance,Will-O-Wisp
 Talonflame,Kindler Jace,54,Flare Blitz,Acrobatics,Will-O-Wisp,Roost
@@ -1453,8 +1453,8 @@ Togekiss,Hex Maniac Kathleen & Nicholas,85,Air Slash,Heat Wave,Follow Me,Tailwin
 Togekiss,Pokémaniac Hambino,94,Air Slash,Aura Sphere,Mystical Fire,Thunder Wave
 Togekiss,Ninja Boy Jonas & Fredrick,95,Dazzling Gleam,Stored Power,Fling,Psych Up
 Torkoal,Kindler Bryant & Shayla,50,Heat Wave,Body Press,Scorching Sands,Stealth Rock
-Torkoal,Magma Admin Tabitha Mt Chimney,54,Flamethrower,Explosion,Solar Beam,Earth Power
 Torkoal,Kindler Cole,53,Flamethrower,Solar Beam,Scorching Sands,Stealth Rock
+Torkoal,Magma Admin Tabitha Mt Chimney,54,Flamethrower,Explosion,Solar Beam,Earth Power
 Torkoal,Kindler Jeff,56,Fire Blast,Explosion,Earth Power,Body Press
 Torkoal,Team Magma Grunt Magma Hideout #1,74,Fire Blast,Solar Beam,Explosion,Shell Smash
 Tornadus,Aqua Admin Shelly Weather Institute,64,Acrobatics,Knock Off,Heat Wave,Grass Knot
@@ -1497,7 +1497,7 @@ Turtonator,Team Magma Grunt Magma Hideout #4teen,76,Draco Meteor,Overheat,Scorch
 Turtonator,Swimmer♂ Dean,86,Flamethrower,Dragon Pulse,Scorching Sands,Shell Smash
 Turtonator,Cool Trainer Halle,94,Heat Crash,Explosion,Body Press,Curse
 Typhlosion,Collector Edwin,38,Eruption,Flamethrower,Focus Blast,Wild Charge
-Typhlosion,Rich Boy Santos,45,Eruption
+Typhlosion,Rich Boy Santos,45,Eruption,,,
 Typhlosion-Hisui,Swimmer♀ Carlee & Harrison,90,Fire Blast,Heat Wave,Shadow Ball,Protect
 Tyranitar,Cool Trainer Cristin,70,Stone Edge,Pursuit,Earthquake,Counter
 Tyranitar,Triathlete Pablo,89,Stone Edge,Crunch,Pursuit,Heavy Slam
@@ -1546,8 +1546,8 @@ Volbeat,Battle Girl Vivian,32,Bug Buzz,Discharge,Baton Pass,Tail Glow
 Volcarona,Leader Winona,69,Bug Buzz,Fiery Dance,Psychic,Quiver Dance
 Volcarona,Swimmer♀ Carlee & Harrison,90,Heat Wave,Bug Buzz,Giga Drain,Quiver Dance
 Volcarona,Hex Maniac Gongas,95,Bug Buzz,Fiery Dance,Giga Drain,Quiver Dance
-Wailord,Ninja Boy Takashi & Dayton,62,Water Spout,Surf,Explosion
-Wailord,Swimmer♂ Cranberry,84,Water Spout,Hydro Pump,Self-Destruct
+Wailord,Ninja Boy Takashi & Dayton,62,Water Spout,Surf,Explosion,
+Wailord,Swimmer♂ Cranberry,84,Water Spout,Hydro Pump,Self-Destruct,
 Walrein,Team Aqua Grunt Weather Inst #2,62,Liquidation,Freeze-Dry,Body Press,Curse
 Walrein,Team Aqua Grunt Aqua Hideout #4,78,Blizzard,Scald,Substitute,Toxic
 Walrein,Lass Pearl,89,Blizzard,Scald,Freeze-Dry,Substitute
@@ -1560,7 +1560,7 @@ Weavile,Trainer Rival Lilycove Swampert,72,Knock Off,Ice Shard,Pursuit,Triple Ax
 Weavile,Triathlete Aubrey,82,Pursuit,Triple Axel,Psycho Cut,Low Kick
 Weavile,Team Magma Grunt Space Center #2,86,Night Slash,Ice Shard,Low Kick,Swords Dance
 Weavile,Cool Trainer Halle,95,Knock Off,Triple Axel,Low Kick,Swords Dance
-Weedle,Fisherman Bill,16,Bug Bite
+Weedle,Fisherman Bill,16,Bug Bite,,,
 Weezing,Cool Trainer Tammy & Cale,72,Sludge Bomb,Fire Blast,Assurance,Protect
 Weezing-Galar,Ninja Boy Lao,45,Strange Steam,Venoshock,Flamethrower,Toxic
 Weezing-Galar,Kindler Cole,54,Play Rough,Explosion,Payback,Overheat
@@ -1585,22 +1585,22 @@ Wobbuffet,Ninja Boy Jack,95,Counter,Mirror Coat,Destiny Bond,Encore
 Wormadam,Bug Maniac Brent,70,Leaf Storm,Bug Buzz,Psychic,Giga Drain
 Wormadam-Sandy,Bug Maniac Brent,70,Earthquake,Rock Blast,Infestation,Fissure
 Wormadam-Trash,Bug Maniac Brent,70,Iron Head,Infestation,Protect,Metal Burst
-Wurmple,Fisherman Bill,15,Bug Bite
+Wurmple,Fisherman Bill,15,Bug Bite,,,
 Wyrdeer,Bird Keeper Josue & Andres,64,Psychic,Hyper Voice,Light Screen,Reflect
-Wyrdeer,Psychic Jacki & Alberto,95,Psychic,Megahorn,Thunder,Earthquake
 Wyrdeer,Ninja Boy Jack,95,Psychic,Megahorn,Throat Chop,Thunder Wave
+Wyrdeer,Psychic Jacki & Alberto,95,Psychic,Megahorn,Thunder,Earthquake
 Xatu,Psychic Jaclyn,33,Extrasensory,Drill Peck,Heat Wave,Light Screen
 Xurkitree,Magma Admin Courtney Space center,87,Thunderbolt,Grass Knot,Hypnosis,Substitute
-Yanma,Triathlete Mikey,9,Acrobatics,Sonic Boom
+Yanma,Triathlete Mikey,9,Acrobatics,Sonic Boom,,
 Yanmega,Cool Trainer Randall,39,Bug Buzz,Air Slash,Giga Drain,Detect
-Yanmega,Bird Keeper Jared,67,Bug Buzz,Air Slash,U-turn
+Yanmega,Bird Keeper Jared,67,Bug Buzz,Air Slash,U-turn,
 Yanmega,Pokémaniac Mark,72,Bug Buzz,Air Slash,Ancient Power,Hypnosis
 Yanmega,Magma Admin Tabitha Magma Hideout,77,Air Slash,Giga Drain,Hidden Power Fire,Detect
 Yanmega,Cool Trainer Katelynn,93,Bug Buzz,Air Slash,Hypnosis,Substitute
-Yanmega,Black Belt Koichi,95,Hurricane,Bug Buzz,U-turn
+Yanmega,Black Belt Koichi,95,Hurricane,Bug Buzz,U-turn,
 Yveltal,Elite Four Sidney,100,Dark Pulse,Oblivion Wing,Heat Wave,Roost
 Zangoose,Collector Hector,51,Facade,Close Combat,Night Slash,Detect
-Zangoose,Tuber Simon,57,Last Resort,Retaliate
+Zangoose,Tuber Simon,57,Last Resort,Retaliate,,
 Zangoose,Bug Catcher Davis,94,Quick Attack,Close Combat,Night Slash,Belly Drum
 Zapdos,Aqua Leader Archie Seafloor Cavern,90,Hurricane,Thunder,Weather Ball,Roost
 Zapdos-Galar,Trainer Rival Lilycove Swampert,73,Brave Bird,Thunderous Kick,Throat Chop,Bulk Up
@@ -1613,8 +1613,8 @@ Zekrom,Elite Four DrakeDouble,100,Draco Meteor,Bolt Strike,Scale Shot,Protect
 Zeraora,Leader Wattson,35,Plasma Fists,Close Combat,Knock Off,Grass Knot
 Zoroark,Triathlete Jasmine,35,Night Daze,Knock Off,Flamethrower,Sludge Bomb
 Zoroark,Ninja Boy Keigo,70,Night Daze,Flamethrower,Aura Sphere,Nasty Plot
-Zoroark,Team Magma Grunt Magma Hideout #3,75,Pursuit,Fire Blast,Focus Blast,Sludge Bomb
 Zoroark,Team Magma Grunt Magma Hideout #10,75,Night Daze,Fire Blast,Grass Knot,Nasty Plot
+Zoroark,Team Magma Grunt Magma Hideout #3,75,Pursuit,Fire Blast,Focus Blast,Sludge Bomb
 Zoroark,Leader Tate,86,Night Daze,Pursuit,Sludge Bomb,Aura Sphere
 Zoroark,Team Aqua Grunt Seafloor Cavern #5,87,Night Daze,Aura Sphere,Extrasensory,Nasty Plot
 Zoroark,Ninja Boy Jack,95,Sucker Punch,Knock Off,Low Kick,Swords Dance
