@@ -645,6 +645,7 @@ function calculateHighestDamage(moves: any[]): KVP[] {
        let keyStrings = [];
        let keyString = "";
        i = 0;
+       let highestDamageSet = false;
        for (let key of keys) {
            if (keyString != "") {
                keyString += "/"
@@ -686,8 +687,12 @@ function calculateHighestDamage(moves: any[]): KVP[] {
                 }
            }
 
-           if (key === maximumKey) {
+           // if multiple moves kill, they are both highest damage 
+           if (key === maximumKey && key >= p1CurrentHealth) {
                keyString += `${moveName}:HD+${moveBonus}`;
+           } else if (key === maximumKey && !highestDamageSet) {
+               keyString += `${moveName}:HD+0`;
+               highestDamageSet = true;
            } else {
                keyString += `${moveName}:0`;
            }
@@ -2359,7 +2364,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                     rate: 1
                 });
             }
-            
+
             // end of the hell loop
         });
 

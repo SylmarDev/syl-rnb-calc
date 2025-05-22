@@ -31,6 +31,8 @@
 In general
 - Someday make a test suite to verify this all works
 - On Highest Damage calcs, ties go to the higher ranked move based on the order of moves
+  - WE ALSO NEED TO MAKE IT STOP REORDERING DAMAGING 0 BP MOVES
+  - 0 BP but not status list exists in ai.ts, move it to moveset_import or wherever the call that rearranges that stuff is
 - Finish off special move cases
   - Sun based recovery
   - Flame Charge (no, there's no docs or consensus on the score, but they can click it sometimes when its slower. I'd assume similar AI for speed control)
@@ -50,7 +52,7 @@ In general
 - Add in the survival chance calculator that I have the python program for (that'll take a while)
 - Code cleanup for maintainability
   - remove scripts folder
-  - refactor the pushes to moveStringsToAdd all throughout ``ai.ts``, sub that for a function 
+  - refactor the pushes to moveStringsToAdd all throughout ``ai.ts``, sub that for a function
 
 ## COMMUNITY SUGGESTIONS
 - Remove items button (set your box to have all items (none))
