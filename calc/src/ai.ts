@@ -48,9 +48,10 @@ const soundMoves: string[] = ["Boomburst", "Bug Buzz", "Chatter",
 const offensiveSetup: string[] = [
     "Dragon Dance", "Shift Gear", "Swords Dance", "Howl",
     "Sharpen", "Meditate", "Hone Claws", "Charge Beam", "Power-Up Punch",
-    "Swords Dance", "Howl", "Tail Glow", "Nasty Plot", "Dragon Dance", "Hone Claws",
-    "Growth", "Work Up"
-];
+    "Swords Dance", "Howl", "Dragon Dance", "Hone Claws",
+    "Growth"
+]; // removing tail glow, nasty plot and work up because they are offensive setup but they have their own section
+// TODO: test tail glow
 const defensiveSetup: string[] = [
     "Acid Armor", "Barrier", "Cotton Guard", "Harden", "Iron Defense",
     "Stockpile", "Cosmic Power"
