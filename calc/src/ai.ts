@@ -1846,7 +1846,9 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             } else if (moveScore == 0) {
                 // all others that aren't contrary
                 if (isNamed(moveName, ...offensiveSetup)) {
-                    isOffensiveSetup = true;
+                    // stop Charge Beam and Power Up Punch from being chosen on ground/ghost types respectively
+                    isOffensiveSetup = !(isNamed(moveName, "Charge Beam", "Power-Up Punch") &&
+                                            !anyValidDamageRolls);
                 } else if (isNamed(moveName, ...defensiveSetup)) {
                     isDefensiveSetup = true;
                 }
