@@ -2384,6 +2384,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             // default to +6
             if (moveScore == 0 &&
                 moveIsStatus &&
+                moveName != "(No Move)" &&
                 !(moveStringsToAdd.map(x => x.move).includes(moveName))) {
                     moveStringsToAdd.push({
                         move: moveName,
