@@ -2368,6 +2368,17 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                     rate: 1
                 });
             }
+            
+            // I'm just guessing it's similar to Speed reduction AI, 
+            // because I've seen Lass Haley's Numel Flame Charge when its not highest damage
+            if (moveName == "Flame Charge" 
+                && moveScore == 0 && !aiFaster && anyValidDamageRolls) {
+                moveStringsToAdd.push({
+                    move: moveName,
+                    score: 6,
+                    rate: 1
+                });
+            }
 
             // end of the hell loop
         });
