@@ -1488,7 +1488,8 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                 } else {
                     let screenScore = 6;
                     const correspondingMoveSplit = moveName == "Reflect" ? "Physical": "Special";
-                    const playerHasAnyOfCorrespondingSplit = playerMoves.some(x => x.move.category == correspondingMoveSplit && x.move.bp > 0);
+                    const playerHasAnyOfCorrespondingSplit = playerMoves.some(x => x.move.category == correspondingMoveSplit && 
+                        (x.move.bp > 0 || (zeroBPButNotStatus.includes(x.move.name) && x.move.name != "(No Move)")));
 
                     if (playerHasAnyOfCorrespondingSplit) {
                         if (aiItem == "Light Clay") {
