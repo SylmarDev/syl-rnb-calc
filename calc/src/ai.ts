@@ -1451,8 +1451,8 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             if (moveName.endsWith(" Terrain")) {
                 // I think there's only ever one terrain type per team, so this should be fine. 
                 // If it's broken fix it obvs
-                if (terrain == "") {
-                    if (aiItem != "Terrain Extender") {
+                if (!terrain) {
+                    if (aiItem === "Terrain Extender") {
                         moveStringsToAdd.push({
                             move: moveName,
                             score: 9,
