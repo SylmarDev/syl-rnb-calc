@@ -138,7 +138,13 @@ function performCalculations() {
 		for (var i = 0; i < moveRates.length; i++) {
 			$("#resultMoveRateR" + (i + 1)).text((moveRates[i] * 100).toFixed(2) + "%");
 		}
+	
+		// needs to take list of enemy pokemon objects
+		// and return the one to switch in maybe it's found its moment
+		var getSwitchInDist(damageResults[0][0].attacker, damageResults[0][0].field, )
 	}
+
+	// TODO: put another AI option?
 
 	if ($('.locked-move').length) {
 		bestResult = $('.locked-move');
