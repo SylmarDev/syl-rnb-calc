@@ -2140,6 +2140,42 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                 }
             }
 
+            // Sun Based Recovery
+            // TODO: tabled for now, needs some funky solution
+            // I'm sure we can multiply rate to figure it out, and move this above recovery moves so we can funnel these moves to normal recovery
+            let sunBasedHealingOverflow = false; // bool to flag if sun-based recovery should get handled like other healing moves
+            let sunRecoveryRate = 0;
+            if (isNamed(moveName, "Morning Sun", "Synthesis", "Moonlight")) {
+                if (aiHealthPercentage == 100) {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: -20,
+                        rate: 1
+                    });
+                } else if (aiHealthPercentage >= 85) {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: -6,
+                        rate: 1
+                    });
+                } else {
+                    if (weather == "Sun") {
+                        // TODO: update recover percentage with actual # (1 rn)
+                        sunRecoveryRate = shouldAIRecover(moves[0].attacker, 1, playerHighestRoll, aiFaster);
+                    }
+                    if (sunRecoveryRate == 1) {
+                        moveStringsToAdd.push({
+                            move: moveName,
+                            score: 7,
+                            rate: 1
+                        });
+                    } else {
+                        sunBasedHealingOverflow = true;
+                    }
+                }
+                
+            }
+
             // Recovery Moves
             if (isNamed(moveName, "Recover", "Slack Off", "Heal Order", "Soft-Boiled",
                 "Roost", "Strength Sap"))
@@ -2157,6 +2193,13 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                         rate: 1
                     });
                 } else {
+                    const aiRecoverRate = shouldAIRecover(moves[0].attacker, 0.5, playerHighestRoll, aiFaster)
+                    // if sunRecoveryRate != 0, then Sun is active and shouldAIRecover returned 0.5 or 0.75
+                    // todo: test this, but it looks good
+                    let sevenRate = sunRecoveryRate != 0 ?
+                                        sunRecoveryRate + ((1 - sunRecoveryRate) * aiRecoverRate):
+                                        aiRecoverRate;
+                                        
                     moveStringsToAdd.push(...[{
                         move: moveName,
                         score: 5,
@@ -2165,17 +2208,10 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                     {
                         move: moveName,
                         score: 2,
-                        rate: shouldAIRecover(moves[0].attacker, 0.5, playerHighestRoll, aiFaster)
+                        rate: sevenRate
                     }]);
                 }
             }
-
-            // Sun Based Recovery
-            // TODO: tabled for now, needs some funky solution
-            // I'm sure we can multiply rate to figure it out, and move this above recovery moves so we can funnel these moves to normal recovery
-            /* if (isNamed(moveName, "Morning Sun", "Synthesis", "Moonlight")) {
-                
-            } */
 
             // Rest
             if (moveName == "Rest") {
