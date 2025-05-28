@@ -2193,7 +2193,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                         rate: 1
                     });
                 } else {
-                    const aiRecoverRate = shouldAIRecover(moves[0].attacker, 0.5, playerHighestRoll, aiFaster)
+                    const aiRecoverRate = shouldAIRecover(moves[0].attacker, 0.5, playerHighestRoll, aiFaster);
                     // if sunRecoveryRate != 0, then Sun is active and shouldAIRecover returned 0.5 or 0.75
                     // todo: test this, but it looks good
                     let sevenRate = sunRecoveryRate != 0 ?
