@@ -56,6 +56,9 @@ const defensiveSetup: string[] = [
     "Acid Armor", "Barrier", "Cotton Guard", "Harden", "Iron Defense",
     "Stockpile", "Cosmic Power"
 ];
+const powderMoves: string[] = [
+    "Cotton Spore", "Magic Powder", "Poison Powder", "Powder", "Rage Powder", "Sleep Powder", "Spore", "Stun Spore"
+];
 
 // move functions
 function isNamed(moveName: string, ...names: string[]) {
@@ -2054,11 +2057,13 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
 
             // Focus Energy, Laser Focus
             // If AI has Super Luck/Sniper, holding Scope Lens, or has a high crit rate move +7, else +6
+            // I lost 2 mons to aiDeadToPlayer check here not be referenced in the docs, I should've known that was weird
             if (moveName == "Focus Energy" || moveName == "Laser Focus") {
                 const critIncentive = move.ability == "Super Luck" || move.ability == "Sniper"
                                         || move.item == "Scope Lens" || movesetHasHighCritRatioMove(moves);
                 if ((moveName == "Focus Energy" && moves[0].field.attackerSide.isFocusEnergy) ||
-                    playerAbility == "Shell Armor" || playerAbility == "Battle Armor") {
+                    playerAbility == "Shell Armor" || playerAbility == "Battle Armor" ||
+                    aiDeadToPlayer) {
                     moveStringsToAdd.push({
                         move: moveName,
                         score: -40,
@@ -2140,6 +2145,42 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                 }
             }
 
+            // Sun Based Recovery
+            // TODO: tabled for now, needs some funky solution
+            // I'm sure we can multiply rate to figure it out, and move this above recovery moves so we can funnel these moves to normal recovery
+            let sunBasedHealingOverflow = false; // bool to flag if sun-based recovery should get handled like other healing moves
+            let sunRecoveryRate = 0;
+            if (isNamed(moveName, "Morning Sun", "Synthesis", "Moonlight")) {
+                if (aiHealthPercentage == 100) {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: -20,
+                        rate: 1
+                    });
+                } else if (aiHealthPercentage >= 85) {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: -6,
+                        rate: 1
+                    });
+                } else {
+                    if (weather == "Sun") {
+                        // TODO: update recover percentage with actual # (1 rn)
+                        sunRecoveryRate = shouldAIRecover(moves[0].attacker, 1, playerHighestRoll, aiFaster);
+                    }
+                    if (sunRecoveryRate == 1) {
+                        moveStringsToAdd.push({
+                            move: moveName,
+                            score: 7,
+                            rate: 1
+                        });
+                    } else {
+                        sunBasedHealingOverflow = true;
+                    }
+                }
+                
+            }
+
             // Recovery Moves
             if (isNamed(moveName, "Recover", "Slack Off", "Heal Order", "Soft-Boiled",
                 "Roost", "Strength Sap"))
@@ -2157,6 +2198,13 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                         rate: 1
                     });
                 } else {
+                    const aiRecoverRate = shouldAIRecover(moves[0].attacker, 0.5, playerHighestRoll, aiFaster);
+                    // if sunRecoveryRate != 0, then Sun is active and shouldAIRecover returned 0.5 or 0.75
+                    // todo: test this, but it looks good
+                    let sevenRate = sunRecoveryRate != 0 ?
+                                        sunRecoveryRate + ((1 - sunRecoveryRate) * aiRecoverRate):
+                                        aiRecoverRate;
+                                        
                     moveStringsToAdd.push(...[{
                         move: moveName,
                         score: 5,
@@ -2165,17 +2213,10 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                     {
                         move: moveName,
                         score: 2,
-                        rate: shouldAIRecover(moves[0].attacker, 0.5, playerHighestRoll, aiFaster)
+                        rate: sevenRate
                     }]);
                 }
             }
-
-            // Sun Based Recovery
-            // TODO: tabled for now, needs some funky solution
-            // I'm sure we can multiply rate to figure it out, and move this above recovery moves so we can funnel these moves to normal recovery
-            /* if (isNamed(moveName, "Morning Sun", "Synthesis", "Moonlight")) {
-                
-            } */
 
             // Rest
             if (moveName == "Rest") {
@@ -2379,6 +2420,19 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                     score: 6,
                     rate: 1
                 });
+            }
+
+            // Powder
+            // Doesn't affect Grass-types, Overcoat, or Safety Goggles holders
+            if (isNamed(moveName, ...powderMoves) &&
+                (playerTypes.includes("Grass") ||
+                playerAbility === "Overcoat" ||
+                moves[0].defender.item === "Safety Goggles")) {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: -50,
+                        rate: 1
+                    });
             }
 
             // end of the hell loop
