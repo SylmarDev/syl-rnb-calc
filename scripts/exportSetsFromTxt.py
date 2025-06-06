@@ -80,7 +80,6 @@ with open("scripts/data/Trainer Battles.txt", "r", encoding="utf-8") as f:
 
         # print(sets[len(sets)-1].toList())
         
-        # TODO: replace with line = f.readline()
         line = f.readline()
 
 print("done reading, now writing...")

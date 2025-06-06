@@ -737,6 +737,11 @@ $(".forme").change(function () {
 	} else {
 		container.find(".item").prop("disabled", false);
 	}
+
+	// TODO: cont from here
+	// this doesn't always update how you'd expect but we're getting there. csv already exists
+	console.log($(".set-selector.opposing").val()); // test
+	container.find()
 });
 
 function correctHiddenPower(pokemon) {
