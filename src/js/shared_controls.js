@@ -738,9 +738,14 @@ $(".forme").change(function () {
 		container.find(".item").prop("disabled", false);
 	}
 
+	if ($(this).val().indexOf("-Mega") !== -1) {
+		
+	}
+
 	// TODO: cont from here
 	// this doesn't always update how you'd expect but we're getting there. csv already exists
-	console.log($(".set-selector.opposing").val()); // test
+	console.log(setName);
+	// console.log($(".set-selector.opposing").val()); // test
 	container.find()
 });
 
