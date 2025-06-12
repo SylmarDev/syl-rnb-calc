@@ -7,3 +7,4 @@ pnpm-debug.log
 npm-debug.log
 dist/
 scripts/__pycache__
+.vscode

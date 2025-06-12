@@ -1937,7 +1937,7 @@ $(document).ready(function () {
 	$('#cc-ohko-color')[0].checked=true;
 	$('#singles-format').click(switchIconDouble);
 	$('#doubles-format').click(switchIconSingle);
-	for (let dropzone of document.getElementsByClassName("dropzone")){
+	for (let dropzone of document.getElementsByClassName("dropzone")) {
 		dropzone.ondragenter=handleDragEnter;
 		dropzone.ondragleave=handleDragLeave;
 		dropzone.ondrop=drop;
@@ -1970,6 +1970,20 @@ $(document).ready(function () {
 
 	// hide ai options
 	hideAiOptions();
+
+	// show changelog
+	// TODO - cont from here
+	// localStorage.setItem()
+	// test this I have no idea if this slop works
+	$('#show-changelog').on('click', function () {
+      $('#changelog-overlay').fadeIn(200);
+    });
+
+    $('#changelog-close, #changelog-overlay').on('click', function (e) {
+      if (e.target.id === 'changelog-close' || e.target.id === 'changelog-overlay') {
+        $('#changelog-overlay').fadeOut(200);
+      }
+    });
 });
 
 /* Click-to-copy function */
