@@ -738,14 +738,21 @@ $(".forme").change(function () {
 		container.find(".item").prop("disabled", false);
 	}
 
-	if ($(this).val().indexOf("-Mega") !== -1) {
-		
+	// overwrite ability if a mega has forme switched
+	if (pokemonName.indexOf("-Mega") !== -1) {
+		if (setName.includes("Trainer Rival")) {
+			setName = "Pokemon Trainer May"
+		}
+		// console.log(MEGA_BASE_ABILITIES[setName]); // DEBUG
+
+		// if forme is != mega
+		if ($(this).val().indexOf("-Mega") === -1) {
+			container.find(".ability").val(MEGA_BASE_ABILITIES[setName][pokemonName.split("-Mega")[0]]);
+		} else { // if mega form use mega ability
+			container.find(".ability").val(chosenSet.ability);
+		}
 	}
 
-	// TODO: cont from here
-	// this doesn't always update how you'd expect but we're getting there. csv already exists
-	console.log(setName);
-	// console.log($(".set-selector.opposing").val()); // test
 	container.find()
 });
 
