@@ -2002,11 +2002,6 @@ $(document).ready(function () {
 	// console.log(latestChangelogVersion); // DEBUG
 
 	// show changelog
-	// TODO - cont from here
-	if (localStorage.getItem("lastChangelogVersion") === null) {
-		localStorage.setItem("lastChangelogVersion", latestChangelogVersion);
-	}
-
 	if (localStorage.getItem("lastChangelogVersion") !== latestChangelogVersion) {
 		showChangelog();
 	}
