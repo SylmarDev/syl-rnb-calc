@@ -40,6 +40,17 @@
     <nav><div class="header"><div class="header-color"><div class="header-inner">
     </div></div></div></nav>
 
+<div id="changelog-overlay">
+  <div id="changelog-popup">
+    <span id="changelog-close">&times;</span>
+    <h2>Changelog</h2>
+    <div id="changelog-content">
+      <ul id="changelog-content-list">
+      </ul>
+    </div>
+  </div>
+</div>
+
 <div class="wrapper">
     <div aria-label="Settings" role="region">
         <span class="title-text">Pok&eacute;mon Damage Calculator</span>
@@ -1739,6 +1750,7 @@
     <script type="text/javascript" src="./js/data/sets/gen3.js?"></script>
     <script type="text/javascript" src="./js/data/sets/gen2.js?"></script>
     <script type="text/javascript" src="./js/data/sets/gen1.js?"></script>
+    <script type="text/javascript" src="./js/data/changelog.js?"></script>
     <script type="text/javascript" src="./calc/data/types.js?"></script>
     <script type="text/javascript" src="./calc/data/natures.js?"></script>
     <script type="text/javascript" src="./calc/data/abilities.js?"></script>
@@ -1770,6 +1782,7 @@
         <li><p class="p-noPadding">Hosted by SylmarDev. This project is MIT Licensed.</p></li>
         <li><a href="https://github.com/SylmarDev/syl-rnb-calc/tree/main" class="links-lighten" target="_blank">Modification Repository</a></li>
         <li><a href="https://github.com/SylmarDev/syl-rnb-calc/issues/new" class="links-lighten" target="_blank">Report an issue</a></li>
+        <li><button id="show-changelog">Show Changelog</button></li>
         <li>
             <label class="unselectable" for="enableDebugLogging">Enable Debug Logging</label>
             <input class="" type="checkbox" name="enableDebugLogging" id="enableDebugLogging" aria-describedby="aiOption" />
