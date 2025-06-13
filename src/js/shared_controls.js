@@ -1903,6 +1903,10 @@ function showAiOptionsDiv() {
 	$("#aiOptions .row").show();
 }
 
+function showChangelog() {
+	$('#changelog-overlay').fadeIn(200);
+}
+
 $(document).ready(function () {
 	var params = new URLSearchParams(window.location.search);
 	var g = GENERATION[params.get('gen')] || 8;
@@ -1971,18 +1975,36 @@ $(document).ready(function () {
 	// hide ai options
 	hideAiOptions();
 
+	// set changelog text
+	for (var changeLogLine of CHANGELOG) {
+		$("#changelog-content-list")
+		.prepend(`<li><strong>v${changeLogLine.majorVersion}.${changeLogLine.minorVersion}.${changeLogLine.patchVersion}</strong> - ${changeLogLine.desc}</li>`)
+	}
+
+	const latestChangelogVersion = `${changeLogLine.majorVersion}.${changeLogLine.minorVersion}.${changeLogLine.patchVersion}`;
+	// console.log(latestChangelogVersion); // DEBUG
+
 	// show changelog
 	// TODO - cont from here
-	// localStorage.setItem()
-	// test this I have no idea if this slop works
+	if (localStorage.getItem("lastChangelogVersion") === null) {
+		localStorage.setItem("lastChangelogVersion", latestChangelogVersion);
+	}
+
+	if (localStorage.getItem("lastChangelogVersion") !== latestChangelogVersion) {
+		showChangelog();
+	}
+
 	$('#show-changelog').on('click', function () {
-      $('#changelog-overlay').fadeIn(200);
+      	showChangelog();
     });
 
     $('#changelog-close, #changelog-overlay').on('click', function (e) {
       if (e.target.id === 'changelog-close' || e.target.id === 'changelog-overlay') {
         $('#changelog-overlay').fadeOut(200);
       }
+	  if (localStorage.getItem("lastChangelogVersion") !== latestChangelogVersion) {
+		localStorage.setItem("lastChangelogVersion", latestChangelogVersion);
+	  }
     });
 });
 

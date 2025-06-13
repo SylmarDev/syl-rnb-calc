@@ -736,17 +736,17 @@ table.field {
     position: absolute;
     top: 50%; left: 50%;
     transform: translate(-50%, -50%);
-    background: #fff;
+    background: #141414;
     padding: 20px;
-    width: 400px;
+    width: 45vw;
     border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
 }
 
 #changelog-close {
     float: right;
     cursor: pointer;
-    font-size: 18px;
+    font-size: 22px;
     color: #999;
 }
 
@@ -755,7 +755,17 @@ table.field {
 }
 
 #changelog-content {
-    margin-top: 10px;
+    margin-top: 7px;
     font-family: Arial, sans-serif;
-    font-size: 14px;
+    font-size: 22px;
+    overflow-y: auto;
+    max-height: 65vh;
+}
+
+#changelog-content li {
+    margin-bottom: 4px;
+}
+
+#show-changelog {
+    margin-top: 5px;
 }
