@@ -732,11 +732,14 @@ $(".forme").change(function () {
 	}
 	container.find(".ability").keyup();
 
+	// probably unnessesary for good, leaves mega stones equipped
+	// leaving commented out just in case
+	/*
 	if ($(this).val().indexOf("-Mega") !== -1 && $(this).val() !== "Rayquaza-Mega") {
 		container.find(".item").val("").keyup();
 	} else {
 		container.find(".item").prop("disabled", false);
-	}
+	} */
 
 	// overwrite ability if a mega has forme switched
 	if (pokemonName.indexOf("-Mega") !== -1) {
