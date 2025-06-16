@@ -700,6 +700,16 @@ function setSelectValueIfValid(select, value, fallback) {
 	select.val(!value ? fallback : select.children("option[value='" + value + "']").length ? value : fallback);
 }
 
+// and the award for worst named function goes to...
+function setSetName(setName, arrayOfNames) {
+	for (var trainerName of arrayOfNames) {
+		if (setName.includes(trainerName)) {
+			return trainerName;
+		}
+	}
+	return setName;
+}
+
 $(".forme").change(function () {
 	var altForme = pokedex[$(this).val()],
 		container = $(this).closest(".info-group").siblings(),
@@ -741,11 +751,18 @@ $(".forme").change(function () {
 		container.find(".item").prop("disabled", false);
 	} */
 
+	// console.log(setName); // DEBUG
+
 	// overwrite ability if a mega has forme switched
 	if (pokemonName.indexOf("-Mega") !== -1) {
 		if (setName.includes("Trainer Rival")) {
-			setName = "Pokemon Trainer May"
+			setName = "Pokemon Trainer May";
 		}
+
+		setName = setSetName(setName, ["Magma Admin Tabitha", "Magma Leader Maxie",
+			"Aqua Leader Archie", "Aqua Admin Shelly", "Aqua Admin Matt", "Winstrate Vito",
+		]);
+		
 		// console.log(MEGA_BASE_ABILITIES[setName]); // DEBUG
 
 		// if forme is != mega
