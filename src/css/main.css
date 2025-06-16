@@ -743,6 +743,10 @@ table.field {
     box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
 }
 
+#changelog-popup h2 {
+    color: #fff;
+}
+
 #changelog-close {
     float: right;
     cursor: pointer;
@@ -760,6 +764,7 @@ table.field {
     font-size: 22px;
     overflow-y: auto;
     max-height: 65vh;
+    color: #fff;
 }
 
 #changelog-content li {
