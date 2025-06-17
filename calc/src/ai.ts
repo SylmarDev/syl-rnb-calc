@@ -813,6 +813,8 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
         });
     }
 
+
+
     //console.log(moves); // DEBUG
     
     let damagingMoveDist = calculateHighestDamage(moves);
@@ -821,6 +823,14 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
     let playerHighestRoll = 0;
     damageResults[0].forEach((move: {damage: number[], move: any, attacker: any}, i: number) => {
         let playerDamageRoll: number = move.damage[move.damage.length-1];
+        
+        if (movesetHasMultiHitMove(playerMoves)) {
+            const multiHit: number = getMultiHitCount(move.move);
+            if (multiHit > 1) {
+                playerDamageRoll *= multiHit;
+            }
+        }
+
         // TODO: don't do this check if move is a guaranteed crit
         if (move.move.isCrit) {
             playerDamageRoll = Math.trunc(playerDamageRoll / 1.5);

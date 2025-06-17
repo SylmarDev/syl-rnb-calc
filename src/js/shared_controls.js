@@ -772,8 +772,6 @@ $(".forme").change(function () {
 			container.find(".ability").val(chosenSet.ability);
 		}
 	}
-
-	container.find()
 });
 
 function correctHiddenPower(pokemon) {
