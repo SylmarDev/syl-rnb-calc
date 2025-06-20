@@ -2411,6 +2411,15 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             }
 
             // ad hoc stuff that comes up
+
+            // prevents it from tying with 0 score moves
+            if (moveName == "(No Move)") {
+                moveStringsToAdd.push({
+                    move: moveName,
+                    score: -100,
+                    rate: 1
+                });
+            }
             
             // Sleep Talk
             if (moveName == "Sleep Talk" && aiStatusCond != "slp") {
@@ -2460,7 +2469,6 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             // default to +6
             if (moveScore == 0 &&
                 moveIsStatus &&
-                moveName != "(No Move)" &&
                 !(moveStringsToAdd.map(x => x.move).includes(moveName))) {
                     moveStringsToAdd.push({
                         move: moveName,
