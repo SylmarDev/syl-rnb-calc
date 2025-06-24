@@ -182,6 +182,11 @@ function getAIDeadAfterShellSmash(res: any[], playerMaxDamage: number) {
 
     const playerMoves = res[0];
 
+    // Shell Smash AI sees Focus Sash in these calcs
+    if (aiItem == "Focus Sash" && aiCurrentHp === res[1][0].attacker.maxHP()) {
+        return false;
+    }
+
     if (aiItem == "White Herb" || aiSlower) {
         return playerMaxDamage >= aiCurrentHp;
     }
