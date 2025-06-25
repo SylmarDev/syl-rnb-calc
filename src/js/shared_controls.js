@@ -750,6 +750,18 @@ $(".forme").change(function () {
 	} else {
 		container.find(".item").prop("disabled", false);
 	} */
+});
+
+$("#p2 .forme").change(function() {
+	var altForme = pokedex[$(this).val()],
+		container = $(this).closest(".info-group").siblings(),
+		fullSetName = container.find(".select2-chosen").first().text(),
+		pokemonName = fullSetName.substring(0, fullSetName.indexOf(" (")),
+		setName = fullSetName.substring(fullSetName.indexOf("(") + 1, fullSetName.lastIndexOf(")"));
+
+	var isRandoms = $("#randoms").prop("checked");
+	var pokemonSets = isRandoms ? randdex[pokemonName] : setdex[pokemonName];
+	var chosenSet = pokemonSets && pokemonSets[setName];
 
 	// console.log(setName); // DEBUG
 

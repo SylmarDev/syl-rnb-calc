@@ -16,5 +16,6 @@ const CHANGELOG = [
     new ChangelogLine(1, 1, 4, "Fixed issue with several mega pokemon abilities not changing and throwing an error (thanks Jmash for finding this)"),
     new ChangelogLine(1, 2, 0, "Player multi hit moves now show kills to AI (for AI clicking prio)"),
     new ChangelogLine(1, 2, 1, "Fixed No Move being chooseable when tied with other 0 score moves"),
-    new ChangelogLine(1, 2, 2, "Shell Smash AI now sees focus sash")
+    new ChangelogLine(1, 2, 2, "Shell Smash AI now sees its own Focus Sash (thanks rysace)"),
+    new ChangelogLine(1, 2, 3, "Fixed bug with player mega form switching not updating player calcs (thanks neverknight)")
 ];
