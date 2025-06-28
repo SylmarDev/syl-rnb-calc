@@ -17,5 +17,6 @@ const CHANGELOG = [
     new ChangelogLine(1, 2, 0, "Player multi hit moves now show kills to AI (for AI clicking prio)"),
     new ChangelogLine(1, 2, 1, "Fixed No Move being chooseable when tied with other 0 score moves"),
     new ChangelogLine(1, 2, 2, "Shell Smash AI now sees its own Focus Sash (thanks rysace)"),
-    new ChangelogLine(1, 2, 3, "Fixed bug with player mega form switching not updating player calcs (thanks neverknight)")
+    new ChangelogLine(1, 2, 3, "Fixed bug with player mega form switching not updating player calcs (thanks neverknight)"),
+    new ChangelogLine(1, 2, 4, "Fixed King's Rock, and Nature's Madness not showing up in the calc due to apostrophes (thanks Berry), added Mystical Fire to Guaranteed Atk/Sp Atk drop logic")
 ];
