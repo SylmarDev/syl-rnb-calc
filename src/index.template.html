@@ -144,7 +144,7 @@
         
     </div>
     <div id="aiOptions" aria-labelledby="aiOptions" class="ai-options-subgroup" role="checkboxgroup">
-        <div class="result-move-header"><span id="aiOptionsHeader">Ai Options</span></div>
+        <div class="result-move-header"><span class="aiOptionsHeader">Ai Options</span></div>
         <div class="row">
             <div class="col" id="firstTurnOutOpt">
                 <label class="unselectable" for="firstTurnOutAiOpt">First Turn Out:</label>
@@ -1777,20 +1777,26 @@
     <script type="text/javascript" src="./js/moveset_import.js?"></script>
 </div>
 
+<div id="miscOptions" aria-labelledby="miscOptions" class="ai-options-subgroup" role="checkboxgroup">
+    <div class="result-move-header"><span class="aiOptionsHeader">Misc Options</span></div>
+    <div class="row">
+        <div class="col">
+            <input class="misc-option" type="checkbox" name="enableDebugLogging" id="enableDebugLogging" />
+            <label for="enableDebugLogging">Enable Debug Logging</label>
+        </div>
+        <div class="col">
+            <input class="misc-option" type="checkbox" name="disableAiMovePercentage" id="disableAiMovePercentage" />
+            <label for="disableAiMovePercentage">Disable AI Move %</label>
+        </div>
+    </div>
+</div>
+
 <div class="credits">Run and Bun AI % work done by SylmarDev. Modified by dekzeh, ForwardFeed, Originaly Created by Honko, maintained by Austin and Kris, Special thanks to Hzla
     <ul>
         <li><p class="p-noPadding">Hosted by SylmarDev. This project is MIT Licensed.</p></li>
         <li><a href="https://github.com/SylmarDev/syl-rnb-calc/tree/main" class="links-lighten" target="_blank">Modification Repository</a></li>
         <li><a href="https://github.com/SylmarDev/syl-rnb-calc/issues/new" class="links-lighten" target="_blank">Report an issue</a></li>
         <li><button id="show-changelog">Show Changelog</button></li>
-        <li>
-            <label class="unselectable" for="enableDebugLogging">Enable Debug Logging</label>
-            <input class="" type="checkbox" name="enableDebugLogging" id="enableDebugLogging" aria-describedby="aiOption" />
-        </li>
-        <li>
-            <label class="unselectable" for="disableAiMovePercentage">Disable AI Move %</label>
-            <input class="" type="checkbox" name="disableAiMovePercentage" id="disableAiMovePercentage" aria-describedby="aiOption" />
-        </li>
         <li><a href="https://twitch.tv/princesssylmar" class="links-lighten" target="_blank">My twitch :3</a></li>
         <li><p>Shoutouts to the original <a href="https://github.com/smogon/damage-calc/contributors" class="links-lighten" target="_blank">Smogon Contributors</a></p></li>
     </ul>    

@@ -382,13 +382,20 @@ th {
     gap: 1rem;
 }
 
+#miscOptions {
+    clear: both;
+    padding: 20px;
+    max-width: 1285px;
+    margin: 0px auto;
+}
+
 .row .col {
     display: flex;
     align-items: center;
     gap: 0.5rem;
 }
 
-#aiOptionsHeader {
+.aiOptionsHeader {
     display: table;
     margin: 0 auto;
     font-size: 1.2em;
