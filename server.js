@@ -2,17 +2,22 @@ const dotenv = require('dotenv').config();
 const express = require("express");
 const calc = require("./calc");
 const app = express();
-app.listen(3000, () => {
+const port = 3000;
+
+/*
+app.listen(port, () => {
 	console.log("Server running on port 3000");
-});
+}); */
+
+// behind a reverse proxy
+app.set('trust proxy', true); 
+
+const distStatic = express.static('dist');
+const untrustedStatic = express.static('untrusted-site');
 
 // blocking middleware
 const allowedIps = process.env.ALLOWED_IPS ? process.env.ALLOWED_IPS.split(',').map(ip => ip.trim()) : [];
 const restrictionsInPlace = allowedIps.length > 0;
-
-// Define the paths for your two sites.
-const trustedSitePath = path.join(__dirname, 'dist');
-const untrustedSitePath = path.join(__dirname, 'untrusted-site');
 
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
@@ -30,11 +35,11 @@ app.use((req, res, next) => {
     if (!restrictionsInPlace || allowedIps.includes(userIp)) {
         // If the IP is trusted, serve the main site.
         console.log(`Connection from trusted IP: ${userIp}. Serving main site.`);
-        express.static(trustedSitePath)(req, res, next);
+        return distStatic(req, res, next);
     } else {
         // If the IP is not trusted, serve the untrusted site.
         console.warn(`Connection from untrusted IP: ${userIp}. Serving alternate site.`);
-        express.static(untrustedSitePath)(req, res, next);
+		return untrustedStatic(req, res, next);
     }
 });
 
