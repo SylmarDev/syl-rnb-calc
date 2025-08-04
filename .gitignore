@@ -8,3 +8,4 @@ npm-debug.log
 dist/
 scripts/__pycache__
 .vscode
+.env

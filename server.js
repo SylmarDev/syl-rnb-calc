@@ -1,3 +1,4 @@
+const dotenv = require('dotenv').config();
 const express = require("express");
 const calc = require("./calc");
 const app = express();
@@ -5,8 +6,40 @@ app.listen(3000, () => {
 	console.log("Server running on port 3000");
 });
 
+// blocking middleware
+const allowedIps = process.env.ALLOWED_IPS ? process.env.ALLOWED_IPS.split(',').map(ip => ip.trim()) : [];
+const restrictionsInPlace = allowedIps.length > 0;
+
+// Define the paths for your two sites.
+const trustedSitePath = path.join(__dirname, 'dist');
+const untrustedSitePath = path.join(__dirname, 'untrusted-site');
+
+app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+    if (allowedIps.length > 0) {
+        console.log(`Restricting access to the following IPs: ${allowedIps.join(', ')}`);
+    } else {
+        console.log("No IP restrictions are set. All connections allowed.");
+    }
+});
+
+// Middleware to serve different content based on IP.
+app.use((req, res, next) => {
+    const userIp = req.ip;
+
+    if (!restrictionsInPlace || allowedIps.includes(userIp)) {
+        // If the IP is trusted, serve the main site.
+        console.log(`Connection from trusted IP: ${userIp}. Serving main site.`);
+        express.static(trustedSitePath)(req, res, next);
+    } else {
+        // If the IP is not trusted, serve the untrusted site.
+        console.warn(`Connection from untrusted IP: ${userIp}. Serving alternate site.`);
+        express.static(untrustedSitePath)(req, res, next);
+    }
+});
+
 // parse application/json
-app.use(express.json())
+app.use(express.json());
 
 app.get("/calculate",(req, res, next) => {
 	const gen = calc.Generations.get((typeof req.body.gen === 'undefined') ? 9 : req.body.gen);
@@ -27,4 +60,4 @@ app.get("/calculate",(req, res, next) => {
 	res.json(result);
 })
 
-app.use(express.static('dist'))
+// app.use(express.static('dist'))
