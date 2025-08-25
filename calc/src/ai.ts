@@ -2018,10 +2018,11 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
 
                 if (playerIncapacitated) { score += 3; }
 
+                // aiDeadToPlayer
                 const aiDeadAfterShellSmash = getAIDeadAfterShellSmash(damageResults, playerHighestRoll);
 
                 // if player cannot KO AI if Shell Smash is used this turn +2
-                if (!aiDeadAfterShellSmash) {
+                if ((aiFaster && !aiDeadAfterShellSmash) || (!aiFaster && !aiDeadToPlayer)) {
                     score += 2;
                 } else { // if player mon can KO AI mon if Shell Smash is used this turn -2
                     score -= 2;
