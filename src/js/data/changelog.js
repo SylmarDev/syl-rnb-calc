@@ -20,5 +20,6 @@ const CHANGELOG = [
     new ChangelogLine(1, 2, 3, "Fixed bug with player mega form switching not updating player calcs (thanks neverknight)"),
     new ChangelogLine(1, 2, 4, "Fixed King's Rock, and Nature's Madness not showing up in the calc due to apostrophes (thanks Berry), added Mystical Fire to Guaranteed Atk/Sp Atk drop logic"),
     new ChangelogLine(1, 2, 5, "Added Scary Face to speed reducing moves logic"),
-    new ChangelogLine(1, 2, 6, "Shell Smash AI now takes player's speed into account when testing if it dies")
+    new ChangelogLine(1, 2, 6, "Shell Smash AI now takes player's speed into account when testing if it dies"),
+    new ChangelogLine(1, 2, 7, "Leech Seed no longer clicked against grass types")
 ];

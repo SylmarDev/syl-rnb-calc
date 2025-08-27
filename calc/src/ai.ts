@@ -59,6 +59,9 @@ const defensiveSetup: string[] = [
 const powderMoves: string[] = [
     "Cotton Spore", "Magic Powder", "Poison Powder", "Powder", "Rage Powder", "Sleep Powder", "Spore", "Stun Spore"
 ];
+const statusApplyingMoves: string[] = [
+    "Grass Whistle", ""
+]
 
 // move functions
 function isNamed(moveName: string, ...names: string[]) {
@@ -2456,6 +2459,20 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                     moveStringsToAdd.push({
                         move: moveName,
                         score: -50,
+                        rate: 1
+                    });
+            }
+
+            // Status appliers should get -40 when player already has a status
+            if (playerHasStatusCond && isNamed(moveName, ...statusApplyingMoves)) {
+
+            }
+            
+            // Leech seed
+            if (isNamed(moveName, "Leech Seed")) {
+                moveStringsToAdd.push({
+                        move: moveName,
+                        score: -20,
                         rate: 1
                     });
             }
