@@ -1608,6 +1608,10 @@ function setAiOptionVisibility(side) {
 	}
 }
 
+function setDisclaimVisibility() {
+	if 
+}
+
 $(document).on('click', '.right-side', function () {
 	var set = $(this).attr('data-id');
 	topPokemonIcon(set, $("#p2mon")[0])
@@ -1941,6 +1945,10 @@ function hideAiOptions() {
 	});
 }
 
+function hideDisclaimers() {
+	$("#disclaims").hide();
+}
+
 function showAiOptionsDiv() {
 	if ($("#disableAiMovePercentage").is(":checked")) {
 		return;
@@ -1948,6 +1956,28 @@ function showAiOptionsDiv() {
 	
 	$("#aiOptions").show();
 	$("#aiOptions .row").show();
+}
+
+function showDisclaimers() {
+	if ($("#disableAiMovePercentage").is(":checked")) {
+		return;
+	}
+
+	$("#disclaims").show();
+}
+
+function hideAiOptionsAndDisclaimers() {
+	hideAiOptions();
+	hideDisclaimers();
+}
+
+function showAiOptionsAndDisclaimers() {
+	if ($("#disableAiMovePercentage").is(":checked")) {
+		return;
+	}
+
+	showAiOptionsDiv();
+	showDisclaimers();
 }
 
 function showChangelog() {
@@ -2021,6 +2051,7 @@ $(document).ready(function () {
 
 	// hide ai options
 	hideAiOptions();
+	hideDisclaimers();
 
 	// set changelog text
 	for (var changeLogLine of CHANGELOG) {

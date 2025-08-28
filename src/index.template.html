@@ -143,67 +143,75 @@
         </div>
         
     </div>
-    <div id="aiOptions" aria-labelledby="aiOptions" class="ai-options-subgroup" role="checkboxgroup">
-        <div class="result-move-header"><span id="aiOptionsHeader">Ai Options</span></div>
-        <div class="row">
-            <div class="col" id="firstTurnOutOpt">
-                <label class="unselectable" for="firstTurnOutAiOpt">First Turn Out:</label>
-                <input class="calc-trigger" type="checkbox" name="firstTurnOutAiOpt" id="firstTurnOutAiOpt" aria-describedby="aiOption" />
-            </div>
-            <div class="col" id="suckerPunchOpt">
-                <label class="unselectable" for="suckerPunchAiOpt">Sucker Punch Used Last Turn:</label>
-                <input class="calc-trigger" type="checkbox" name="suckerPunchAiOpt" id="suckerPunchAiOpt" aria-describedby="aiOption" />
-            </div>
-            <div class="col" id="lastMonOpt">
-                <label class="unselectable" for="lastMonAiOpt">AI's last mon:</label>
-                <input class="calc-trigger" type="checkbox" name="lastMonAiOpt" id="lastMonAiOpt" aria-describedby="aiOption" />
-            </div>
-            <div class="col" id="playerLastMonOpt">
-                <label class="unselectable" for="playerLastMonAiOpt">Player's last mon:</label>
-                <input class="calc-trigger" type="checkbox" name="playerLastMonAiOpt" id="playerLastMonAiOpt" aria-describedby="aiOption" />
-            </div>
-            <div class="col" id="playerCharmedOrConfusedOpt">
-                <label class="unselectable" for="playerCharmedOrConfusedAiOpt">Player Charmed or Confused:</label>
-                <input class="calc-trigger" type="checkbox" name="playerCharmedOrConfusedAiOpt" id="playerCharmedOrConfusedAiOpt" aria-describedby="aiOption" />
-            </div>
-            <div class="col" id="tauntOpt">
-                <label class="unselectable" for="tauntAiOpt">Taunt Up:</label>
-                <input class="calc-trigger" type="checkbox" name="tauntAiOpt" id="tauntAiOpt" aria-describedby="aiOption" />
-            </div>
-            <div class="col" id="imprisonOpt">
-                <label class="unselectable" for="imprisonAiOpt">Imprison Up:</label>
-                <input class="calc-trigger" type="checkbox" name="imprisonAiOpt" id="imprisonAiOpt" aria-describedby="aiOption" />
-            </div>
-            <div class="col" id="encoreOpt">
-                <label class="unselectable" for="encoreAiOpt">Encore Encouraged:</label>
-                <input class="calc-trigger" type="checkbox" name="encoreAiOpt" id="encoreAiOpt" aria-describedby="aiOption" />
-            </div>
-            <div class="col" id="playerFirstTurnOutOpt">
-                <label class="unselectable" for="playerFirstTurnOutAiOpt">Player First Turn Out or Encored:</label>
-                <input class="calc-trigger" type="checkbox" name="playerFirstTurnOutAiOpt" id="playerFirstTurnOutAiOpt" aria-describedby="aiOption" />
-            </div>
-            <div class="col" id="magnetRiseOpt">
-                <label class="unselectable" for="magnetRiseAiOpt">AI Magnet Risen:</label>
-                <input class="calc-trigger" type="checkbox" name="magnetRiseAiOpt" id="magnetRiseAiOpt" aria-describedby="aiOption" />
-            </div>
-            <div class="col" id="protectIncentiveOpt">
-                <label class="unselectable" for="protectIncentiveAiOpt">Protect Incentive:</label>
-                <input class="calc-trigger" type="checkbox" name="protectIncentiveAiOpt" id="protectIncentiveAiOpt" aria-describedby="aiOption" />
-            </div>
-            <div class="col" id="protectDisincentiveOpt">
-                <label class="unselectable" for="protectDisincentiveAiOpt">Protect Disincentive:</label>
-                <input class="calc-trigger" type="checkbox" name="protectDisincentiveAiOpt" id="protectDisincentiveAiOpt" aria-describedby="aiOption" />
-            </div>
-            <div class="col" id="protectLastOpt">
-                <label class="unselectable" for="protectLastAiOpt">Protect Last Turn:</label>
-                <input class="calc-trigger" type="checkbox" name="protectLastAiOpt" id="protectLastAiOpt" aria-describedby="aiOption" />
-            </div>
-            <div class="col" id="protectLastTwoOpt">
-                <label class="unselectable" for="protectLastTwoAiOpt">Protect Last Two Turns:</label>
-                <input class="calc-trigger" type="checkbox" name="protectLastTwoAiOpt" id="protectLastTwoAiOpt" aria-describedby="aiOption" />
-            </div>
+    <div id="aiOptionsAndDisclaims">
+        <div id="aiOptions" aria-labelledby="aiOptions" class="ai-options-subgroup" role="checkboxgroup">
+                <div class="result-move-header"><span id="aiOptionsHeader">Ai Options</span></div>
+                <div class="row">
+                    <div class="col" id="firstTurnOutOpt">
+                        <label class="unselectable" for="firstTurnOutAiOpt">First Turn Out:</label>
+                        <input class="calc-trigger" type="checkbox" name="firstTurnOutAiOpt" id="firstTurnOutAiOpt" aria-describedby="aiOption" />
+                    </div>
+                    <div class="col" id="suckerPunchOpt">
+                        <label class="unselectable" for="suckerPunchAiOpt">Sucker Punch Used Last Turn:</label>
+                        <input class="calc-trigger" type="checkbox" name="suckerPunchAiOpt" id="suckerPunchAiOpt" aria-describedby="aiOption" />
+                    </div>
+                    <div class="col" id="lastMonOpt">
+                        <label class="unselectable" for="lastMonAiOpt">AI's last mon:</label>
+                        <input class="calc-trigger" type="checkbox" name="lastMonAiOpt" id="lastMonAiOpt" aria-describedby="aiOption" />
+                    </div>
+                    <div class="col" id="playerLastMonOpt">
+                        <label class="unselectable" for="playerLastMonAiOpt">Player's last mon:</label>
+                        <input class="calc-trigger" type="checkbox" name="playerLastMonAiOpt" id="playerLastMonAiOpt" aria-describedby="aiOption" />
+                    </div>
+                    <div class="col" id="playerCharmedOrConfusedOpt">
+                        <label class="unselectable" for="playerCharmedOrConfusedAiOpt">Player Charmed or Confused:</label>
+                        <input class="calc-trigger" type="checkbox" name="playerCharmedOrConfusedAiOpt" id="playerCharmedOrConfusedAiOpt" aria-describedby="aiOption" />
+                    </div>
+                    <div class="col" id="tauntOpt">
+                        <label class="unselectable" for="tauntAiOpt">Taunt Up:</label>
+                        <input class="calc-trigger" type="checkbox" name="tauntAiOpt" id="tauntAiOpt" aria-describedby="aiOption" />
+                    </div>
+                    <div class="col" id="imprisonOpt">
+                        <label class="unselectable" for="imprisonAiOpt">Imprison Up:</label>
+                        <input class="calc-trigger" type="checkbox" name="imprisonAiOpt" id="imprisonAiOpt" aria-describedby="aiOption" />
+                    </div>
+                    <div class="col" id="encoreOpt">
+                        <label class="unselectable" for="encoreAiOpt">Encore Encouraged:</label>
+                        <input class="calc-trigger" type="checkbox" name="encoreAiOpt" id="encoreAiOpt" aria-describedby="aiOption" />
+                    </div>
+                    <div class="col" id="playerFirstTurnOutOpt">
+                        <label class="unselectable" for="playerFirstTurnOutAiOpt">Player First Turn Out or Encored:</label>
+                        <input class="calc-trigger" type="checkbox" name="playerFirstTurnOutAiOpt" id="playerFirstTurnOutAiOpt" aria-describedby="aiOption" />
+                    </div>
+                    <div class="col" id="magnetRiseOpt">
+                        <label class="unselectable" for="magnetRiseAiOpt">AI Magnet Risen:</label>
+                        <input class="calc-trigger" type="checkbox" name="magnetRiseAiOpt" id="magnetRiseAiOpt" aria-describedby="aiOption" />
+                    </div>
+                    <div class="col" id="protectIncentiveOpt">
+                        <label class="unselectable" for="protectIncentiveAiOpt">Protect Incentive:</label>
+                        <input class="calc-trigger" type="checkbox" name="protectIncentiveAiOpt" id="protectIncentiveAiOpt" aria-describedby="aiOption" />
+                    </div>
+                    <div class="col" id="protectDisincentiveOpt">
+                        <label class="unselectable" for="protectDisincentiveAiOpt">Protect Disincentive:</label>
+                        <input class="calc-trigger" type="checkbox" name="protectDisincentiveAiOpt" id="protectDisincentiveAiOpt" aria-describedby="aiOption" />
+                    </div>
+                    <div class="col" id="protectLastOpt">
+                        <label class="unselectable" for="protectLastAiOpt">Protect Last Turn:</label>
+                        <input class="calc-trigger" type="checkbox" name="protectLastAiOpt" id="protectLastAiOpt" aria-describedby="aiOption" />
+                    </div>
+                    <div class="col" id="protectLastTwoOpt">
+                        <label class="unselectable" for="protectLastTwoAiOpt">Protect Last Two Turns:</label>
+                        <input class="calc-trigger" type="checkbox" name="protectLastTwoAiOpt" id="protectLastTwoAiOpt" aria-describedby="aiOption" />
+                    </div>
+                </div>
+        </div>
+        <div id="disclaims" aria-labelledby="disclaims" role="">
+            <ul>
+                <li id="doublesDisclaim"><i>Doubles not implemented yet, be careful!</i></li>
+            </ul>
         </div>
     </div>
+    
     <div aria-label="Calculation results" class="main-result-group" role="region">
         <div class="big-text" title="Click to copy.">
             <span id="mainResult">Loading...</span>
