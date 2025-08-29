@@ -1609,7 +1609,13 @@ function setAiOptionVisibility(side) {
 }
 
 function setDisclaimVisibility() {
-	if 
+	hideDisclaimers();
+
+	var isDoubles = $('#doubles-format:checked').val() !== undefined;
+	if (isDoubles) {
+		showDisclaimers();
+		$("#doublesDisclaim").show();
+	}
 }
 
 $(document).on('click', '.right-side', function () {
@@ -1631,6 +1637,10 @@ $(document).on('click', '.left-side', function () {
 
 $(document).on('change', '#p2 .i-f-o-move select.move-selector', function () {
 	setAiOptionVisibility('p2');
+})
+
+$(document).on('change', '#p1, #fieldInfo, #p2', function() {
+	setDisclaimVisibility();
 })
 
 //select first mon of the box when loading
@@ -2050,8 +2060,7 @@ $(document).ready(function () {
 	});
 
 	// hide ai options
-	hideAiOptions();
-	hideDisclaimers();
+	hideAiOptionsAndDisclaimers();
 
 	// set changelog text
 	for (var changeLogLine of CHANGELOG) {

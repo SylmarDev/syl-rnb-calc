@@ -382,6 +382,16 @@ th {
     gap: 1rem;
 }
 
+#disclaims {
+    margin-top: 0.75rem;
+}
+
+#disclaims ul {
+    width: fit-content;
+    margin: 0 auto;
+    padding: 0;
+}
+
 .row .col {
     display: flex;
     align-items: center;

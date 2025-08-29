@@ -27,3 +27,5 @@ Nice to have:
 - In between the two calcs show what the screen would look like
   - will require backsprites, etc
 - Chart of what AI is likely to click next (toggleable)
+- Searchable trainer names
+- Plusle and Minun icons correctly show singles and doubles and can't be cheesed
