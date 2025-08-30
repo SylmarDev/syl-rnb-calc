@@ -2469,7 +2469,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             }
             
             // Leech seed
-            if (isNamed(moveName, "Leech Seed")) {
+            if (isNamed(moveName, "Leech Seed") && playerTypes.includes("Grass")) {
                 moveStringsToAdd.push({
                         move: moveName,
                         score: -20,
