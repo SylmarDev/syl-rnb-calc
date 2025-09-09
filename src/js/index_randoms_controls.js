@@ -35,8 +35,79 @@ function createAiOptionsDict() {
 		dict["enableDebugLogging"] = $("#enableDebugLogging").is(":checked");
 	}
 
+	if ($("#searchToggle").length) {
+		dict["searchToggle"] = $("#searchToggle").is(":checked");
+	}
+
 	// console.log(dict); // DEBUG
 	return dict;
+}
+
+// --- AI Options persistence helpers ---
+var AI_OPTIONS_STORAGE_KEY = 'aiOptionsDict';
+
+function saveAiOptionsToStorage() {
+	try {
+		localStorage.setItem(AI_OPTIONS_STORAGE_KEY, JSON.stringify(createAiOptionsDict()));
+	} catch (e) {
+		// localStorage may be unavailable (privacy mode) – ignore persist errors
+	}
+}
+
+function loadAiOptionsFromStorage() {
+	try {
+		var raw = localStorage.getItem(AI_OPTIONS_STORAGE_KEY);
+		return raw ? JSON.parse(raw) : null;
+	} catch (e) {
+		return null;
+	}
+}
+
+function applyAiOptionsDict(dict, triggerChange) {
+	if (!dict) return;
+	var prevNoCalc = window.NO_CALC;
+	window.NO_CALC = true;
+	$("#aiOptions :input").each(function () {
+		var id = $(this).attr('id');
+		if (dict.hasOwnProperty(id)) {
+			$(this).prop('checked', !!dict[id]);
+			if (triggerChange) $(this).change();
+		}
+	});
+	if ($("#enableDebugLogging").length && dict.hasOwnProperty("enableDebugLogging")) {
+		$("#enableDebugLogging").prop('checked', !!dict["enableDebugLogging"]);
+		if (triggerChange) $("#enableDebugLogging").change();
+	}
+	if ($("#toggleSearch").length && dict.hasOwnProperty("toggleSearch")) {
+		$("#toggleSearch").prop('checked', !!dict["toggleSearch"]);
+		if (triggerChange) $("#toggleSearch").change();
+	}
+	window.NO_CALC = prevNoCalc;
+}
+
+function initAiOptionsPersistence() {
+	var stored = loadAiOptionsFromStorage();
+	if (stored) {
+		applyAiOptionsDict(stored, false);
+	} else {
+		// Persist the current defaults so we have an initial value
+		saveAiOptionsToStorage();
+	}
+
+	// Keep storage in sync on any checkbox change within AI options or debug logging
+	$("#aiOptions :input").on('change', function () {
+		saveAiOptionsToStorage();
+	});
+	if ($("#enableDebugLogging").length) {
+		$("#enableDebugLogging").on('change', function () {
+			saveAiOptionsToStorage();
+		});
+	}
+	if ($("#toggleSearch").length) {
+		$("#toggleSearch").on('change', function () {
+			saveAiOptionsToStorage();
+		});
+	}
 }
 
 function showAIPercentages() {
@@ -337,6 +408,9 @@ $(document).ready(function () {
 			}
 		}
 	}
+
+	// Initialize AI options persistence
+	initAiOptionsPersistence();
 
 	$("#disableAiMovePercentage").change(function () {
 		var disableAiMovePercentage = $(this).is(":checked");
