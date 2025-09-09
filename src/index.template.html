@@ -746,7 +746,12 @@
         </div>
         <div aria-label="trainer-poks" role="region">
             <fieldset class="poke-info" id="trainer-mons">
-                <legend align="center">Team/Box</legend>
+                <legend class="team-legend">
+                    <span id="team-box-legend">Team/Box</span>
+                    <span id="search-inline" class="search-inline">
+                        <input type="text" id="search" placeholder="Search" />
+                    </span>
+                </legend>
                 <div>
                     <legend align="center">Team</legend>
                     <div id="team-poke-list" class="box-poke dropzone">
@@ -1751,6 +1756,7 @@
     <script type="text/javascript" src="./js/data/sets/gen2.js?"></script>
     <script type="text/javascript" src="./js/data/sets/gen1.js?"></script>
     <script type="text/javascript" src="./js/data/changelog.js?"></script>
+    <script type="text/javascript" src="./js/data/name-search-overrides.js"></script>
     <script type="text/javascript" src="./calc/data/types.js?"></script>
     <script type="text/javascript" src="./calc/data/natures.js?"></script>
     <script type="text/javascript" src="./calc/data/abilities.js?"></script>
@@ -1790,6 +1796,10 @@
         <li>
             <label class="unselectable" for="disableAiMovePercentage">Disable AI Move %</label>
             <input class="" type="checkbox" name="disableAiMovePercentage" id="disableAiMovePercentage" aria-describedby="aiOption" />
+        </li>
+        <li>
+            <label class="unselectable" for="toggleSearch">Show Search</label>
+            <input class="" type="checkbox" name="toggleSearch" id="toggleSearch" aria-describedby="aiOption" checked />
         </li>
         <li><a href="https://twitch.tv/princesssylmar" class="links-lighten" target="_blank">My twitch :3</a></li>
         <li><p>Shoutouts to the original <a href="https://github.com/smogon/damage-calc/contributors" class="links-lighten" target="_blank">Smogon Contributors</a></p></li>

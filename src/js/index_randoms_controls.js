@@ -347,6 +347,56 @@ $(document).ready(function () {
 		}
 	});
 
+	$("#toggleSearch").change(function () {
+		var showSearch = $(this).is(":checked");
+		if (showSearch) {
+			$(".search-inline").show();
+		} else {
+			$(".search-inline").hide();
+		}
+	});
+
+	// clear search if escape pressed
+
+	document.onkeydown = function(evt) {
+		evt = evt || window.event;
+		isEscape = evt.key === 'Escape';
+		if (isEscape && $("#search").is(":focus")) {
+			$('#search').val('');
+		}
+	}
+
+	// Filters mons in players sections based on the search input.
+	$("#search").on('input keyup change', function () {
+		var q = ($(this).val() || '').trim().toLowerCase();
+		var $targets = $('#team-poke-list img.trainer-pok, #box-poke-list img.trainer-pok, #box-poke-list2 img.trainer-pok, #trash-box img.trainer-pok');
+
+		// If targets aren't loaded return
+		if ($targets.length === 0) {
+			return;
+		}
+
+		$targets.each(function () {
+			var dataId = (this.dataset && this.dataset.id) ? this.dataset.id.split("(")[0].trim() : '';
+
+			var haystack = (dataId).toLowerCase();
+
+			// Hamilton Alaska now show Arcanine Hisui, etc.
+			for (const key in NAME_SEARCH_OVERRIDES) {
+				if (haystack.indexOf(key) !== -1) {
+					haystack = haystack.concat(" ", NAME_SEARCH_OVERRIDES[key]);
+				}
+			}
+
+			// set display to none if query doesn't match
+			if (q.length === 0 || haystack.indexOf(q) !== -1) {
+				this.style.display = '';
+			} else {
+				this.style.display = 'none';
+			}
+		});
+	});
+
 	$(".calc-trigger").bind("change keyup", function (ev) {
 		/*
 			This prevents like 8 performCalculations out of 8 that were useless
