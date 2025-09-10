@@ -35,8 +35,79 @@ function createAiOptionsDict() {
 		dict["enableDebugLogging"] = $("#enableDebugLogging").is(":checked");
 	}
 
+	if ($("#searchToggle").length) {
+		dict["searchToggle"] = $("#searchToggle").is(":checked");
+	}
+
 	// console.log(dict); // DEBUG
 	return dict;
+}
+
+// --- AI Options persistence helpers ---
+var AI_OPTIONS_STORAGE_KEY = 'aiOptionsDict';
+
+function saveAiOptionsToStorage() {
+	try {
+		localStorage.setItem(AI_OPTIONS_STORAGE_KEY, JSON.stringify(createAiOptionsDict()));
+	} catch (e) {
+		// localStorage may be unavailable (privacy mode) – ignore persist errors
+	}
+}
+
+function loadAiOptionsFromStorage() {
+	try {
+		var raw = localStorage.getItem(AI_OPTIONS_STORAGE_KEY);
+		return raw ? JSON.parse(raw) : null;
+	} catch (e) {
+		return null;
+	}
+}
+
+function applyAiOptionsDict(dict, triggerChange) {
+	if (!dict) return;
+	var prevNoCalc = window.NO_CALC;
+	window.NO_CALC = true;
+	$("#aiOptions :input").each(function () {
+		var id = $(this).attr('id');
+		if (dict.hasOwnProperty(id)) {
+			$(this).prop('checked', !!dict[id]);
+			if (triggerChange) $(this).change();
+		}
+	});
+	if ($("#enableDebugLogging").length && dict.hasOwnProperty("enableDebugLogging")) {
+		$("#enableDebugLogging").prop('checked', !!dict["enableDebugLogging"]);
+		if (triggerChange) $("#enableDebugLogging").change();
+	}
+	if ($("#toggleSearch").length && dict.hasOwnProperty("toggleSearch")) {
+		$("#toggleSearch").prop('checked', !!dict["toggleSearch"]);
+		if (triggerChange) $("#toggleSearch").change();
+	}
+	window.NO_CALC = prevNoCalc;
+}
+
+function initAiOptionsPersistence() {
+	var stored = loadAiOptionsFromStorage();
+	if (stored) {
+		applyAiOptionsDict(stored, false);
+	} else {
+		// Persist the current defaults so we have an initial value
+		saveAiOptionsToStorage();
+	}
+
+	// Keep storage in sync on any checkbox change within AI options or debug logging
+	$("#aiOptions :input").on('change', function () {
+		saveAiOptionsToStorage();
+	});
+	if ($("#enableDebugLogging").length) {
+		$("#enableDebugLogging").on('change', function () {
+			saveAiOptionsToStorage();
+		});
+	}
+	if ($("#toggleSearch").length) {
+		$("#toggleSearch").on('change', function () {
+			saveAiOptionsToStorage();
+		});
+	}
 }
 
 function showAIPercentages() {
@@ -338,6 +409,9 @@ $(document).ready(function () {
 		}
 	}
 
+	// Initialize AI options persistence
+	initAiOptionsPersistence();
+
 	$("#disableAiMovePercentage").change(function () {
 		var disableAiMovePercentage = $(this).is(":checked");
 		if (disableAiMovePercentage) {
@@ -345,6 +419,56 @@ $(document).ready(function () {
 		} else {
 			showAIPercentages();
 		}
+	});
+
+	$("#toggleSearch").change(function () {
+		var showSearch = $(this).is(":checked");
+		if (showSearch) {
+			$(".search-inline").show();
+		} else {
+			$(".search-inline").hide();
+		}
+	});
+
+	// clear search if escape pressed
+
+	document.onkeydown = function(evt) {
+		evt = evt || window.event;
+		isEscape = evt.key === 'Escape';
+		if (isEscape && $("#search").is(":focus")) {
+			$('#search').val('');
+		}
+	}
+
+	// Filters mons in players sections based on the search input.
+	$("#search").on('input keyup change', function () {
+		var q = ($(this).val() || '').trim().toLowerCase();
+		var $targets = $('#team-poke-list img.trainer-pok, #box-poke-list img.trainer-pok, #box-poke-list2 img.trainer-pok, #trash-box img.trainer-pok');
+
+		// If targets aren't loaded return
+		if ($targets.length === 0) {
+			return;
+		}
+
+		$targets.each(function () {
+			var dataId = (this.dataset && this.dataset.id) ? this.dataset.id.split("(")[0].trim() : '';
+
+			var haystack = (dataId).toLowerCase();
+
+			// Hamilton Alaska now show Arcanine Hisui, etc.
+			for (const key in NAME_SEARCH_OVERRIDES) {
+				if (haystack.indexOf(key) !== -1) {
+					haystack = haystack.concat(" ", NAME_SEARCH_OVERRIDES[key]);
+				}
+			}
+
+			// set display to none if query doesn't match
+			if (q.length === 0 || haystack.indexOf(q) !== -1) {
+				this.style.display = '';
+			} else {
+				this.style.display = 'none';
+			}
+		});
 	});
 
 	$(".calc-trigger").bind("change keyup", function (ev) {

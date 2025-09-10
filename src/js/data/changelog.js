@@ -23,5 +23,6 @@ const CHANGELOG = [
     new ChangelogLine(1, 2, 6, "Shell Smash AI now takes player's speed into account when testing if it dies"),
     new ChangelogLine(1, 2, 7, "Leech Seed no longer clicked against grass types"),
     new ChangelogLine(1, 2, 8, "Leech Seed no longer clicked against grass types for real oops"),
-    new ChangelogLine(1, 2, 9, "Parasol Lady Madeline and Camper Lawrence (Shed Shell double) show as one fight")
+    new ChangelogLine(1, 2, 9, "Parasol Lady Madeline and Camper Lawrence (Shed Shell double) show as one fight"),
+    new ChangelogLine(1, 3, 0, "Search bar searches by trainer name as well, added Toggleable Box search feature, toggles stay selected in between sessions")
 ];

@@ -1384,40 +1384,92 @@ function getTerrainEffects() {
 }
 
 function loadDefaultLists() {
-	$(".set-selector").select2({
-		formatResult: function (object) {
-			if ($("#randoms").prop("checked")) {
-				return object.pokemon;
-			} else {
-				return object.set ? ("&nbsp;&nbsp;&nbsp;" + object.set) : ("<b>" + object.text + "</b>");
-			}
-		},
-		query: function (query) {
-			var pageSize = 30;
-			var results = [];
-			var options = getSetOptions();
-			for (var i = 0; i < options.length; i++) {
-				var option = options[i];
-				var pokeName = option.pokemon.toUpperCase();
-				if (!query.term || query.term.toUpperCase().split(" ").every(function (term) {
-					return pokeName.indexOf(term) === 0 || pokeName.indexOf("-" + term) >= 0 || pokeName.indexOf(" " + term) >= 0;
-				})) {
-					if ($("#randoms").prop("checked")) {
-						if (option.id) results.push(option);
-					} else {
-						results.push(option);
-					}
-				}
-			}
-			query.callback({
-				results: results.slice((query.page - 1) * pageSize, query.page * pageSize),
-				more: results.length >= query.page * pageSize
-			});
-		},
-		initSelection: function (element, callback) {
-			callback(getFirstValidSetOption());
-		}
-	});
+    $(".set-selector").select2({
+        formatResult: function (object) {
+            if ($("#randoms").prop("checked")) {
+                return object.pokemon;
+            } else {
+                return object.set ? ("&nbsp;&nbsp;&nbsp;" + object.set) : ("<b>" + object.text + "</b>");
+            }
+        },
+        query: function (query) {
+            var pageSize = 30;
+            var results = [];
+            var options = getSetOptions();
+            for (var i = 0; i < options.length; i++) {
+                var option = options[i];
+                var pokeName = option.pokemon.toUpperCase();
+                var setName = option.set ? option.set.toUpperCase() : "";
+                var tokens = query.term ? query.term.toUpperCase().split(" ") : [];
+                var matchesPoke = !tokens.length || tokens.every(function (term) {
+                    return pokeName.indexOf(term) === 0 || pokeName.indexOf("-" + term) >= 0 || pokeName.indexOf(" " + term) >= 0;
+                });
+                var matchesSet = !!option.set && tokens.length && tokens.every(function (term) {
+                    return setName.indexOf(term) === 0 || setName.indexOf("-" + term) >= 0 || setName.indexOf(" " + term) >= 0;
+                });
+                if (!query.term || matchesPoke || matchesSet) {
+                    if ($("#randoms").prop("checked")) {
+                        if (option.id) results.push(option);
+                    } else {
+                        results.push(option);
+                    }
+                }
+            }
+            // If searching, deduplicate by set name when matching by set (trainer/party), and pick the first mon (smallest index)
+            if (query.term && !$("#randoms").prop("checked")) {
+                var tokens = query.term.toUpperCase().split(" ");
+                var bySetBest = {};
+                var seenBestId = {};
+                for (var r = 0; r < results.length; r++) {
+                    var opt = results[r];
+                    var setNameUpper = opt.set ? opt.set.toUpperCase() : "";
+                    if (!opt.set || setNameUpper === "BLANK SET") continue; // don't dedupe headers or Blank Set
+                    var matchesSet = tokens.every(function (term) {
+                        return setNameUpper.indexOf(term) === 0 || setNameUpper.indexOf("-" + term) >= 0 || setNameUpper.indexOf(" " + term) >= 0;
+                    });
+                    if (!matchesSet) continue;
+                    var idx = Infinity;
+                    try {
+                        if (window.setdex && setdex[opt.pokemon] && setdex[opt.pokemon][opt.set] && typeof setdex[opt.pokemon][opt.set].index !== 'undefined') {
+                            idx = setdex[opt.pokemon][opt.set].index;
+                        }
+                    } catch (e) { /* ignore lookup issues */ }
+                    if (!(setNameUpper in bySetBest) || idx < bySetBest[setNameUpper].idx) {
+                        bySetBest[setNameUpper] = { idx: idx, option: opt };
+                    }
+                }
+                if (Object.keys(bySetBest).length) {
+                    var filtered = [];
+                    var chosenIds = {};
+                    for (var r2 = 0; r2 < results.length; r2++) {
+                        var opt2 = results[r2];
+                        if (opt2.set) {
+                            var setUpper = opt2.set.toUpperCase();
+                            if (bySetBest[setUpper]) {
+                                var bestOpt = bySetBest[setUpper].option;
+                                if (!chosenIds[setUpper]) {
+                                    filtered.push(bestOpt);
+                                    chosenIds[setUpper] = true;
+                                }
+                                // skip additional entries for this set
+                                continue;
+                            }
+                        }
+                        // keep non-set matches and headers as-is
+                        filtered.push(opt2);
+                    }
+                    results = filtered;
+                }
+            }
+            query.callback({
+                results: results.slice((query.page - 1) * pageSize, query.page * pageSize),
+                more: results.length >= query.page * pageSize
+            });
+        },
+        initSelection: function (element, callback) {
+            callback(getFirstValidSetOption());
+        }
+    });
 }
 
 function allPokemon(selector) {

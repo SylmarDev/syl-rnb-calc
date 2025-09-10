@@ -183,7 +183,7 @@ div.wrapper > div > span {
 fieldset {
     float: left;
     background-color: #F1F4F9;
-    border: 1px solid #AAAAAA;
+    border: 1px solid #AAAAAA !important;
 }
 legend {
     font-weight: bold;
@@ -773,4 +773,27 @@ table.field {
 
 #show-changelog {
     margin-top: 5px;
+}
+
+.team-legend {
+    display: flex;
+    align-items: center;
+    justify-content: inital;
+}
+
+#team-box-legend {
+    min-width: 6em;
+    padding: 2px 6px;
+}
+
+#search-inline {
+    width: 0px;
+}
+
+#search {
+    margin-left: 8em;
+    min-width: 14em;
+    padding: 2px 6px;
+    border-radius: 4px;
+    border: 1px solid #AAAAAA;
 }
