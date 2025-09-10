@@ -51,7 +51,6 @@ In general
 - Code cleanup for maintainability
   - remove scripts folder
   - refactor the pushes to moveStringsToAdd all throughout ``ai.ts``, sub that for a function
-- Make AI Options dictionary stored locally
 
 ## COMMUNITY SUGGESTIONS
 - Remove items button (set your box to have all items (none))
