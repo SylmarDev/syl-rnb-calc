@@ -1605,7 +1605,7 @@ function setAiOptionVisibility(side) {
 	}
 
 	// self fainting moves
-	if (hasMove(["Explosion", "Self Destruct", "Misty Explosion", "Memento"], moveNames)) {
+	if (hasMove(["Explosion", "Self-Destruct", "Misty Explosion", "Memento"], moveNames)) {
 		if (!isNamed("Memento", ...moveNames)) {
 			$("#playerLastMonOpt").show();
 		}
