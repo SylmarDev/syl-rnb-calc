@@ -384,12 +384,17 @@ th {
 
 #disclaims {
     margin-top: 0.75rem;
+    margin-right: 15%;
 }
 
 #disclaims ul {
     width: fit-content;
     margin: 0 auto;
     padding: 0;
+}
+
+#disclaims li {
+    color: rgb(236, 56, 56);
 }
 
 .row .col {

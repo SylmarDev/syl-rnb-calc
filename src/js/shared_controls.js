@@ -1531,12 +1531,20 @@ function hasMove(affectedMoves, aiMoves) {
 	return false;
 }
 
-function setAiOptionVisibility(side) {
+function getMoveNames(side) {
 	let moveNames = [];
-	// console.log($(`#${side} .i-f-o-move div.move-selector a.select2-choice span.select2-chosen`));
 	$(`#${side} .i-f-o-move div.move-selector a.select2-choice span.select2-chosen`).each(function() { moveNames.push($(this).text())}); // trust the process
-	// console.log(moveNames);
+	return moveNames;
+}
 
+function setAiOptionAndDisclaimVisibility(side) {
+	let moveNames = getMoveNames(side);
+	setAiOptionVisibility(moveNames);
+	setDisclaimVisibility(moveNames);
+}
+
+function setAiOptionVisibility(moveNames) {
+	// console.log(moveNames);
 	hideAiOptions();
 	
 	// if Stealth Rocks, Spikes, Toxic Spikes, Sticky Web, Fake Out, Or Encore
@@ -1608,13 +1616,31 @@ function setAiOptionVisibility(side) {
 	}
 }
 
-function setDisclaimVisibility() {
+function setDisclaimVisibility(moveNames) {
 	hideDisclaimers();
 
-	var isDoubles = $('#doubles-format:checked').val() !== undefined;
-	if (isDoubles) {
+	// doubles
+	if ($('#doubles-format:checked').val() !== undefined) {
 		showDisclaimers();
 		$("#doublesDisclaim").show();
+	}
+
+	// flame charge
+	if (isNamed("Flame Charge", ...moveNames)) {
+		showDisclaimers();
+		$("#flameChargeDisclaim").show();
+	}
+
+	// sleep talk
+	if (isNamed("Sleep Talk", ...moveNames)) {
+		showDisclaimers();
+		$("#sleepTalkDisclaim").show();
+	}
+
+	// shore up
+	if (isNamed("Shore Up", ...moveNames)) {
+		showDisclaimers();
+		$("#shoreUpDisclaim").show();
 	}
 }
 
@@ -1624,7 +1650,7 @@ $(document).on('click', '.right-side', function () {
 	$('.opposing').val(set);
 	$('.opposing').change();
 	$('.opposing .select2-chosen').text(set);
-	setAiOptionVisibility('p2');
+	setAiOptionAndDisclaimVisibility('p2');
 })
 
 $(document).on('click', '.left-side', function () {
@@ -1636,11 +1662,11 @@ $(document).on('click', '.left-side', function () {
 })
 
 $(document).on('change', '#p2 .i-f-o-move select.move-selector', function () {
-	setAiOptionVisibility('p2');
+	setAiOptionAndDisclaimVisibility('p2');
 })
 
 $(document).on('change', '#p1, #fieldInfo, #p2', function() {
-	setDisclaimVisibility();
+	setDisclaimVisibility(getMoveNames('p2'));
 })
 
 //select first mon of the box when loading
@@ -1957,6 +1983,9 @@ function hideAiOptions() {
 
 function hideDisclaimers() {
 	$("#disclaims").hide();
+	$("#disclaims li").each(function () {
+		$(this).hide();
+	});
 }
 
 function showAiOptionsDiv() {
