@@ -958,7 +958,8 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             // Damaging Priority moves
             // if AI is dead to player mon and slower, 
             // all attacking moves with priority get an additional +11
-            if (move.priority > 0 && !aiFaster && aiDeadToPlayer && anyValidDamageRolls) {
+            const moveHasPriority = move.priority > 0 || (moveName == "Grassy Glide" && terrain == "Grassy");
+            if (moveHasPriority && !aiFaster && aiDeadToPlayer && anyValidDamageRolls) {
                 moveStringsToAdd.push({
                     move: moveName,
                     score: 11,
@@ -2469,7 +2470,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             }
             
             // Leech seed
-            if (isNamed(moveName, "Leech Seed")) {
+            if (isNamed(moveName, "Leech Seed") && playerTypes.includes("Grass")) {
                 moveStringsToAdd.push({
                         move: moveName,
                         score: -20,

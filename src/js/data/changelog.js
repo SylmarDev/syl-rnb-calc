@@ -21,5 +21,9 @@ const CHANGELOG = [
     new ChangelogLine(1, 2, 4, "Fixed King's Rock, and Nature's Madness not showing up in the calc due to apostrophes (thanks Berry), added Mystical Fire to Guaranteed Atk/Sp Atk drop logic"),
     new ChangelogLine(1, 2, 5, "Added Scary Face to speed reducing moves logic"),
     new ChangelogLine(1, 2, 6, "Shell Smash AI now takes player's speed into account when testing if it dies"),
-    new ChangelogLine(1, 2, 7, "Leech Seed no longer clicked against grass types")
+    new ChangelogLine(1, 2, 7, "Leech Seed no longer clicked against grass types"),
+    new ChangelogLine(1, 2, 8, "Leech Seed no longer clicked against grass types for real oops"),
+    new ChangelogLine(1, 2, 9, "Parasol Lady Madeline and Camper Lawrence (Shed Shell double) show as one fight"),
+    new ChangelogLine(1, 3, 0, "Search bar searches by trainer name as well, added Toggleable Box search feature, toggles stay selected in between sessions"),
+    new ChangelogLine(1, 3, 1, "Grassy Glide now gets +1 Prio when it AI sees fast kill in Grassy Terrain, Self-Destruct procs AI Options to show up (thanks dylanrae)")
 ];
