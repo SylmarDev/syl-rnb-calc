@@ -10,6 +10,7 @@ Must haves:
 - Notes underneath AI Options when a percentage is murky, or to disclaim when things may not show correctly
 - HIGHLY CUSTOMIZABLE
 - Boxes on top (CUSTOMIZABLE)
+    - Guys remember what boxes they were in, update their sorting and etc in localstorage
 - Crit rolls show alongside normal rolls, no more crit buttons (toggleable)
 - Buttons for Poison tick, Burn tick, Sand tick, berry heal (toggleable)
 - A way to keep track of how many people have used it, how many calcs have been done, what toggles people keep on, etc
@@ -26,3 +27,5 @@ Nice to have:
 - In between the two calcs show what the screen would look like
   - will require backsprites, etc
 - Chart of what AI is likely to click next (toggleable)
+- Searchable trainer names
+- Plusle and Minun icons correctly show singles and doubles and can't be cheesed

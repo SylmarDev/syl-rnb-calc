@@ -39,7 +39,6 @@ In general
   - Grass Whistle (and probably many similar status applying moves) still get +6 if their target is statused. Use playerHasStatusCond to filter those moves out that apply non-volatile status conditions
   - Damaging Speed Reduction and Damaging Atk/SpAtk go if score is 0, but they can get kill bonuses so that's not always true. Look into how to fix that
 - Make switch % chance underneath all the moves (only make it show if its above 0, it should be a very rare case)
-- Make a <span> tag that shows up to explain certain decisions in small italics when certain moves are on the enemy side to easier understand
 - Crit buttons should automatically set to clicked on Guaranteed Crit moves (Frost Breath, Super Luck+Scope Lens+Air Slash)
 - Figure out something to make the Crit buttons look less ugly (Colors?)
   - Maybe show the crit rate of each move as a percentage next to the crit toggle, that way the button isn't as big. Take focus energy and high crit ratio moves into account
