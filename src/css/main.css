@@ -782,6 +782,10 @@ table.field {
     color: #fff;
 }
 
+#changelog-content-list {
+    padding: 0px 25px;
+}
+
 #changelog-content li {
     margin-bottom: 4px;
 }
