@@ -821,3 +821,15 @@ table.field {
     margin-top: 5px;
     width: 400px;
 }
+
+.select2-container.set-selector {
+    display: block;
+    width: 400px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.select2-choice {
+    padding-right: 8px !important;
+}

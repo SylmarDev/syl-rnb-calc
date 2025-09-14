@@ -415,8 +415,13 @@ $(document).ready(function () {
 	$("#disableAiMovePercentage").change(function () {
 		var disableAiMovePercentage = $(this).is(":checked");
 		if (disableAiMovePercentage) {
+			hideAiOptionsAndDisclaimers();
 			hideAiPercentages();
 		} else {
+			// turn on ai options and disclaimers
+			showAiOptionsAndDisclaimers();
+			setAiOptionAndDisclaimVisibility('p2');
+			
 			showAIPercentages();
 		}
 	});
