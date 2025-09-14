@@ -241,6 +241,32 @@
         </button>
     </div>
     <div class="panel">
+        <div aria-label="trainer-poks" role="region">
+            <fieldset class="poke-info" id="trainer-mons">
+                <legend class="team-legend">
+                    <span id="team-box-legend">Team/Box</span>
+                    <span id="search-inline" class="search-inline">
+                        <input type="text" id="search" placeholder="Search" />
+                    </span>
+                </legend>
+                <div>
+                    <legend align="center">Team</legend>
+                    <div id="team-poke-list" class="box-poke dropzone">
+                    </div>
+                </div>
+                <hr>
+                <div>
+                    <legend align="center">Box</legend>
+                    <div id="box-poke-list" class="box-poke dropzone">
+                    </div>
+                </div>
+                <div>
+                    <legend align="center">Box 2</legend>
+                    <div id="box-poke-list2" class="box-poke dropzone">
+                    </div>
+                </div>
+            </fieldset>
+        </div>
         <div aria-label="Pok&eacute;mon 1" role="region">
             <fieldset class="poke-info" id="p1">
                 <legend align="center">Pok&eacute;mon 1
@@ -754,36 +780,14 @@
                 </div>
             </fieldset>
         </div>
-        <div aria-label="trainer-poks" role="region">
-            <fieldset class="poke-info" id="trainer-mons">
-                <legend class="team-legend">
-                    <span id="team-box-legend">Team/Box</span>
-                    <span id="search-inline" class="search-inline">
-                        <input type="text" id="search" placeholder="Search" />
-                    </span>
-                </legend>
-                <div>
-                    <legend align="center">Team</legend>
-                    <div id="team-poke-list" class="box-poke dropzone">
-                    </div>
-                </div>
-                <hr>
-                <div>
-                    <legend align="center">Box</legend>
-                    <div id="box-poke-list" class="box-poke dropzone">
-                    </div>
-                </div>
-                <div>
-                    <legend align="center">Box 2</legend>
-                    <div id="box-poke-list2" class="box-poke dropzone">
-                    </div>
-                </div>
-                <hr>
+        <div aria-label="" role="region">
+            <fieldset id="trashFieldset">
                 <div>
                     <legend align="center">Trash</legend>
                     <div id="trash-box" class="box-poke dropzone">
                     </div>
                     <button class="deadzone" id="trash-pok">Remove Pokémon from the trash</button>
+                    <br>
                     <button class="deadzone" id="clearSets">Remove Pokémon from all boxes</button>
                 </div>
                 <hr>
@@ -828,8 +832,9 @@
                         <input type="checkbox" name="cc-auto-refr" id="cc-auto-refr" autocomplete="off">Auto-Refresh
                     </div>
                 </div>
+            
             </fieldset>
-        </div>
+        </div> 
     </div>
     <div class="panel">
         <div aria-label="Field information" role="region">
@@ -1191,6 +1196,24 @@
         </div>
     </div>
     <div class="panel">
+        <div aria-label="trainer-poks" role="region">
+            <fieldset class="poke-info" id="trainer-mons">
+                <legend align="center"> OPPOSING TEAM</legend>
+                <div class="trainer-poks">
+                    <div class="trainer-pok-list-opposing">
+                        <div class="trainer-pok-container"> 
+                            <img class="trainer-pok-opposing" src="https://raw.githubusercontent.com/May8th1995/sprites/master/charizard.png" title="Focus Blast 120">
+                        </div>
+                    </div>
+                </div>
+                <!--hr>
+                <button id="set-double-opp">Set in doubles</button-->
+                <hr>
+                <button type="button" id="previous-trainer"> Previous Trainer</button>
+                <button type="button" id="next-trainer"> Next Trainer</button>
+                <button type="button" id="reset-trainer" style="float: right">🚚</button>
+            </fieldset>
+        </div>
         <div aria-label="Pok&eacute;mon 2" role="region">
             <fieldset class="poke-info" id="p2">
                 <legend align="center">Pok&eacute;mon 2
@@ -1700,24 +1723,6 @@
                         <option value="5">5 times</option>
                     </select>
                 </div>
-            </fieldset>
-        </div>
-        <div aria-label="trainer-poks" role="region">
-            <fieldset class="poke-info" id="trainer-mons">
-                <legend align="center"> OPPOSING TEAM</legend>
-                <div class="trainer-poks">
-                    <div class="trainer-pok-list-opposing">
-                        <div class="trainer-pok-container"> 
-                            <img class="trainer-pok-opposing" src="https://raw.githubusercontent.com/May8th1995/sprites/master/charizard.png" title="Focus Blast 120">
-                        </div>
-                    </div>
-                </div>
-                <!--hr>
-                <button id="set-double-opp">Set in doubles</button-->
-                <hr>
-                <button type="button" id="previous-trainer"> Previous Trainer</button>
-                <button type="button" id="next-trainer"> Next Trainer</button>
-                <button type="button" id="reset-trainer" style="float: right">🚚</button>
             </fieldset>
         </div>
     </div>
