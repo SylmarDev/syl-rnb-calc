@@ -28,22 +28,25 @@ for (var i = 0; i < 4; i++) {
 function createAiOptionsDict() {
 	var dict = {};
 	$("#aiOptions :input").each(function () {
-		dict[$(this).attr('id')] = $(this).is(":checked");
+		var id = $(this).attr('id');
+		if (id) {
+			dict[id] = $(this).is(":checked");
+		}
 	});
 
-	if ($("#enableDebugLogging").length) {
-		dict["enableDebugLogging"] = $("#enableDebugLogging").is(":checked");
-	}
-
-	if ($("#searchToggle").length) {
-		dict["searchToggle"] = $("#searchToggle").is(":checked");
-	}
-
+	// Include any checkboxes in the credits section of index.template.html
+	$(".credits input[type='checkbox']").each(function () {
+		var id = $(this).attr('id');
+		if (id) {
+			dict[id] = $(this).is(":checked");
+		}
+	});
+	
 	// console.log(dict); // DEBUG
 	return dict;
 }
 
-// --- AI Options persistence helpers ---
+// AI Options persistence helpers
 var AI_OPTIONS_STORAGE_KEY = 'aiOptionsDict';
 
 function saveAiOptionsToStorage() {
@@ -74,14 +77,14 @@ function applyAiOptionsDict(dict, triggerChange) {
 			if (triggerChange) $(this).change();
 		}
 	});
-	if ($("#enableDebugLogging").length && dict.hasOwnProperty("enableDebugLogging")) {
-		$("#enableDebugLogging").prop('checked', !!dict["enableDebugLogging"]);
-		if (triggerChange) $("#enableDebugLogging").change();
-	}
-	if ($("#toggleSearch").length && dict.hasOwnProperty("toggleSearch")) {
-		$("#toggleSearch").prop('checked', !!dict["toggleSearch"]);
-		if (triggerChange) $("#toggleSearch").change();
-	}
+	// Apply any checkboxes in the credits section of index.template.html
+	$(".credits input[type='checkbox']").each(function () {
+		var id = $(this).attr('id');
+		if (id && dict.hasOwnProperty(id)) {
+			$(this).prop('checked', !!dict[id]);
+			if (triggerChange) $(this).change();
+		}
+	});
 	window.NO_CALC = prevNoCalc;
 }
 
@@ -94,20 +97,10 @@ function initAiOptionsPersistence() {
 		saveAiOptionsToStorage();
 	}
 
-	// Keep storage in sync on any checkbox change within AI options or debug logging
-	$("#aiOptions :input").on('change', function () {
+	// Keep storage in sync on any checkbox change within AI options or in the credits section (index.template.html)
+	$("#aiOptions :input, .credits input[type='checkbox']").on('change', function () {
 		saveAiOptionsToStorage();
 	});
-	if ($("#enableDebugLogging").length) {
-		$("#enableDebugLogging").on('change', function () {
-			saveAiOptionsToStorage();
-		});
-	}
-	if ($("#toggleSearch").length) {
-		$("#toggleSearch").on('change', function () {
-			saveAiOptionsToStorage();
-		});
-	}
 }
 
 function showAIPercentages() {
@@ -432,6 +425,17 @@ $(document).ready(function () {
 			$(".search-inline").show();
 		} else {
 			$(".search-inline").hide();
+		}
+	});
+
+	$("#rangeCompare").change(function() {
+		var rangeCompare = $(this).is(":checked");
+		if (rangeCompare) {
+			$(".wrapper").css({"width": "1685px"});
+			$(".range-compare").show();
+		} else {
+			$(".wrapper").css({"width": "1285px"});
+			$(".range-compare").hide();
 		}
 	});
 

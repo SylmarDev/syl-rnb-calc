@@ -833,3 +833,7 @@ table.field {
 .select2-choice {
     padding-right: 8px !important;
 }
+
+.range-compare {
+    width: 400px;
+}
