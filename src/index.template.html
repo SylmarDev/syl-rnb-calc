@@ -78,6 +78,7 @@
             <div>
                 <input class="result-move visually-hidden" type="radio" name="resultMove" id="resultMoveL1" checked="checked" aria-describedby="resultDamageL1" />
                 <label class="btn btn-xxxwide btn-top" for="resultMoveL1">Loading...</label>
+                <button class="addRangeBtn" id="rangeL1"></button>
                 <span id="resultDamageL1">??? - ???%</span>
                 <input aria-describedby="criticalHitInstruction" class="result-move visually-hidden top-crit" type="checkbox" id="critTopL1" />
                 <label class="btn small-crit-btn" for="critTopL1" title="Force this attack to be a critical hit?">Crit</label>
@@ -1749,7 +1750,26 @@
             <fieldset>
                 <legend align="center">Range Compare</legend>
                 <div>
-                    <label>Target</label>
+                    <div id="range-move-options">
+                        <input type="checkbox" id="range-addMove">Add Move Mode</input>
+                    </div>
+                    <!-- I want range-target on the same line as range-move-options -->
+                    <div id="range-target">
+                        <label for="targetSpr">Target</label>
+                        <img id="targetSpr"></img>
+                        <label>PLAYER</label>
+                        <!-- Add HP values and held item here -->
+                    </div>
+                </div>
+                <div id="range-moves">
+                    <!-- Add a move indicator here for each move added -->
+                </div>
+                <hr>
+                <div id="range-chart">
+
+                </div>
+                <div id="range-meters">
+
                 </div>
             </fieldset>
         </div>
@@ -1806,6 +1826,7 @@
     <script type="text/javascript" src="./js/shared_controls.js?"></script>
     <script type="text/javascript" src="./js/index_randoms_controls.js?"></script>
     <script type="text/javascript" src="./js/moveset_import.js?"></script>
+    <script type="text/javascript" src="./js/range_compare.js?"></script>
 </div>
 
 <div class="credits">Run and Bun AI % work done by SylmarDev. Modified by dekzeh, ForwardFeed, Originaly Created by Honko, maintained by Austin and Kris, Special thanks to Hzla

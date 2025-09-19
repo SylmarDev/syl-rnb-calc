@@ -834,6 +834,17 @@ table.field {
     padding-right: 8px !important;
 }
 
-.range-compare {
-    width: 400px;
+.range-compare fieldset {
+    width: 1244px;
+}
+
+#targetSpr {
+    height: 30px;
+    width: 40px;
+}
+
+.addRangeBtn {
+    display: none;
+    height: 16px;
+    width: 16px;
 }
