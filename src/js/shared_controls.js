@@ -2016,14 +2016,13 @@ function collapseArrow(arrow){
 	}
 }
 
-/* although those two function could be factorised in one, i may think about more in depth 
-functionality laters that may involve two separate functions, i will remove this comment if i do*/
-function switchIconSingle(){
-	document.getElementById("monDouble").toggleAttribute("hidden")
-}
-
-function switchIconDouble(){
-	document.getElementById("monDouble").toggleAttribute("hidden")
+function updateSingleDoublesIcon() {
+	const isDoubles = $("#doubles-format").is(':checked');
+	if (isDoubles) {
+		document.getElementById("monDouble").removeAttribute('hidden');
+	} else {
+		document.getElementById("monDouble").setAttribute('hidden', '');
+	}
 }
 
 function hideAiOptions() {
@@ -2107,8 +2106,8 @@ $(document).ready(function () {
 	$('#cc-ohko-color').change(ColorCodeSetsChange);
 	$('#cc-spe-border')[0].checked=true;
 	$('#cc-ohko-color')[0].checked=true;
-	$('#singles-format').click(switchIconDouble);
-	$('#doubles-format').click(switchIconSingle);
+	$('#singles-format').click(updateSingleDoublesIcon);
+	$('#doubles-format').click(updateSingleDoublesIcon);
 	for (let dropzone of document.getElementsByClassName("dropzone")) {
 		dropzone.ondragenter=handleDragEnter;
 		dropzone.ondragleave=handleDragLeave;
