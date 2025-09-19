@@ -212,7 +212,11 @@ th {
     cursor: pointer;
     opacity: 0.7;
 }
-#tooltipText {
+.small-text #damageValues:hover {  /* indicates the presence of click-to-copy function */
+    cursor: pointer;
+    opacity: 0.7;
+}
+.tooltipText {
     font-size: 0.8em;
     visibility: hidden;
     border-radius: 5px;
