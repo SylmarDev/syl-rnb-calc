@@ -773,6 +773,7 @@ $("#p2 .forme").change(function() {
 
 		setName = setSetName(setName, ["Magma Admin Tabitha", "Magma Leader Maxie",
 			"Aqua Leader Archie", "Aqua Admin Shelly", "Aqua Admin Matt", "Winstrate Vito",
+			"Magma Admin Courtney"
 		]);
 		
 		// console.log(MEGA_BASE_ABILITIES[setName]); // DEBUG

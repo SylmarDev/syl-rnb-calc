@@ -719,7 +719,13 @@ var MEGA_BASE_ABILITIES = {
     'Elite Four GlaciaDouble': { 'Abomasnow' : 'Snow Warning'},
     'Elite Four Drake': { 'Salamence' : 'Intimidate'},
     'Elite Four DrakeDouble': { 'Salamence' : 'Intimidate'},
-    'Champion Wallace': { 'Swampert' : 'Torrent'}
+    'Champion Wallace': { 'Swampert' : 'Torrent'},
+    // Charizardite XY fix
+    'Magma Admin Courtney': { 'Charizard' : 'Blaze'},
+    'Triathlete Darren': { 'Charizard' : 'Blaze'},
+    'Leader Flannery': { 'Charizard' : 'Blaze'},
+    'Cool Trainer Edgar': { 'Charizard' : 'Blaze'}
+
 }
 
 
