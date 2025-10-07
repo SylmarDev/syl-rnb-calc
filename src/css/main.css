@@ -829,7 +829,6 @@ table.field {
     text-overflow: ellipsis;
     white-space: nowrap;
 }
-
 .select2-choice {
     padding-right: 8px !important;
 }
@@ -838,11 +837,74 @@ table.field {
     width: 1244px;
 }
 
-#targetSpr {
-    height: 30px;
-    width: 40px;
+/* Range Compare: selection/highlight */
+body.rc-selecting-target .trainer-pok,
+body.rc-selecting-target .trainer-pok-opposing {
+    cursor: crosshair;
+}
+.rc-selectable {
+    outline: 2px dashed #90caf9;
+    outline-offset: 2px;
 }
 
+#range-target.rc-need-target {
+    box-shadow: inset 0 0 0 3px #ff9800;
+    animation: rcPulse 0.6s ease-in-out 2;
+}
+@keyframes rcPulse {
+    0% { box-shadow: inset 0 0 0 0 rgba(255,152,0,.7); }
+    100% { box-shadow: inset 0 0 0 6px rgba(255,152,0,0); }
+}
+
+/* Range Compare: chart UI */
+#range-moves {
+    margin-top: 6px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+.rc-move-pill {
+    background: #2b2b2b;
+    border: 1px solid #444;
+    border-radius: 12px;
+    padding: 2px 8px;
+    font-size: 12px;
+}
+#range-chart {
+    margin-top: 8px;
+}
+.rc-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 6px 0;
+}
+.rc-label {
+    width: 240px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 12px;
+}
+.rc-track {
+    position: relative;
+    flex: 1;
+    height: 16px;
+    background: linear-gradient(90deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.08) 100%);
+    border: 1px solid #555;
+    border-radius: 8px;
+}
+.rc-track .rc-segment {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    border-radius: 8px;
+}
+.rc-pct {
+    width: 110px;
+    text-align: right;
+    font-size: 12px;
+}
 .addRangeBtn {
     display: none;
     height: 16px;
