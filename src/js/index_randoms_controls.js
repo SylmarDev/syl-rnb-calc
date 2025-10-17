@@ -506,3 +506,12 @@ $("#mainResult").click(function () {
 		}, 2000);
 	});
 });
+
+$("#damageValues").click(function() {
+	navigator.clipboard.writeText(`(${$("#damageValues").text().split('(')[1]}`).then(function() {
+		document.getElementById('smallTooltipText').style.visibility = 'visible';
+		setTimeout(function () {
+			document.getElementById('smallTooltipText').style.visibility = 'hidden';
+		}, 2000);
+	});
+});
