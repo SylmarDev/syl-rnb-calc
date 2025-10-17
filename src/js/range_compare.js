@@ -242,7 +242,6 @@ function rcRenderDistribution(healthDist, maxHP) {
 
 	// Fill missing keys
 	var keys = Object.keys(healthDist).map(function (k) { return parseInt(k, 10); });
-	// var min = Math.min.apply(null, keys);
 	var max = Math.max.apply(null, keys);
 	for (var i = 0; i <= max; i++) if (healthDist[i] == null) healthDist[i] = 0;
 
@@ -251,7 +250,8 @@ function rcRenderDistribution(healthDist, maxHP) {
 	RangeCompare.lastHealthDist = $.extend(true, {}, healthDist);
 	RangeCompare.lastTotal = total;
 
-	console.log(healthDist);
+	// TODO: make this print on debug logging?
+	// console.log(healthDist);
 
 	var ctx = document.getElementById('range-chart');
     if (RangeCompare.chart != null) {
