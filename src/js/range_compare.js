@@ -15,36 +15,53 @@ window.RangeCompare = {
     chart: null
 };
 
+function removeAllOccurrences(str, substring) {
+	if (!substring) return str;
+	return str.split(substring).join('');
+  }
+
 // Ensure "+" buttons exist for all 8 moves and reflect Add Move Mode state
 function ensureAddButtons() {
 	function btnHtml(side, i) {
 		var id = 'range' + side + i;
-		return '<button class="addRangeBtn" id="' + id + '" title="Add to Range Compare" data-side="' + side + '" data-idx="' + i + '">+</button>';
+		return removeAllOccurrences(`
+		<button type="button" class="btn-range-add" id='${id}' data-side='${side}' data-idx='${i}' title="Add to Range Compare">
+			<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16" style="--darkreader-inline-fill: currentColor;" data-darkreader-inline-fill="">
+				<path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"></path>
+			</svg>
+        </button>
+		`, '(\r\n|\r|\n)');
 	}
 	for (var i = 1; i <= 4; i++) {
-		// Left rows
+		// left
 		var $lRow = $('#resultMoveL' + i).closest('div');
 		if ($lRow.length) {
-			var $btnL = $lRow.find('.addRangeBtn');
+			var $btnL = $lRow.find('.btn-range-add');
+			
 			if ($btnL.length === 0) {
-				$(btnHtml('L', i)).insertAfter($lRow.find('label.btn').first());
+				$(btnHtml('L', i)).insertAfter($lRow.find('label.btn').last());
 			} else {
-				$btnL.attr({'data-side': 'L', 'data-idx': i, title: 'Add to Range Compare'}).text('+');
+				$btnL.replaceWith(btnHtml('L', i));
 			}
 		}
-		// Right rows
+		// right
 		var $rRow = $('#resultMoveR' + i).closest('div');
 		if ($rRow.length) {
-			var $btnR = $rRow.find('.addRangeBtn');
+			var $btnR = $rRow.find('.btn-range-add');
 			if ($btnR.length === 0) {
 				$(btnHtml('R', i)).insertBefore($rRow.find('span.resultDamageR').first());
 			} else {
-				$btnR.attr({'data-side': 'R', 'data-idx': i, title: 'Add to Range Compare'}).text('+');
+				$btnR.replaceWith(btnHtml('R', i));
 			}
 		}
 	}
 	var show = $('#range-addMove').is(':checked');
-	$('.addRangeBtn').css('display', show ? 'inline' : 'none').prop('disabled', !show);
+	$('.btn-range-add').css('display', show ? 'inline-flex' : 'none');
+	if (!show) {
+		$('.btn-range-add').addClass('disabled');
+	} else {
+		$('.btn-range-add').removeClass('disabled');
+	}
 }
 
 // Ensure HP/item controls are present and prefilled
@@ -402,7 +419,6 @@ function addSelectedMoveToRange(side, moveIndex) {
 
 	RangeCompare.moves = RangeCompare.moves || [];
 	RangeCompare.moves.push(entry);
-	renderRangeForm();
 }
 
 function recalcEntry(entry) {
@@ -506,7 +522,7 @@ $(function () {
 	});
 
 	// Handle clicking on any + button to add move
-	$(document).on('click', '.addRangeBtn', function (ev) {
+	$(document).on('click', '.btn-range-add', function (ev) {
 		ev.preventDefault();
 		if (!$('#range-addMove').is(':checked')) return;
 		var side = $(this).data('side');
@@ -520,14 +536,12 @@ $(function () {
 		ev.preventDefault();
 		var id = $(this).closest('.rc-move-row').data('id');
 		RangeCompare.moves = (RangeCompare.moves || []).filter(function (m) { return m.id !== id; });
-		renderRangeForm();
 	});
 	// Remove via pill (min-max list) if shown
 	$(document).on('click', '.rc-move-pill .rc-remove', function (ev) {
 		ev.preventDefault();
 		var id = $(this).closest('.rc-move-pill').data('id');
 		RangeCompare.moves = (RangeCompare.moves || []).filter(function (m) { return m.id !== id; });
-		renderRangeForm();
 		renderRangeChart();
 	});
 

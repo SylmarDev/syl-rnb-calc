@@ -304,6 +304,38 @@ th {
     width: 8.5em;
 }
 
+button svg {
+ display: block;
+ margin: auto;
+ position: absolute;
+ bottom: -0.15em;
+ right: 6px;
+}
+
+.btn-range-add {
+    height: 1em;
+    width: 2.25em;
+    padding: 3px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    background: var(--background);
+    border: 1px solid #aaaaaa;
+    cursor: pointer;
+    position: relative;
+}
+
+.btn-range-add:active {
+    background-color:  var(--button-selected);
+}
+
+.btn-range-add.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
 .visually-hidden:focus + .btn, /* Add visual indication when focusing on visually hidden elements */
 .btn:hover {
     z-index: 10;
@@ -486,7 +518,6 @@ select.toxic-counter {
     height: 1em;
     padding: 3px 3px;
     margin: 0px 1px;
-    
 }
 
 .small-crit-btn[id*="TopL"] {
@@ -908,9 +939,4 @@ body.rc-selecting-target .trainer-pok-opposing {
     width: 110px;
     text-align: right;
     font-size: 12px;
-}
-.addRangeBtn {
-    display: none;
-    height: 16px;
-    width: 16px;
 }
