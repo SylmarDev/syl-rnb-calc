@@ -18,6 +18,52 @@ window.RangeCompare = {
 LINEBREAK_REGEX = '(\r\n|\r|\n)';
 
 
+var highCritRatioMoveNames = [
+	"Aeroblast", "Air Cutter", "Attack Order",
+	"Blaze Kick", "Crabhammer", "Cross Chop", "Cross Poison", "Drill Run",
+	"Karate Chop", "Leaf Blade", "Night Slash", "Poison Tail", "Psycho Cut",
+	"Razor Leaf", "Razor Wind", "Shadow Claw", "Sky Attack", "Slash",
+	"Spacial Rend", "Stone Edge"
+];
+
+var critBlockingAbilities = [
+	"Shell Armor", "Battle Armor", "Magma Armor"
+]
+
+var highCritRatioItems = [
+	"Razor Claw", "Scope Lens"
+]
+
+function strMatch(s, ...matches) {
+	for (m in match) {
+		if (s === m) { return true; }
+	}
+	return false;
+}
+
+function getCritRate(attacker, defender, aField, dField, moveIndex) {
+	if (strMatch(defender.ability, ...critBlockingAbilities) ||
+		(dField.isLuckyChant ?? false)) { return 0; }
+
+	stages = [0.0625, 0.125, 0.5, 1];
+
+	boosts = 0;
+
+	if (strMatch(attacker.move[moveIdx].originalName, ...highCritRatioMoveNames)) {
+		boosts++;
+	}
+
+	if (strMatch(attacker.item, ...highCritRatioItems)) { boosts++; }
+	if (strMatch(attacker.ability, "Super Luck")) { boosts++; }
+	if (attacker.name.includes("fetch'd") && 
+		(attacker.item == "Leek" || attacker.item == "Stick")) { boosts += 2; }
+	if (attacker.name == "Chansey" && attacker.item == "Lucky Punch") { boosts += 2; }
+	if (aField.isFocusEnergy) { boosts += 2; }
+
+	return stages[boosts];
+}
+
+
 function removeAllOccurrences(str, substring) {
 	if (!substring) return str;
 	return str.split(substring).join('');
@@ -152,6 +198,7 @@ function rcListFromDamageRollString(str) {
 	return str.split(',').map(function (s) { return parseInt(s, 10); }).filter(function (n) { return !isNaN(n); });
 }
 
+// can probably be refactored away
 function rcGetFractionFloat(frac) {
 	if (!frac) return 1 / 16;
 	if (typeof frac === 'number') return frac;
@@ -171,7 +218,7 @@ function rcGetItemById(id, maxHP) {
 }
 
 function rcMoveDist(move) {
-	var critRate = rcGetFractionFloat(move.critRateStr || move.critRate || 1 / 16);
+	var critRate = move.critRate ?? 0.0625;
 	var damageRolls = (move.damageRolls && move.damageRolls.length) ? move.damageRolls.slice() : rcListFromDamageRollString(move.damageRollsStr);
 	var critRolls = (move.critRolls && move.critRolls.length) ? move.critRolls.slice() : rcListFromDamageRollString(move.critRollsStr);
 	var dist = {};
@@ -387,6 +434,7 @@ function startSelectingTarget() {
 			ensureTargetControls();
 		} catch (e) {}
 		endSelectingTarget();
+		refreshMoveDisplays();
 	});
 }
 
@@ -421,7 +469,7 @@ function addSelectedMoveToRange(side, moveIndex) {
 		move: damageResults[isP1][moveIndex],
 		attacker: damageResults[isP1][moveIndex].attacker.name ?? "",
 		moveName: damageResults[isP1][moveIndex].move.originalName ?? "",
-		field: isP1 ? p1field : p2field
+		field: isP1 === 0 ? p1field : p2field
 	};
 
 	// console.log(entry); // TEMP
@@ -436,32 +484,29 @@ function addSelectedMoveToRange(side, moveIndex) {
 
 function recalcEntry(entry) {
 	try {
-		var isP1 = side === 'L' ? 0 : 1;
-		var attackerInfo = entry.side === 'L' ? $('#p1') : $('#p2');
-		var attacker = createPokemon(attackerInfo);
+		console.log(entry);
+		var isP1 = entry.side === 'L' ? 0 : 1;
 		var field = entry.field;
-		if (entry.side === 'R' && typeof field.clone === 'function') {
-			field = field.clone().swap();
-		}
 		var p2field = field.clone().swap();
-		var move = attacker.moves[entry.moveIdx];
+
+		var attacker = entry.move.attacker;
 		var defender = createPokemon(RangeCompare.targetId);
 
-		// 
-		var result = calculateAllMoves(gen, p1, field, p2, p2field);
-		var hits = move.hits || 1;
-		var minMax = result.range();
-		var minDmg = minMax[0] * hits;
-		var maxDmg = minMax[1] * hits;
-		entry.minPct = Math.floor(minDmg * 1000 / defender.maxHP()) / 10;
-		entry.maxPct = Math.floor(maxDmg * 1000 / defender.maxHP()) / 10;
-		// entry.label = attacker.name + ' ' + move.name;
+		var result = calculateAllMoves(gen, 
+			attacker,
+			field,
+			defender, 
+			p2field);
 
-		entry.damageRolls = result[isP1][entry.moveIdx].attacker.damageRolls;
-		entry.critRolls = entry.damageRolls.map(function (n) { return Math.trunc(n * 1.5); });
-
-		// TODO: solve crit rate
-		console.log(defender);
+		entry.label = attacker.name + ' ' + move.name;
+		
+		entry.damageRolls = result[0][entry.moveIdx].damage;
+		entry.critRolls = entry.damageRolls.map(function (n) {
+			// additional multiplication for sniper
+			if (attacker.ability === "Sniper") { n = Math.trunc(n * 1.5); }
+			return Math.trunc(n * 1.5);
+		});
+		entry.critRate = getCritRate(attacker, defender, field, p2field, entry.moveIdx);
 	} catch (e) {
 		// If anything fails, mark as 0
 		entry.minPct = 0;
@@ -483,7 +528,7 @@ function createMoveDisplays() {
 		var id = move.id;
 
 		var attackerName = move.attacker  ?? "";
-		var moveName = move.moveName ?? "";
+		var moveName = move.moveName.split(" ").map(x => x[0]).join("") ?? "";
 
 		console.log(move);
 
@@ -493,20 +538,48 @@ function createMoveDisplays() {
 		var critMaxRoll = Math.max(...move.critRolls);
 
 		var moveHtml = `
-			<div id="${id}" class="range-move">
-				<span>${attackerName} ${moveName}</span>
-				<span>${minRoll}-${maxRoll}</span>
-				<span class="critBold">${critMinRoll}-${critMaxRoll}</span>
-				<button id=delete${id} class="range-delete-move">
-				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
-					<path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
-				</svg></button>
+			<div id="${id}" class="range-move" data-move-id="${id}">
+				<div class="range-move-controls">
+					<button id="copy${id}" class="range-copy-move btn-range-compare-body" title="Copy move">
+						<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-copy" viewBox="0 0 16 16">
+							<path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+							<path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+						</svg>
+					</button>
+					<button id="delete${id}" class="range-delete-move btn-range-compare-body" title="Delete move">
+						<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+							<path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+						</svg>
+					</button>
+				</div>
+				<div class="range-move-content">
+					<span class="range-move-name">${attackerName} ${moveName}</span>
+					<span class="range-move-damage">${minRoll}-${maxRoll}</span>
+					<span class="range-move-crit critBold">${critMinRoll}-${critMaxRoll}</span>
+				</div>
+				<div class="range-move-navigation">
+					<button id="left${id}" class="range-move-left btn-range-compare-body" title="Move left">
+						<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16">
+							<path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+						</svg>
+					</button>
+					<button id="right${id}" class="range-move-right btn-range-compare-body" title="Move right">
+						<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16">
+							<path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+						</svg>
+					</button>
+				</div>
 			</div>
 		`
 		html.push(removeAllOccurrences(moveHtml, LINEBREAK_REGEX))
 	}
 
 	$("#range-moves").append(html.join('\n'));
+}
+
+function refreshMoveDisplays() {
+	recalcAllEntries();
+	createMoveDisplays();
 }
 
 
@@ -546,13 +619,68 @@ $(function () {
 		RangeCompare.moves = (RangeCompare.moves || []).filter(function (m) { return m.id !== id; });
 	});
 
+	// Remove a single move (from range-move display)
+	$(document).on('click', '.range-delete-move', function (ev) {
+		ev.preventDefault();
+		var id = $(this).attr('id').replace('delete', '');
+		RangeCompare.moves = (RangeCompare.moves || []).filter(function (m) { return m.id !== id; });
+		createMoveDisplays();
+	});
+
+	// Copy a move
+	$(document).on('click', '.range-copy-move', function (ev) {
+		ev.preventDefault();
+		var id = $(this).attr('id').replace('copy', '');
+		var originalMove = RangeCompare.moves.find(function (m) { return m.id === id; });
+		if (originalMove) {
+			// Create a copy with a new ID
+			var copiedMove = JSON.parse(JSON.stringify(originalMove));
+			copiedMove.id = Date.now() + '-' + Math.random().toString(36).slice(2, 7);
+			
+			// Find the index of the original move and insert the copy after it
+			var originalIndex = RangeCompare.moves.findIndex(function (m) { return m.id === id; });
+			if (originalIndex !== -1) {
+				// Insert the copy right after the original move
+				RangeCompare.moves.splice(originalIndex + 1, 0, copiedMove);
+				createMoveDisplays();
+			}
+		}
+	});
+
+	// Move left
+	$(document).on('click', '.range-move-left', function (ev) {
+		ev.preventDefault();
+		var id = $(this).attr('id').replace('left', '');
+		var currentIndex = RangeCompare.moves.findIndex(function (m) { return m.id === id; });
+		if (currentIndex > 0) {
+			// Swap with the previous move
+			var temp = RangeCompare.moves[currentIndex];
+			RangeCompare.moves[currentIndex] = RangeCompare.moves[currentIndex - 1];
+			RangeCompare.moves[currentIndex - 1] = temp;
+			createMoveDisplays();
+		}
+	});
+
+	// Move right
+	$(document).on('click', '.range-move-right', function (ev) {
+		ev.preventDefault();
+		var id = $(this).attr('id').replace('right', '');
+		var currentIndex = RangeCompare.moves.findIndex(function (m) { return m.id === id; });
+		if (currentIndex < RangeCompare.moves.length - 1) {
+			// Swap with the next move
+			var temp = RangeCompare.moves[currentIndex];
+			RangeCompare.moves[currentIndex] = RangeCompare.moves[currentIndex + 1];
+			RangeCompare.moves[currentIndex + 1] = temp;
+			createMoveDisplays();
+		}
+	});
+
 	// Inject Clear All button if not present
 	if ($('#range-move-options .rc-clear-all').length === 0) {
 		$('#range-move-options').append('<button class="rc-clear-all btn-range-compare-body" title="Clear all Range Compare entries">Clear</button>');
 	}
 	$(document).on('click', '.rc-clear-all', function () {
 		RangeCompare.moves = [];
-		renderRangeForm();
 		$('#range-chart').empty();
 		$('#range-meters').empty();
 	});

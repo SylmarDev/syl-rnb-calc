@@ -308,8 +308,16 @@ button svg {
  display: block;
  margin: auto;
  position: absolute;
- bottom: -0.15em;
- right: 6px;
+}
+
+.bi-plus {
+    bottom: -0.15em;
+    right: 6px;
+}
+
+.bi-x {
+    bottom: 0.3em;
+    right: 5px;
 }
 
 .btn-range-add {
@@ -391,18 +399,114 @@ button svg {
 }
 
 #range-moves {
+    display: flex;
     justify-content: flex-end;
+}
+
+#range-compare-moves {
+    display: flex;
 }
 
 .range-move {
     width: auto;
     text-align: center;
-    max-width: 125px;
+    max-width: 250px;
+    display: flex;
+    flex-direction: column;
+    padding: 8px;
+    margin: 4px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #3c3c3c;
+    transition: all 0.2s ease;
+    position: relative;
 }
 
-.range-move span {
-    width: 45%;
-    display: block;
+.range-move:hover {
+    border-color: #bbb;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.range-move-controls {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+}
+
+.range-move-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 4px 0;
+}
+
+.range-move-name {
+    font-weight: bold;
+    font-size: 12px;
+    margin-bottom: 2px;
+}
+
+.range-move-damage {
+    font-size: 11px;
+}
+
+.range-move-crit {
+    font-size: 11px;
+    color: #d32f2f;
+}
+
+.range-move-navigation {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 4px;
+}
+
+.range-copy-move {
+    cursor: pointer;
+    background: #28a745;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    padding: 4px 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+}
+
+.range-copy-move:hover {
+    background: #218838;
+}
+
+.range-delete-move {
+    cursor: pointer;
+    background: #ff4444;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    padding: 4px 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+}
+
+.range-delete-move:hover {
+    background: #cc0000;
+}
+
+.range-move-left,
+.range-move-right {
+    cursor: pointer;
+    color: white; 
+    padding: 4px 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
 }
 
 .critBold {
