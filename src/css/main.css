@@ -326,6 +326,17 @@ button svg {
     position: relative;
 }
 
+.btn-range-compare-body {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    background: var(--background);
+    border: 1px solid #aaaaaa;
+    cursor: pointer;
+    position: relative;
+}
+
 .btn-range-add:active {
     background-color:  var(--button-selected);
 }
@@ -334,6 +345,10 @@ button svg {
     opacity: 0.5;
     cursor: not-allowed;
     pointer-events: none;
+}
+
+.btn-range-compare-body:active {
+    background-color:  var(--button-selected);
 }
 
 .visually-hidden:focus + .btn, /* Add visual indication when focusing on visually hidden elements */
@@ -349,6 +364,26 @@ button svg {
 }
 .visually-hidden[type="radio"]:checked + .btn {
     cursor: default;
+}
+
+.numbersOnly {
+    width: 70px;
+}
+
+/* Chrome, Safari, Edge, Opera */
+#rc-maxHP::-webkit-outer-spin-button,
+#rc-maxHP::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+#rc-maxHP[type=number] {
+  -moz-appearance: textfield;
+}
+
+#range-target-parent {
+    width: 40%;
 }
 
 /* Hide element visually, but not from screen readers. See http://adrianroselli.com/2017/05/under-engineered-custom-radio-buttons-and-checkboxen.html */
@@ -897,6 +932,8 @@ body.rc-selecting-target .trainer-pok-opposing {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
+    width: 60%;
+    
 }
 .rc-move-pill {
     background: #2b2b2b;

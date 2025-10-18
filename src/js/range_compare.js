@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 /* eslint-disable radix */
-// Global-ish state for Range Compare
+// Global state for Range Compare
 window.RangeCompare = {
 	targetId: null, // e.g. "Charizard (Some Set)"
 	targetSide: null, // 'PLAYER' | 'OPPONENT'
@@ -14,6 +14,8 @@ window.RangeCompare = {
 	rangeComparator: "<=",
     chart: null
 };
+
+
 
 function removeAllOccurrences(str, substring) {
 	if (!substring) return str;
@@ -70,16 +72,16 @@ function ensureTargetControls() {
 	if ($t.find('.rc-hp-inputs').length === 0) {
 		var hpHtml = [
 			'<div class="rc-hp-inputs">',
-			'  <input type="number" id="rc-currentHP" min="0" value="" style="width:70px;"/>',
+			'  <input type="number" class="numbersOnly" id="rc-currentHP" min="0" value="""/>',
 			'  <span>/</span>',
-			'  <input type="number" id="rc-maxHP" min="1" value="" style="width:70px;"/>',
+			'  <input type="number" id="rc-maxHP" class="numbersOnly" min="1" value=""" readonly/>',
 			'  <select id="rc-item">',
 			'    <option value="0">None</option>',
 			'    <option value="1">Oran Berry</option>',
 			'    <option value="2">Sitrus Berry</option>',
 			'    <option value="3">Leftovers</option>',
 			'  </select>',
-			'  <button id="rc-calc" class="btn btn-small" title="Calc HP distribution">Calc</button>',
+			'  <button id="rc-calc" class="btn-range-compare-body" title="Calc HP distribution">Calc</button>',
 			'</div>'
 		].join('');
 		$t.append(hpHtml);
@@ -317,7 +319,7 @@ function ensureRangeCompareUI() {
 	var html = [
 		'<div class="rc-range-ui" style="margin-top:10px;">',
 		'  <div><b>Compare HP Against</b></div>',
-		'  <input id="rc-range-hp" type="number" style="width:80px;" value="' + (RangeCompare.rangeHPVal || 0) + '">',
+		'  <input id="rc-range-hp" class="numbersOnly" type="number" style="width:80px;" value="' + (RangeCompare.rangeHPVal || 0) + '">',
 		'  <select id="rc-range-op">',
 		'    <option value="<="><=</option>',
 		'    <option value=">=">>=</option>',
@@ -325,7 +327,7 @@ function ensureRangeCompareUI() {
 		'    <option value=">">></option>',
 		'    <option value="=">=</option>',
 		'  </select>',
-		'  <button id="rc-range-submit" class="btn btn-small">Submit</button>',
+		'  <button id="rc-range-submit" class="btn btn-small btn-range-compare-body">Submit</button>',
 		'  <div id="rc-range-result" style="margin-top:6px;"></div>',
 		'</div>'
 	].join('');
@@ -381,7 +383,6 @@ function startSelectingTarget() {
 		$('#targetSpr').attr('src', $img.attr('src'));
 		// Update side label (2nd label within #range-target)
 		$('#range-target label').eq(1).text(RangeCompare.targetSide);
-		updateRangeTargetInfo();
 		// Prefill HP controls from target
 		try {
 			var def = createPokemon(RangeCompare.targetId);
@@ -393,6 +394,7 @@ function startSelectingTarget() {
 	});
 }
 
+var damageResults;
 function addSelectedMoveToRange(side, moveIndex) {
 	if (!RangeCompare.targetId) {
 		// visual nudge to select a target first
@@ -401,9 +403,18 @@ function addSelectedMoveToRange(side, moveIndex) {
 		return;
 	}
 
-	var attackerInfo = side === 'L' ? $('#p1') : $('#p2');
-	var attacker = createPokemon(attackerInfo);
-	var move = attacker.moves[moveIndex];
+	var p1info = $("#p1");
+	var p2info = $("#p2");
+	var p1 = createPokemon(p1info);
+	var p2 = createPokemon(p2info);
+	var p1field = createField();
+	var p2field = p1field.clone().swap();
+
+	var isP1 = side === 'L' ? 0 : 1;
+
+	damageResults = calculateAllMoves(gen, p1, p1field, p2, p2field);
+
+	console.log(damageResults[isP1][0]);
 
 	var entry = {
 		id: Date.now() + '-' + Math.random().toString(36).slice(2, 7),
@@ -411,7 +422,8 @@ function addSelectedMoveToRange(side, moveIndex) {
 		side: side,
 		color: side === 'L' ? '#4caf50' : '#ef5350',
 		moveIdx: moveIndex,
-		targetId: RangeCompare.targetId
+		targetId: RangeCompare.targetId,
+		move: damageResults[isP1][0],
 	};
 
 	// Prefill damage/crit rolls from calc engine and defaults
@@ -484,23 +496,6 @@ function renderRangeChart() {
 	});
 }
 
-function updateRangeTargetInfo() {
-	if (!RangeCompare.targetId) return;
-	try {
-		var def = createPokemon(RangeCompare.targetId);
-		var hpInfo = 'HP: ' + def.maxHP();
-		var itemInfo = def.item ? (' | Item: ' + def.item) : '';
-		// Ensure info container exists
-		var $info = $('#range-target .rc-target-info');
-		if ($info.length === 0) {
-			$info = $('<span class="rc-target-info"></span>')
-			$('#range-target').append($info);
-		}
-		$info.text(hpInfo + itemInfo);
-	} catch (e) {
-		// eat exception
-	}
-}
 
 // Initialize behaviors
 $(function () {
@@ -547,7 +542,7 @@ $(function () {
 
 	// Inject Clear All button if not present
 	if ($('#range-move-options .rc-clear-all').length === 0) {
-		$('#range-move-options').append('<button class="rc-clear-all" title="Clear all Range Compare entries">Clear</button>');
+		$('#range-move-options').append('<button class="rc-clear-all btn-range-compare-body" title="Clear all Range Compare entries">Clear</button>');
 	}
 	$(document).on('click', '.rc-clear-all', function () {
 		RangeCompare.moves = [];
@@ -605,3 +600,7 @@ function syncFormToEntries() {
 		entry.critRate = critOn ? rcGetFractionFloat(rateStr) : 0;
 	});
 }
+
+$('.numbersOnly').on('input', function() { 
+    this.value = this.value.replace(/[^0-9]/g, '');
+});
