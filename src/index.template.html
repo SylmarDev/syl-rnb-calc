@@ -1758,18 +1758,19 @@
         <div aria-label="range-compare" role="region">
             <fieldset>
                 <legend align="center">Range Compare</legend>
-                    <div id="range-move-options">
-                        <input type="checkbox" id="range-addMove">Add Move Mode</input>
+                <div id="range-compare-top-fields">
+                    <div id="range-target-fields">
+                        <div id="range-move-options">
+                            <input type="checkbox" id="range-addMove">Add Move Mode</input>
+                        </div>
+                        <div id="range-target">
+                            <label for="targetSpr">Target</label>
+                            <img id="targetSpr"></img>
+                            <label>PLAYER</label>
+                        </div>
                     </div>
-                    <!-- I want range-target on the same line as range-move-options -->
-                    <div id="range-target">
-                        <label for="targetSpr">Target</label>
-                        <img id="targetSpr"></img>
-                        <label>PLAYER</label>
-                        <!-- Add HP values and held item here -->
-                </div>
-                <div id="range-moves">
-                    <!-- Add a move indicator here for each move added -->
+                    <div id="range-moves">
+                    </div>
                 </div>
                 <hr>
                 <canvas id="range-chart">

@@ -382,9 +382,33 @@ button svg {
   -moz-appearance: textfield;
 }
 
-#range-target-parent {
-    width: 40%;
+#range-compare-top-fields {
+    display: flex;
 }
+
+#range-target-fields {
+    justify-content: flex-start;
+}
+
+#range-moves {
+    justify-content: flex-end;
+}
+
+.range-move {
+    width: auto;
+    text-align: center;
+    max-width: 125px;
+}
+
+.range-move span {
+    width: 45%;
+    display: block;
+}
+
+.critBold {
+    font-weight: 700;
+}
+
 
 /* Hide element visually, but not from screen readers. See http://adrianroselli.com/2017/05/under-engineered-custom-radio-buttons-and-checkboxen.html */
 .visually-hidden {

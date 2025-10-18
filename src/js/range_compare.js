@@ -15,6 +15,7 @@ window.RangeCompare = {
     chart: null
 };
 
+LINEBREAK_REGEX = '(\r\n|\r|\n)';
 
 
 function removeAllOccurrences(str, substring) {
@@ -32,7 +33,7 @@ function ensureAddButtons() {
 				<path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"></path>
 			</svg>
         </button>
-		`, '(\r\n|\r|\n)');
+		`, LINEBREAK_REGEX);
 	}
 	for (var i = 1; i <= 4; i++) {
 		// left
@@ -261,8 +262,9 @@ function rcRenderDistribution(healthDist, maxHP) {
 
 	// Fill missing keys
 	var keys = Object.keys(healthDist).map(function (k) { return parseInt(k, 10); });
+	var min = Math.min.apply(null, keys);
 	var max = Math.max.apply(null, keys);
-	for (var i = 0; i <= max; i++) if (healthDist[i] == null) healthDist[i] = 0;
+	for (var i = min; i <= max; i++) if (healthDist[i] == null) healthDist[i] = 0;
 
 	// Normalize to percentage and store for range comparator
 	var total = 0; for (var k in healthDist) total += healthDist[k];
@@ -295,18 +297,6 @@ function rcRenderDistribution(healthDist, maxHP) {
 					beginAtZero: true
 				}
 			},
-            animation: {
-                onComplete: () => {
-                    delayed = true;
-                },
-                delay: (context) => {
-                    let delay = 0;
-                    if (context.type === 'data' && context.mode === 'default' && !delayed) {
-                        delay = context.dataIndex * 20 + context.datasetIndex * 10;
-                    }
-                    return delay;
-                },
-            },
 		}
 	});
 
@@ -327,7 +317,7 @@ function ensureRangeCompareUI() {
 		'    <option value=">">></option>',
 		'    <option value="=">=</option>',
 		'  </select>',
-		'  <button id="rc-range-submit" class="btn btn-small btn-range-compare-body">Submit</button>',
+		'  <button id="rc-range-submit" class="btn-range-compare-body">Submit</button>',
 		'  <div id="rc-range-result" style="margin-top:6px;"></div>',
 		'</div>'
 	].join('');
@@ -356,7 +346,13 @@ function rcRenderMeters(healthDist) {
 	var total = 0; for (var k in healthDist) total += healthDist[k];
 	var kill = healthDist[0] || 0;
 	var survival = 1 - (kill / (total || 1));
-	var $sur = $('<div><b>Survival chance:</b> ' + (survival * 100).toFixed(3) + '%</div>');
+
+	// targets name
+	var targetStr = RangeCompare.targetId && RangeCompare.targetId.split("(")[0] ?
+		 RangeCompare.targetId.split("(")[0] :
+		 "";
+
+	var $sur = $(`<div><b>${targetStr}Survival Chance:</b> ${(survival * 100).toFixed(3)}%</div>`);
 	$meters.prepend($sur);
 }
 function endSelectingTarget() {
@@ -414,43 +410,58 @@ function addSelectedMoveToRange(side, moveIndex) {
 
 	damageResults = calculateAllMoves(gen, p1, p1field, p2, p2field);
 
-	console.log(damageResults[isP1][0]);
+	console.log(damageResults[isP1][moveIndex]);
 
 	var entry = {
 		id: Date.now() + '-' + Math.random().toString(36).slice(2, 7),
-		label: attacker.name + ' ' + move.name,
 		side: side,
 		color: side === 'L' ? '#4caf50' : '#ef5350',
 		moveIdx: moveIndex,
 		targetId: RangeCompare.targetId,
-		move: damageResults[isP1][0],
+		move: damageResults[isP1][moveIndex],
+		attacker: damageResults[isP1][moveIndex].attacker.name ?? "",
+		moveName: damageResults[isP1][moveIndex].move.originalName ?? "",
+		field: isP1 ? p1field : p2field
 	};
+
+	// console.log(entry); // TEMP
 
 	// Prefill damage/crit rolls from calc engine and defaults
 	prefillEntryFromCalc(entry);
 
 	RangeCompare.moves = RangeCompare.moves || [];
 	RangeCompare.moves.push(entry);
+	createMoveDisplays();
 }
 
 function recalcEntry(entry) {
 	try {
+		var isP1 = side === 'L' ? 0 : 1;
 		var attackerInfo = entry.side === 'L' ? $('#p1') : $('#p2');
 		var attacker = createPokemon(attackerInfo);
-		var field = createField();
+		var field = entry.field;
 		if (entry.side === 'R' && typeof field.clone === 'function') {
 			field = field.clone().swap();
 		}
+		var p2field = field.clone().swap();
 		var move = attacker.moves[entry.moveIdx];
-		var defender = createPokemon(entry.targetId);
-		var result = calc.calculate(gen, attacker, defender, move, field);
+		var defender = createPokemon(RangeCompare.targetId);
+
+		// 
+		var result = calculateAllMoves(gen, p1, field, p2, p2field);
 		var hits = move.hits || 1;
 		var minMax = result.range();
 		var minDmg = minMax[0] * hits;
 		var maxDmg = minMax[1] * hits;
 		entry.minPct = Math.floor(minDmg * 1000 / defender.maxHP()) / 10;
 		entry.maxPct = Math.floor(maxDmg * 1000 / defender.maxHP()) / 10;
-		entry.label = attacker.name + ' ' + move.name;
+		// entry.label = attacker.name + ' ' + move.name;
+
+		entry.damageRolls = result[isP1][entry.moveIdx].attacker.damageRolls;
+		entry.critRolls = entry.damageRolls.map(function (n) { return Math.trunc(n * 1.5); });
+
+		// TODO: solve crit rate
+		console.log(defender);
 	} catch (e) {
 		// If anything fails, mark as 0
 		entry.minPct = 0;
@@ -463,37 +474,39 @@ function recalcAllEntries() {
 	RangeCompare.moves.forEach(function (m) { recalcEntry(m); });
 }
 
-function renderRangeChart() {
-	var $list = $('#range-moves');
-	var $chart = $('#range-chart');
-	$list.empty();
-	$chart.empty();
+function createMoveDisplays() {
+	$("#range-moves").empty();
 
-	if (!RangeCompare.moves || RangeCompare.moves.length === 0) return;
+	var html = [];
+	for (var i = 0; i < RangeCompare.moves.length; i++) {
+		var move = RangeCompare.moves[i];
+		var id = move.id;
 
-	RangeCompare.moves.forEach(function (m) {
-		// Moves list pill
-		var $pill = $('<div class="rc-move-pill"></div>')
-			.attr('data-id', m.id)
-			.append($('<span class="rc-pill-text"></span>').text(m.label))
-			.append($('<span class="rc-x rc-remove" title="Remove">×</span>'));
-		$list.append($pill);
+		var attackerName = move.attacker  ?? "";
+		var moveName = move.moveName ?? "";
 
-		// Chart row with min-max segment
-		var $row = $('<div class="rc-row"></div>')
-		var $label = $('<div class="rc-label"></div>').text(m.label);
-		var $track = $('<div class="rc-track"><div class="rc-segment"></div></div>');
-		var left = Math.max(0, Math.min(100, m.minPct));
-		var width = Math.max(0, Math.min(100, m.maxPct)) - left;
-		$track.find('.rc-segment').css({
-			left: left + '%',
-			width: Math.max(1, width) + '%',
-			background: m.color
-		}).attr('title', m.minPct + '% - ' + m.maxPct + '%');
-		var $pct = $('<div class="rc-pct"></div>').text(m.minPct + '% - ' + m.maxPct + '%');
-		$row.append($label, $track, $pct);
-		$chart.append($row);
-	});
+		console.log(move);
+
+		var minRoll = Math.min(...move.damageRolls);
+		var maxRoll = Math.max(...move.damageRolls);
+		var critMinRoll = Math.min(...move.critRolls);
+		var critMaxRoll = Math.max(...move.critRolls);
+
+		var moveHtml = `
+			<div id="${id}" class="range-move">
+				<span>${attackerName} ${moveName}</span>
+				<span>${minRoll}-${maxRoll}</span>
+				<span class="critBold">${critMinRoll}-${critMaxRoll}</span>
+				<button id=delete${id} class="range-delete-move">
+				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+					<path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+				</svg></button>
+			</div>
+		`
+		html.push(removeAllOccurrences(moveHtml, LINEBREAK_REGEX))
+	}
+
+	$("#range-moves").append(html.join('\n'));
 }
 
 
@@ -532,13 +545,6 @@ $(function () {
 		var id = $(this).closest('.rc-move-row').data('id');
 		RangeCompare.moves = (RangeCompare.moves || []).filter(function (m) { return m.id !== id; });
 	});
-	// Remove via pill (min-max list) if shown
-	$(document).on('click', '.rc-move-pill .rc-remove', function (ev) {
-		ev.preventDefault();
-		var id = $(this).closest('.rc-move-pill').data('id');
-		RangeCompare.moves = (RangeCompare.moves || []).filter(function (m) { return m.id !== id; });
-		renderRangeChart();
-	});
 
 	// Inject Clear All button if not present
 	if ($('#range-move-options .rc-clear-all').length === 0) {
@@ -553,7 +559,7 @@ $(function () {
 
 	// Recalculate on calc-trigger changes
 	$(document).on('change keyup', '.calc-trigger, .notation', function () {
-		recalcAllEntries();
+		// recalcAllEntries();
 	});
 
 	// Button: Calc -> simulate and render distribution
@@ -563,6 +569,8 @@ $(function () {
 		RangeCompare.itemId = parseInt($('#rc-item').val() || '0', 10);
 		// Persist moves' editable strings to entries
 		syncFormToEntries();
+		recalcAllEntries();
+
 		var out = rcCalculateDistributions(RangeCompare.moves, RangeCompare.currentHP, RangeCompare.maxHP, RangeCompare.itemId, null);
 		rcRenderDistribution(out.health, RangeCompare.maxHP);
 		rcRenderMeters(out.health);
