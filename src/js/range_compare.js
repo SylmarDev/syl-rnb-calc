@@ -35,21 +35,22 @@ var highCritRatioItems = [
 ]
 
 function strMatch(s, ...matches) {
-	for (m in match) {
-		if (s === m) { return true; }
-	}
-	return false;
+	var match = false;
+	matches.forEach(function(m) {
+		if (s == m) { match = true; }
+	});
+	return match;
 }
 
 function getCritRate(attacker, defender, aField, dField, moveIndex) {
 	if (strMatch(defender.ability, ...critBlockingAbilities) ||
-		(dField.isLuckyChant ?? false)) { return 0; }
+		(dField.isLuckyChant ?? false)) { console.log("returning 0"); return 0; }
 
 	stages = [0.0625, 0.125, 0.5, 1];
 
 	boosts = 0;
 
-	if (strMatch(attacker.move[moveIdx].originalName, ...highCritRatioMoveNames)) {
+	if (strMatch(attacker.moves[moveIndex].originalName, ...highCritRatioMoveNames)) {
 		boosts++;
 	}
 
@@ -60,6 +61,9 @@ function getCritRate(attacker, defender, aField, dField, moveIndex) {
 	if (attacker.name == "Chansey" && attacker.item == "Lucky Punch") { boosts += 2; }
 	if (aField.isFocusEnergy) { boosts += 2; }
 
+	boosts = Math.min(boosts, stages.length-1);
+	
+	// console.log(`returning ${stages[boosts]}`);
 	return stages[boosts];
 }
 
@@ -484,7 +488,7 @@ function addSelectedMoveToRange(side, moveIndex) {
 
 function recalcEntry(entry) {
 	try {
-		console.log(entry);
+		// console.log(entry);
 		var isP1 = entry.side === 'L' ? 0 : 1;
 		var field = entry.field;
 		var p2field = field.clone().swap();
@@ -507,6 +511,7 @@ function recalcEntry(entry) {
 			return Math.trunc(n * 1.5);
 		});
 		entry.critRate = getCritRate(attacker, defender, field, p2field, entry.moveIdx);
+		console.log(entry);
 	} catch (e) {
 		// If anything fails, mark as 0
 		entry.minPct = 0;
