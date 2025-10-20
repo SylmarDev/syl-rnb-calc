@@ -995,7 +995,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             // Only applied if not highest damage already
             const isDamagingSpeedReducing = moveName == "Icy Wind" || moveName == "Electroweb" || moveName == "Rock Tomb"
             || moveName == "Mud Shot" || moveName == "Low Sweep" || moveName == "Bulldoze" || moveName == "Scary Face";
-            if (isDamagingSpeedReducing && moveScore == 0) {
+            if (isDamagingSpeedReducing && moveScore == 0 && anyValidDamageRolls) {
                 if (playerAbility != "Contrary" && playerAbility != "Clear Body" && playerAbility != "White Smoke" && !aiFaster) {
                     moveStringsToAdd.push({
                         move: moveName,
