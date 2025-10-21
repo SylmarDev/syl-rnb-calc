@@ -769,6 +769,7 @@ table.field {
     overflow-y: auto;
     max-height: 65vh;
     color: #fff;
+    padding-right: 15px;
 }
 
 #changelog-content li {
