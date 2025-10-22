@@ -29,4 +29,5 @@ const CHANGELOG = [
     new ChangelogLine(1, 3, 2, "Mega Charizard's now update ability correctly"),
     new ChangelogLine(1, 3, 3, "Speed reducing moves now correctly observe type immunities"),
     new ChangelogLine(1, 3, 4, "Fixed issue with non-mega abilities transferring over when a different mon was chosen"),
+    new ChangelogLine(1, 3, 5, "Bug Maniac Jeffrey now works as intended"),
 ];
