@@ -1665,7 +1665,8 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                 var paraIncentive = aiSlowerButFasterAfterPara || hexIndex != -1 || playerCharmedOrConfused;
 
                 if (playerHasStatusCond || 
-                    (move.type == "Electric" && (playerTypes.includes("Ground") || playerTypes.includes("Electric")))) {
+                    (move.type == "Electric" && (playerTypes.includes("Ground") || playerTypes.includes("Electric"))) ||
+                    (playerAbility == "Limber")) {
                     moveStringsToAdd.push({
                         move: moveName,
                         score: -40,
