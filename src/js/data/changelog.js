@@ -31,4 +31,5 @@ const CHANGELOG = [
     new ChangelogLine(1, 3, 4, "Fixed issue with non-mega abilities transferring over when a different mon was chosen"),
     new ChangelogLine(1, 3, 5, "Bug Maniac Jeffrey now works as intended"),
     new ChangelogLine(1, 3, 6, "Thunder Wave no longer sees it can para Limber mons"),
+    new ChangelogLine(1, 3, 7, "First Impression now has first turn out checkbox"),
 ];
