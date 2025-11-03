@@ -1054,7 +1054,7 @@ body.rc-selecting-target .trainer-pok-opposing {
     100% { box-shadow: inset 0 0 0 6px rgba(255,152,0,0); }
 }
 
-/* Range Compare: chart UI */
+/* Range Compare */
 #range-moves {
     margin-top: 6px;
     display: flex;
@@ -1104,4 +1104,16 @@ body.rc-selecting-target .trainer-pok-opposing {
     width: 110px;
     text-align: right;
     font-size: 12px;
+}
+
+.rc-range-ui {
+    margin-top: 10px;
+}
+
+#rc-range-hp {
+    width: 80px;
+}
+
+#rc-range-result {
+    margin-top: 6px;
 }

@@ -1,12 +1,10 @@
 /* eslint-disable no-undef */
 /* eslint-disable radix */
-// Global state for Range Compare
 window.RangeCompare = {
-	targetId: null, // e.g. "Charizard (Some Set)"
+	targetId: null, // e.g. "MonName (Some Set)"
 	targetSide: null, // 'PLAYER' | 'OPPONENT'
 	// entries: {id, label, side, color, moveIdx, targetId, minPct, maxPct}
 	moves: [],
-	// Python parity inputs
 	currentHP: null,
 	maxHP: null,
 	itemId: 0, // 0=None, 1=Oran, 2=Sitrus, 3=Leftovers
@@ -44,7 +42,7 @@ function strMatch(s, ...matches) {
 
 function getCritRate(attacker, defender, aField, dField, moveIndex) {
 	if (strMatch(defender.ability, ...critBlockingAbilities) ||
-		(dField.isLuckyChant ?? false)) { console.log("returning 0"); return 0; }
+		(dField.isLuckyChant ?? false)) { return 0; }
 
 	stages = [0.0625, 0.125, 0.5, 1];
 
@@ -181,7 +179,6 @@ function normalizeDamageRolls(dmg, hits) {
 		// probably pointless
 		if (Array.isArray(dmg[0])) {
 			console.log("per roll array entered"); // I don't think this ever gets hit...
-			// Sum per-roll arrays (e.g.)
 			var length = dmg[0].length;
 			var summed = [];
 			for (var i = 0; i < length; i++) {
@@ -284,7 +281,7 @@ function rcCalculateDistributions(moves, currentHP, maxHP, itemId, existingHealt
 	var dmgDist = {0: 1.0};
 	var healthDist = {};
 	if (existingHealthDist) {
-		for (var k in existingHealthDist) healthDist[k + '|0'] = existingHealthDist[k];
+		for (var k in existingHealthDist) { healthDist[k + '|0'] = existingHealthDist[k]; }
 	} else {
 		healthDist[currentHP + '|0'] = 1.0;
 	}
@@ -305,20 +302,23 @@ function rcCalculateDistributions(moves, currentHP, maxHP, itemId, existingHealt
 	return {damage: dmgDist, health: rcTranslateToOnlyHealth(healthDist)};
 }
 
-function rcRenderDistribution(healthDist, maxHP) {
+function renderHealthDistChart(healthDist) {
 	var $chart = $('#range-chart');
 	$chart.empty();
 
-	if (!healthDist || Object.keys(healthDist).length === 0) return;
+	if (!healthDist || Object.keys(healthDist).length === 0) { return; }
 
 	// Fill missing keys
+	// thought about starting this from 0 instead of min but looks worse imo
 	var keys = Object.keys(healthDist).map(function (k) { return parseInt(k, 10); });
 	var min = Math.min.apply(null, keys);
 	var max = Math.max.apply(null, keys);
-	for (var i = min; i <= max; i++) if (healthDist[i] == null) healthDist[i] = 0;
+	for (var i = min; i <= max; i++) { if (healthDist[i] == null) { healthDist[i] = 0; }}
 
 	// Normalize to percentage and store for range comparator
-	var total = 0; for (var k in healthDist) total += healthDist[k];
+	var total = 0;
+	for (var k in healthDist) { total += healthDist[k] };
+
 	RangeCompare.lastHealthDist = $.extend(true, {}, healthDist);
 	RangeCompare.lastTotal = total;
 
@@ -351,16 +351,16 @@ function rcRenderDistribution(healthDist, maxHP) {
 		}
 	});
 
-	ensureRangeCompareUI();
+	createRangeCompareDropdown();
 }
 
-function ensureRangeCompareUI() {
+function createRangeCompareDropdown() {
 	var $meters = $('#range-meters');
 	if ($meters.find('.rc-range-ui').length) return;
 	var html = [
-		'<div class="rc-range-ui" style="margin-top:10px;">',
+		'<div class="rc-range-ui">',
 		'  <div><b>Compare HP Against</b></div>',
-		'  <input id="rc-range-hp" class="numbersOnly" type="number" style="width:80px;" value="' + (RangeCompare.rangeHPVal || 0) + '">',
+		'  <input id="rc-range-hp" class="numbersOnly" type="number" value="' + (RangeCompare.rangeHPVal || 0) + '">',
 		'  <select id="rc-range-op">',
 		'    <option value="<="><=</option>',
 		'    <option value=">=">>=</option>',
@@ -369,14 +369,14 @@ function ensureRangeCompareUI() {
 		'    <option value="=">=</option>',
 		'  </select>',
 		'  <button id="rc-range-submit" class="btn-range-compare-body">Submit</button>',
-		'  <div id="rc-range-result" style="margin-top:6px;"></div>',
+		'  <div id="rc-range-result"></div>',
 		'</div>'
 	].join('');
 	$meters.append(html);
 	$('#rc-range-op').val(RangeCompare.rangeComparator || '<=');
 }
 
-function rcComputeRangeProbability(dist, total, op, hp) {
+function calculateRangeProbability(dist, total, op, hp) {
 	if (!dist || total == null) return 0;
 	var sum = 0;
 	for (var k in dist) {
@@ -390,13 +390,24 @@ function rcComputeRangeProbability(dist, total, op, hp) {
 	return sum / (total || 1);
 }
 
-function rcRenderMeters(healthDist) {
+function renderMeters(healthDist) {
 	var $meters = $('#range-meters');
-	if ($meters.find('.rc-range-ui').length === 0) $meters.empty(); else $meters.find('> :not(.rc-range-ui)').remove();
-	if (!healthDist) return;
-	var total = 0; for (var k in healthDist) total += healthDist[k];
-	var kill = healthDist[0] || 0;
-	var survival = 1 - (kill / (total || 1));
+
+	if ($meters.find('.rc-range-ui').length === 0) {
+		 $meters.empty(); 
+	} else { 
+		$meters.find('> :not(.rc-range-ui)').remove(); 
+	}
+
+	if (!healthDist) { return; }
+
+	var total = 0; 
+	for (var k in healthDist) { total += healthDist[k]; }
+
+	// var kill = healthDist[0] || 0;
+	// var survival = 1 - (kill / (total || 1));
+
+	var survival = calculateRangeProbability(healthDist, total, '=', 0);
 
 	// targets name
 	var targetStr = RangeCompare.targetId && RangeCompare.targetId.split("(")[0] ?
@@ -406,6 +417,7 @@ function rcRenderMeters(healthDist) {
 	var $sur = $(`<div><b>${targetStr}Survival Chance:</b> ${(survival * 100).toFixed(3)}%</div>`);
 	$meters.prepend($sur);
 }
+
 function endSelectingTarget() {
 	$('body').removeClass('rc-selecting-target');
 	$('.trainer-pok, .trainer-pok-opposing').removeClass('rc-selectable');
@@ -587,7 +599,6 @@ function refreshMoveDisplays() {
 	createMoveDisplays();
 }
 
-
 // Initialize behaviors
 $(function () {
 	ensureAddButtons();
@@ -695,7 +706,7 @@ $(function () {
 		// recalcAllEntries();
 	});
 
-	// Button: Calc -> simulate and render distribution
+	// Render Range Compare Graph
 	$(document).on('click', '#rc-calc', function () {
 		RangeCompare.currentHP = parseInt($('#rc-currentHP').val() || '0', 10);
 		RangeCompare.maxHP = parseInt($('#rc-maxHP').val() || '1', 10);
@@ -705,8 +716,8 @@ $(function () {
 		recalcAllEntries();
 
 		var out = rcCalculateDistributions(RangeCompare.moves, RangeCompare.currentHP, RangeCompare.maxHP, RangeCompare.itemId, null);
-		rcRenderDistribution(out.health, RangeCompare.maxHP);
-		rcRenderMeters(out.health);
+		renderHealthDistChart(out.health);
+		renderMeters(out.health);
 	});
 
 	// Form events: update entries on change
@@ -718,7 +729,7 @@ $(function () {
 	$(document).on('click', '#rc-range-submit', function () {
 		RangeCompare.rangeHPVal = parseInt($('#rc-range-hp').val() || '0', 10);
 		RangeCompare.rangeComparator = $('#rc-range-op').val();
-		var p = rcComputeRangeProbability(RangeCompare.lastHealthDist, RangeCompare.lastTotal, RangeCompare.rangeComparator, RangeCompare.rangeHPVal);
+		var p = calculateRangeProbability(RangeCompare.lastHealthDist, RangeCompare.lastTotal, RangeCompare.rangeComparator, RangeCompare.rangeHPVal);
 		$('#rc-range-result').html('<b>Chance:</b> ' + (p * 100).toFixed(3) + '%');
 	});
 });
@@ -727,12 +738,15 @@ function syncFormToEntries() {
 	// Reads the form under #range-moves and writes back to RangeCompare.moves
 	$('#range-moves .rc-move-row').each(function () {
 		var id = $(this).data('id');
+
 		var entry = (RangeCompare.moves || []).find(function (m) { return m.id === id; });
-		if (!entry) return;
+		if (!entry) { return; }
+
 		var dmgStr = $(this).find('.rc-dmg-rolls').val();
 		var critOn = $(this).find('.rc-crit-toggle').is(':checked');
 		var critStr = $(this).find('.rc-crit-rolls').val();
 		var rateStr = $(this).find('.rc-crit-rate').val();
+
 		entry.damageRollsStr = dmgStr;
 		entry.damageRolls = rcListFromDamageRollString(dmgStr);
 		entry.critRollsStr = critOn ? critStr : '';
