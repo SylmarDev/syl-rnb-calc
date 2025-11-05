@@ -18,6 +18,9 @@ Must haves:
 - Stat boosts horizontially along the top with -/+ controls
 - Remove all items button from all mons, that exports them with item ``(none)``
 - Range calculator (toggleable)
+  - Target needs a button on the mon panel, not the current target selection
+  - Doesn't handle -1 atk or -1 def by the attacker or target respectively
+  - Burn tick button, 
 
 
 Nice to have:
