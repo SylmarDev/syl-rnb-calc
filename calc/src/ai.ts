@@ -2204,7 +2204,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
 
             // Recovery Moves
             if (isNamed(moveName, "Recover", "Slack Off", "Heal Order", "Soft-Boiled",
-                "Roost", "Strength Sap"))
+                "Roost", "Strength Sap") || sunBasedHealingOverflow)
             {
                 if (aiHealthPercentage == 100) {
                     moveStringsToAdd.push({
