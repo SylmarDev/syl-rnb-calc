@@ -2479,6 +2479,15 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                     });
             }
 
+            // First Impression can't be clicked on other turns
+            if (moveName == "First Impression" && !firstTurnOut) {
+                moveStringsToAdd.push({
+                        move: moveName,
+                        score: -50,
+                        rate: 1
+                    });
+            }
+
             // end of the hell loop
         });
 

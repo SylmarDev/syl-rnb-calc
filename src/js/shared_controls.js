@@ -1610,7 +1610,7 @@ function setAiOptionVisibility(side) {
 	
 	// if Stealth Rocks, Spikes, Toxic Spikes, Sticky Web, Fake Out, Or Encore
 	// first turn out checkbox needs made available
-	if (hasMove(["Stealth Rock", "Spikes", "Toxic Spikes", "Sticky Web", "Fake Out", "Encore"], moveNames)) {
+	if (hasMove(["Stealth Rock", "Spikes", "Toxic Spikes", "Sticky Web", "Fake Out", "Encore", "First Impression"], moveNames)) {
 		showAiOptionsDiv();
 		$("#firstTurnOutOpt").show();
 	}
