@@ -407,7 +407,7 @@ function renderMeters(healthDist) {
 	// var kill = healthDist[0] || 0;
 	// var survival = 1 - (kill / (total || 1));
 
-	var survival = calculateRangeProbability(healthDist, total, '=', 0);
+	var survival = 1 - calculateRangeProbability(healthDist, total, '=', 0);
 
 	// targets name
 	var targetStr = RangeCompare.targetId && RangeCompare.targetId.split("(")[0] ?
