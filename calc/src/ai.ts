@@ -995,7 +995,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             // Only applied if not highest damage already
             const isDamagingSpeedReducing = moveName == "Icy Wind" || moveName == "Electroweb" || moveName == "Rock Tomb"
             || moveName == "Mud Shot" || moveName == "Low Sweep" || moveName == "Bulldoze" || moveName == "Scary Face";
-            if (isDamagingSpeedReducing && moveScore == 0) {
+            if (isDamagingSpeedReducing && moveScore == 0 && anyValidDamageRolls) {
                 if (playerAbility != "Contrary" && playerAbility != "Clear Body" && playerAbility != "White Smoke" && !aiFaster) {
                     moveStringsToAdd.push({
                         move: moveName,
@@ -1665,7 +1665,8 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                 var paraIncentive = aiSlowerButFasterAfterPara || hexIndex != -1 || playerCharmedOrConfused;
 
                 if (playerHasStatusCond || 
-                    (move.type == "Electric" && (playerTypes.includes("Ground") || playerTypes.includes("Electric")))) {
+                    (move.type == "Electric" && (playerTypes.includes("Ground") || playerTypes.includes("Electric"))) ||
+                    (playerAbility == "Limber")) {
                     moveStringsToAdd.push({
                         move: moveName,
                         score: -40,
@@ -2203,7 +2204,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
 
             // Recovery Moves
             if (isNamed(moveName, "Recover", "Slack Off", "Heal Order", "Soft-Boiled",
-                "Roost", "Strength Sap"))
+                "Roost", "Strength Sap") || sunBasedHealingOverflow)
             {
                 if (aiHealthPercentage == 100) {
                     moveStringsToAdd.push({
@@ -2474,6 +2475,15 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                 moveStringsToAdd.push({
                         move: moveName,
                         score: -20,
+                        rate: 1
+                    });
+            }
+
+            // First Impression can't be clicked on other turns
+            if (moveName == "First Impression" && !firstTurnOut) {
+                moveStringsToAdd.push({
+                        move: moveName,
+                        score: -50,
                         rate: 1
                     });
             }

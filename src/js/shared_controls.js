@@ -462,9 +462,9 @@ $(".set-selector").change(function () {
 	window.NO_CALC = true;
 	var fullSetName = $(this).val();
 	if ($(this).hasClass('opposing')) {
-		topPokemonIcon(fullSetName, $("#p2mon")[0])
-		CURRENT_TRAINER_POKS = get_trainer_poks(fullSetName)
-		var next_poks = CURRENT_TRAINER_POKS.sort(sortmons)
+		topPokemonIcon(fullSetName, $("#p2mon")[0]);
+		CURRENT_TRAINER_POKS = get_trainer_poks(fullSetName);
+		var next_poks = CURRENT_TRAINER_POKS.sort(sortmons);
 
 		var trpok_html = ""
 		for (i in next_poks) {
@@ -474,7 +474,12 @@ $(".set-selector").change(function () {
 			var pok_name = next_poks[i].split("]")[1].split(" (")[0]
 			if (pok_name == "Zygarde-10%") {
 				pok_name = "Zygarde-10%25"
-			}//this ruined my day
+			}
+			if (pok_name.includes("Vivillon")) {
+				pok_name = "Vivillon";
+			}
+			
+			// this ruined my day
 			var pok = `<img class="trainer-pok right-side" src="https://raw.githubusercontent.com/May8th1995/sprites/master/${pok_name}.png" data-id="${CURRENT_TRAINER_POKS[i].split("]")[1]}" title="${next_poks[i]}, ${next_poks[i]} BP">`
 			trpok_html += pok
 		}
@@ -482,7 +487,8 @@ $(".set-selector").change(function () {
 		topPokemonIcon(fullSetName, $("#p1mon")[0])
 	}
 
-	$('.trainer-pok-list-opposing').html(trpok_html)
+	$('.trainer-pok-list-opposing').html(trpok_html);
+	var setIndex = $(this).prop('title');
 	var pokemonName = fullSetName.substring(0, fullSetName.indexOf(" ("));
 	var setName = fullSetName.substring(fullSetName.indexOf("(") + 1, fullSetName.lastIndexOf(")"));
 	var pokemon = pokedex[pokemonName];
@@ -544,6 +550,12 @@ $(".set-selector").change(function () {
 		}
 		if (regSets || randset) {
 			var set = regSets ? correctHiddenPower(setdex[pokemonName][setName]) : randset;
+			if (setName == "Bug Maniac Jeffrey") {
+				var tempMonName = `${pokemonName}`;
+				if (setIndex == 790) { tempMonName += " "; }
+				if (setIndex == 791) { tempMonName += "  "; }
+				set = correctHiddenPower(setdex[tempMonName][setName]);
+			}
 			if (regSets) {
 				pokeObj.find(".teraType").val(set.teraType || pokemon.types[0]);
 			}
@@ -752,12 +764,13 @@ $(".forme").change(function () {
 	} */
 });
 
-$("#p2 .forme").change(function() {
+$("#p2 .forme").change(function(e) {
+	if (!e.originalEvent) { return; }
 	var altForme = pokedex[$(this).val()],
-		container = $(this).closest(".info-group").siblings(),
-		fullSetName = container.find(".select2-chosen").first().text(),
-		pokemonName = fullSetName.substring(0, fullSetName.indexOf(" (")),
-		setName = fullSetName.substring(fullSetName.indexOf("(") + 1, fullSetName.lastIndexOf(")"));
+	container = $(this).closest(".info-group").siblings(),
+	fullSetName = container.find(".select2-chosen").first().text(),
+	pokemonName = fullSetName.substring(0, fullSetName.indexOf(" (")),
+	setName = fullSetName.substring(fullSetName.indexOf("(") + 1, fullSetName.lastIndexOf(")"));
 
 	var isRandoms = $("#randoms").prop("checked");
 	var pokemonSets = isRandoms ? randdex[pokemonName] : setdex[pokemonName];
@@ -890,6 +903,7 @@ function createPokemon(pokeInfo) {
 			name = setName;
 		} else {
 			var pokemonName = setName.substring(0, setName.indexOf(" ("));
+			if (pokemonName.includes("Vivillon")) { pokemonName = "Vivillon"; }
 			var species = pokedex[pokemonName];
 			name = (species.otherFormes || (species.baseSpecies && species.baseSpecies !== pokemonName)) ? pokeInfo.find(".forme").val() : pokemonName;
 		}
@@ -1520,11 +1534,13 @@ function get_trainer_names() {
 	var trainer_names = []
 
 	for (const [pok_name, poks] of Object.entries(all_poks)) {
-		var pok_tr_names = Object.keys(poks)
+		var pok_tr_names = Object.keys(poks);
+		var monName = pok_name;
+		if (pok_name.includes("Vivillon")) { monName = "Vivillon"; }
 		for (i in pok_tr_names) {
 			var index = (poks[pok_tr_names[i]]["index"])
 			var trainer_name = pok_tr_names[i]
-			trainer_names.push(`[${index}]${pok_name} (${trainer_name})`)
+			trainer_names.push(`[${index}]${monName} (${trainer_name})`)
 		}
 	}
 	return trainer_names
@@ -1602,7 +1618,7 @@ function setAiOptionVisibility(moveNames) {
 	
 	// if Stealth Rocks, Spikes, Toxic Spikes, Sticky Web, Fake Out, Or Encore
 	// first turn out checkbox needs made available
-	if (hasMove(["Stealth Rock", "Spikes", "Toxic Spikes", "Sticky Web", "Fake Out", "Encore"], moveNames)) {
+	if (hasMove(["Stealth Rock", "Spikes", "Toxic Spikes", "Sticky Web", "Fake Out", "Encore", "First Impression"], moveNames)) {
 		showAiOptionsDiv();
 		$("#firstTurnOutOpt").show();
 	}
@@ -1701,6 +1717,7 @@ $(document).on('click', '.right-side', function () {
 	var set = $(this).attr('data-id');
 	topPokemonIcon(set, $("#p2mon")[0])
 	$('.opposing').val(set);
+	$('input.opposing').prop('title', $(this).prop('title').split("]")[0].slice(1));
 	$('.opposing').change();
 	$('.opposing .select2-chosen').text(set);
 	setAiOptionAndDisclaimVisibility('p2');
@@ -1736,15 +1753,17 @@ function selectTrainer(value) {
 	all_poks = SETDEX_SS
 	for (const [pok_name, poks] of Object.entries(all_poks)) {
 		var pok_tr_names = Object.keys(poks)
+		var monName = pok_name;
+		if (pok_name.includes("Vivillon")) { monName = "Vivillon"; }
 		for (i in pok_tr_names) {
+
 			var index = (poks[pok_tr_names[i]]["index"])
 			if (index == value) {
-				var set = `${pok_name} (${pok_tr_names[i]})`;
+				var set = `${monName} (${pok_tr_names[i]})`;
 				$('.opposing').val(set);
 				$('.opposing').change();
 				$('.opposing .select2-chosen').text(set);
 			}
-
 		}
 	}
 }
@@ -1757,8 +1776,8 @@ function nextTrainer() {
 }
 
 function previousTrainer() {
-	string = ($(".trainer-pok-list-opposing")).html()
-	value = parseInt(string.split("]")[0].split("[")[1]) - 1
+	string = ($(".trainer-pok-list-opposing")).html();
+	value = parseInt(string.split("]")[0].split("[")[1]) - 1;
 	selectTrainer(value)
 }
 
