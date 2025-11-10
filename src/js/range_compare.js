@@ -210,17 +210,6 @@ function rcListFromDamageRollString(str) {
 	return str.split(',').map(function (s) { return parseInt(s, 10); }).filter(function (n) { return !isNaN(n); });
 }
 
-// can probably be refactored away
-function rcGetFractionFloat(frac) {
-	if (!frac) return 1 / 16;
-	if (typeof frac === 'number') return frac;
-	var parts = String(frac).split('/');
-	var num = parseInt(parts[0], 10);
-	var den = parseInt(parts[1], 10);
-	if (!isNaN(num) && !isNaN(den) && den !== 0) return num / den;
-	return 1 / 16;
-}
-
 function rcGetItemById(id, maxHP) {
 	id = parseInt(id || 0, 10);
 	if (id === 1) return {healthToRestore: 10, usable: true};
@@ -334,9 +323,9 @@ function renderHealthDistChart(healthDist) {
 	RangeCompare.lastTotal = total;
 
 	// TODO: make this print on debug logging?
-	if (enableDebugLogging) {
+	/* if (enableDebugLogging) {
 		console.log(healthDist);
-	}
+	} */
 
 	var ctx = document.getElementById('range-chart');
     if (RangeCompare.chart != null) {
@@ -555,18 +544,18 @@ function recalcEntry(entry) {
 		var result = calc.calculate(gen, attacker, defender, move, field);
 		
 		// Calculate crit damage by setting isCrit and recalculating
-		move.isCrit = true;
-		var critResult = calc.calculate(gen, attacker, defender, move, field);
+		var critMove = move.clone();
+		critMove.isCrit = true;
+		var critResult = calc.calculate(gen, attacker, defender, critMove, field);
 		
 		// Normalize damage rolls (handles multi-hit moves)
 		var rolls = normalizeDamageRolls(result.damage, move.hits || 1);
-		var critRolls = normalizeDamageRolls(critResult.damage, move.hits || 1);
+		var critRolls = normalizeDamageRolls(critResult.damage, critMove.hits || 1);
 		
 		entry.damageRolls = rolls;
 		entry.critRolls = critRolls;
 		entry.critRate = getCritRate(attacker, defender, field, p2field, entry.moveIdx);
 		
-		// Update string representations
 		entry.damageRollsStr = entry.damageRolls.join(', ');
 		entry.critRollsStr = entry.critRolls.join(', ');
 		entry.critRateStr = String(entry.critRate);
@@ -768,7 +757,10 @@ $(function () {
 		syncFormToEntries();
 		recalcAllEntries();
 
+		console.log(RangeCompare);
+
 		var out = rcCalculateDistributions(RangeCompare.moves, RangeCompare.currentHP, RangeCompare.maxHP, RangeCompare.itemId, null);
+		
 		renderHealthDistChart(out.health);
 		renderMeters(out.health);
 	});
