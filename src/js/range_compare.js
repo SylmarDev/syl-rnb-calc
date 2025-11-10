@@ -83,6 +83,7 @@ function ensureAddButtons() {
         </button>
 		`, LINEBREAK_REGEX);
 	}
+	
 	for (var i = 1; i <= 4; i++) {
 		// left
 		var $lRow = $('#resultMoveL' + i).closest('div');
@@ -106,7 +107,7 @@ function ensureAddButtons() {
 			}
 		}
 	}
-	var show = $('#range-addMove').is(':checked');
+	var show = $('#rangeCompare').is(':checked');
 	$('.btn-range-add').css('display', show ? 'inline-flex' : 'none');
 	if (!show) {
 		$('.btn-range-add').addClass('disabled');
@@ -149,12 +150,21 @@ function prefillEntryFromCalc(entry) {
 		var attacker = createPokemon(attackerInfo);
 		var field = createField();
 		if (entry.side === 'R' && typeof field.clone === 'function') field = field.clone().swap();
+
 		var defender = createPokemon(entry.targetId);
 		var move = attacker.moves[entry.moveIdx];
+
+		defender.boosts.def = entry.defenseStage;
+		defender.boosts.spd = entry.spdefStage;
+
 		var result = calc.calculate(gen, attacker, defender, move, field);
+		move.isCrit = true;
+		var critResult = calc.calculate(gen, attacker, defender, move, field);
 		var rolls = normalizeDamageRolls(result.damage, move.hits || 1);
+		var critRolls = normalizeDamageRolls(critResult.damage, move.hits || 1);
+
 		entry.damageRolls = rolls;
-		entry.critRolls = entry.damageRolls.map(function (n) { return Math.trunc(n * 1.5); });
+		entry.critRolls = critRolls;
 		entry.critRate = 1 / 16;
 		entry.damageRollsStr = entry.damageRolls.join(', ');
 		entry.critRollsStr = entry.critRolls.join(', ');
@@ -369,7 +379,6 @@ function createRangeCompareDropdown() {
 		'    <option value="=">=</option>',
 		'  </select>',
 		'  <button id="rc-range-submit" class="btn-range-compare-body">Submit</button>',
-		'  <div id="rc-range-result"></div>',
 		'</div>'
 	].join('');
 	$meters.append(html);
@@ -390,13 +399,22 @@ function calculateRangeProbability(dist, total, op, hp) {
 	return sum / (total || 1);
 }
 
+function getGaugeColor(value) {
+	if (value == 100) return 'rgb(140, 214, 16)' ; // green
+	if (value >= 85) return 'rgb(135, 206, 250)'; // light blue
+	if (value >= 50) return 'rgb(136, 166, 255)'; // blue
+	if (value >= 10) return 'rgb(239, 198, 0)'; // yellow
+	return 'rgb(231, 24, 49)'; // red
+}
+
 function renderMeters(healthDist) {
 	var $meters = $('#range-meters');
 
 	if ($meters.find('.rc-range-ui').length === 0) {
 		 $meters.empty(); 
 	} else { 
-		$meters.find('> :not(.rc-range-ui)').remove(); 
+		// Remove old meter displays but keep range-ui
+		$meters.find('.rc-meter-display').remove();
 	}
 
 	if (!healthDist) { return; }
@@ -404,60 +422,78 @@ function renderMeters(healthDist) {
 	var total = 0; 
 	for (var k in healthDist) { total += healthDist[k]; }
 
-	// var kill = healthDist[0] || 0;
-	// var survival = 1 - (kill / (total || 1));
-
 	var survival = 1 - calculateRangeProbability(healthDist, total, '=', 0);
+	var survivalPercent = survival * 100;
 
 	// targets name
 	var targetStr = RangeCompare.targetId && RangeCompare.targetId.split("(")[0] ?
 		 RangeCompare.targetId.split("(")[0] :
 		 "";
 
-	var $sur = $(`<div><b>${targetStr}Survival Chance:</b> ${(survival * 100).toFixed(3)}%</div>`);
-	$meters.prepend($sur);
+	// Create container for meter displays
+	var meterContainer = $('<div class="rc-meter-display"></div>');
+	
+	// Create survival display
+	var survivalColor = getGaugeColor(survivalPercent);
+	var survivalDiv = $('<div class="rc-survival-display" style="color: ' + survivalColor + ';"><b>' + targetStr + ' Survival: ' + survivalPercent.toFixed(2) + '%</b></div>');
+	meterContainer.append(survivalDiv);
+	
+	// Create range comparison display (hidden until range is submitted)
+	var rangeDiv = $('<div class="rc-range-display" style="display: none;"></div>');
+	meterContainer.append(rangeDiv);
+	
+	$meters.prepend(meterContainer);
 }
 
-function endSelectingTarget() {
-	$('body').removeClass('rc-selecting-target');
-	$('.trainer-pok, .trainer-pok-opposing').removeClass('rc-selectable');
-	$(document).off('click.rcTargetPick');
-}
-
-function startSelectingTarget() {
-	$('body').addClass('rc-selecting-target');
-	$('.trainer-pok, .trainer-pok-opposing').addClass('rc-selectable');
-	// Delegate so it works for dynamically loaded sprites
-	$(document).on('click.rcTargetPick', '.trainer-pok, .trainer-pok-opposing', function (ev) {
-		ev.preventDefault();
-		ev.stopPropagation();
-		var $img = $(this);
-		var id = $img.data('id');
-		if (!id) {
-			endSelectingTarget();
-			return;
+// Assign target from a pokemon form (left or right side)
+function assignTargetFromForm(side) {
+	var pokeInfo = side === 'L' ? $('#p1') : $('#p2');
+	var setName = pokeInfo.find('input.set-selector').val();
+	
+	if (!setName || setName.trim() === '') {
+		$('#range-target').addClass('rc-need-target');
+		setTimeout(function () { $('#range-target').removeClass('rc-need-target'); }, 600);
+		return;
+	}
+	
+	RangeCompare.targetId = setName;
+	RangeCompare.targetSide = side === 'L' ? 'PLAYER' : 'OPPONENT';
+	
+	// Get sprite from the pokemon image
+	var spriteSrc = side === 'L' ? $('#p1mon').attr('src') : $('#p2mon').attr('src');
+	if (spriteSrc) {
+		$('#targetSpr').attr('src', spriteSrc);
+	}
+	
+	$('#range-target label').eq(1).text(RangeCompare.targetSide);
+	
+	try {
+		var def;
+		if (setName.indexOf('(') !== -1) {
+			def = createPokemon(RangeCompare.targetId);
+		} else {
+			def = createPokemon(pokeInfo);
 		}
-		RangeCompare.targetId = id;
-		RangeCompare.targetSide = $img.hasClass('left-side') ? 'PLAYER' : 'OPPONENT';
-		$('#targetSpr').attr('src', $img.attr('src'));
-		// Update side label (2nd label within #range-target)
-		$('#range-target label').eq(1).text(RangeCompare.targetSide);
-		// Prefill HP controls from target
+		RangeCompare.maxHP = def.maxHP();
+		RangeCompare.currentHP = def.maxHP();
+		ensureTargetControls();
+	} catch (e) {
 		try {
-			var def = createPokemon(RangeCompare.targetId);
+			var def = createPokemon(pokeInfo);
 			RangeCompare.maxHP = def.maxHP();
 			RangeCompare.currentHP = def.maxHP();
 			ensureTargetControls();
-		} catch (e) {}
-		endSelectingTarget();
-		refreshMoveDisplays();
-	});
+		} catch (e2) {
+			console.error('Error creating pokemon for target:', e2);
+		}
+	}
+	
+	refreshMoveDisplays();
 }
 
 var damageResults;
 function addSelectedMoveToRange(side, moveIndex) {
 	if (!RangeCompare.targetId) {
-		// visual nudge to select a target first
 		$('#range-target').addClass('rc-need-target');
 		setTimeout(function () { $('#range-target').removeClass('rc-need-target'); }, 600);
 		return;
@@ -485,7 +521,9 @@ function addSelectedMoveToRange(side, moveIndex) {
 		move: damageResults[isP1][moveIndex],
 		attacker: damageResults[isP1][moveIndex].attacker.name ?? "",
 		moveName: damageResults[isP1][moveIndex].move.originalName ?? "",
-		field: isP1 === 0 ? p1field : p2field
+		field: isP1 === 0 ? p1field : p2field,
+		defenseStage: damageResults[isP1][moveIndex].defender.boosts.def,
+		spdefStage: damageResults[isP1][moveIndex].defender.boosts.spd
 	};
 
 	// console.log(entry); // TEMP
@@ -500,32 +538,43 @@ function addSelectedMoveToRange(side, moveIndex) {
 
 function recalcEntry(entry) {
 	try {
-		// console.log(entry);
 		var isP1 = entry.side === 'L' ? 0 : 1;
 		var field = entry.field;
-		var p2field = field.clone().swap();
+		var p2field = field ? field.clone().swap() : createField().swap();
 
 		var attacker = entry.move.attacker;
 		var defender = createPokemon(RangeCompare.targetId);
 
-		var result = calculateAllMoves(gen, 
-			attacker,
-			field,
-			defender, 
-			p2field);
+		defender.boosts.def = entry.defenseStage;
+		defender.boosts.spd = entry.spdefStage;
 
-		entry.label = attacker.name + ' ' + move.name;
+		// Get the move from the attacker's moves array
+		var move = attacker.moves[entry.moveIdx];
 		
-		entry.damageRolls = result[0][entry.moveIdx].damage;
-		entry.critRolls = entry.damageRolls.map(function (n) {
-			// additional multiplication for sniper
-			if (attacker.ability === "Sniper") { n = Math.trunc(n * 1.5); }
-			return Math.trunc(n * 1.5);
-		});
+		// Calculate normal damage
+		var result = calc.calculate(gen, attacker, defender, move, field);
+		
+		// Calculate crit damage by setting isCrit and recalculating
+		move.isCrit = true;
+		var critResult = calc.calculate(gen, attacker, defender, move, field);
+		
+		// Normalize damage rolls (handles multi-hit moves)
+		var rolls = normalizeDamageRolls(result.damage, move.hits || 1);
+		var critRolls = normalizeDamageRolls(critResult.damage, move.hits || 1);
+		
+		entry.damageRolls = rolls;
+		entry.critRolls = critRolls;
 		entry.critRate = getCritRate(attacker, defender, field, p2field, entry.moveIdx);
-		console.log(entry);
+		
+		// Update string representations
+		entry.damageRollsStr = entry.damageRolls.join(', ');
+		entry.critRollsStr = entry.critRolls.join(', ');
+		entry.critRateStr = String(entry.critRate);
+		
+		entry.label = attacker.name + ' ' + move.name;
 	} catch (e) {
-		// If anything fails, mark as 0
+		console.error(e);
+
 		entry.minPct = 0;
 		entry.maxPct = 0;
 	}
@@ -554,6 +603,7 @@ function createMoveDisplays() {
 		var critMinRoll = Math.min(...move.critRolls);
 		var critMaxRoll = Math.max(...move.critRolls);
 
+		// TODO: show crit rate and stat stage changes (if relevant stat drops/atk raises exist) in this display
 		var moveHtml = `
 			<div id="${id}" class="range-move" data-move-id="${id}">
 				<div class="range-move-controls">
@@ -603,25 +653,22 @@ function refreshMoveDisplays() {
 $(function () {
 	ensureAddButtons();
 	ensureTargetControls();
+	
+	// Set initial target buttons visibility based on Range Compare state
+	var rangeCompareEnabled = $('#rangeCompare').is(':checked');
+	$("#targetLeft, #targetRight").toggle(rangeCompareEnabled);
 
-	// Toggle target selection mode by clicking the target area
-	$('#range-target').on('click', function () {
-		if ($('body').hasClass('rc-selecting-target')) {
-			endSelectingTarget();
-		} else {
-			startSelectingTarget();
-		}
-	});
-
-	// React to Add Move Mode toggle
-	$('#range-addMove').on('change click', function () {
+	// React to Range Compare toggle
+	$('#rangeCompare').on('change', function () {
 		ensureAddButtons();
+		var rangeCompareEnabled = $(this).is(':checked');
+		$("#targetLeft, #targetRight").toggle(rangeCompareEnabled);
 	});
 
 	// Handle clicking on any + button to add move
 	$(document).on('click', '.btn-range-add', function (ev) {
 		ev.preventDefault();
-		if (!$('#range-addMove').is(':checked')) return;
+		if (!$('#rangeCompare').is(':checked')) return;
 		var side = $(this).data('side');
 		var idx = parseInt($(this).data('idx'), 10);
 		if (!side || isNaN(idx)) return;
@@ -693,10 +740,16 @@ $(function () {
 
 	// Inject Clear All button if not present
 	if ($('#range-move-options .rc-clear-all').length === 0) {
-		$('#range-move-options').append('<button class="rc-clear-all btn-range-compare-body" title="Clear all Range Compare entries">Clear</button>');
+		$('#range-move-options').append('<button class="rc-clear-all btn-range-compare-body" title="Clear all Range Compare entries">Clear All Moves</button>');
 	}
 	$(document).on('click', '.rc-clear-all', function () {
 		RangeCompare.moves = [];
+
+		$('#range-moves').empty();
+		if (RangeCompare.chart) {
+			RangeCompare.chart.destroy();
+			RangeCompare.chart = null;
+		}
 		$('#range-chart').empty();
 		$('#range-meters').empty();
 	});
@@ -730,7 +783,16 @@ $(function () {
 		RangeCompare.rangeHPVal = parseInt($('#rc-range-hp').val() || '0', 10);
 		RangeCompare.rangeComparator = $('#rc-range-op').val();
 		var p = calculateRangeProbability(RangeCompare.lastHealthDist, RangeCompare.lastTotal, RangeCompare.rangeComparator, RangeCompare.rangeHPVal);
-		$('#rc-range-result').html('<b>Chance:</b> ' + (p * 100).toFixed(3) + '%');
+		
+		// Update and show range display
+		if (RangeCompare.lastHealthDist) {
+			var rangeLabel = 'HP ' + RangeCompare.rangeComparator + ' ' + RangeCompare.rangeHPVal;
+			var rangeColor = getGaugeColor(p * 100);
+			$('.rc-range-display')
+				.html('<b>' + rangeLabel + ': ' + (p * 100).toFixed(2) + '%</b>')
+				.css('color', rangeColor)
+				.show();
+		}
 	});
 });
 
@@ -758,4 +820,13 @@ function syncFormToEntries() {
 
 $('.numbersOnly').on('input', function() { 
     this.value = this.value.replace(/[^0-9]/g, '');
+});
+
+// Target button click handlers
+$("#targetLeft").on('click', function() {
+	assignTargetFromForm('L');
+});
+
+$("#targetRight").on('click', function() {
+	assignTargetFromForm('R');
 });
