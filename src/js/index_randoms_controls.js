@@ -449,27 +449,6 @@ $(document).ready(function () {
 		}
 	});
 
-	// Handle Team/Box position swap (left side only)
-	// Store original structure for restoration
-	var $originalTrainerPoksDiv = null;
-	
-	// Helper function to check if Team/Box content is already merged into trash
-	function isTeamBoxMerged($trashFieldset) {
-		// Check if there's a div with id="team-poke-list" inside trashFieldset (Team/Box content)
-		return $trashFieldset.find('#team-poke-list').length > 0;
-	}
-	
-	// Helper function to remove merged Team/Box content from trash
-	function removeMergedContent($trashFieldset) {
-		// Find all HRs - the original one is before Color Coding
-		// Any content before the first HR that contains Team/Box content should be removed
-		var $firstHr = $trashFieldset.find('hr').first();
-		if ($firstHr.length) {
-			// Remove everything before the first HR (Team/Box content and separator)
-			$firstHr.prevAll().remove();
-		}
-	}
-
 	function setBoxPosition(onTop) {
 		var elements = [$('#trainer-mons').parent(), $('#opp-trainer-mons').parent()];
 
@@ -493,8 +472,9 @@ $(document).ready(function () {
 		$("#teamsOnTop").change();
 	}
 
-	// clear search if escape pressed
+	setBoxPosition($("#teamsOnTop").is(":checked"));
 
+	// clear search if escape pressed
 	document.onkeydown = function(evt) {
 		evt = evt || window.event;
 		isEscape = evt.key === 'Escape';

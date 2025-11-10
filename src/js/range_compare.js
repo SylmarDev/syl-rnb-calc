@@ -187,8 +187,9 @@ function normalizeDamageRolls(dmg, hits) {
 			return dmg.map(function (n) { return n * hits; });
 		}
 		// probably pointless
+		// hasn't been hit in a lot of testing, probably TODO: remove, or just catch an error
 		if (Array.isArray(dmg[0])) {
-			console.log("per roll array entered"); // I don't think this ever gets hit...
+			// console.log("per roll array entered"); // I don't think this ever gets hit...
 			var length = dmg[0].length;
 			var summed = [];
 			for (var i = 0; i < length; i++) {
@@ -333,7 +334,9 @@ function renderHealthDistChart(healthDist) {
 	RangeCompare.lastTotal = total;
 
 	// TODO: make this print on debug logging?
-	// console.log(healthDist);
+	if (enableDebugLogging) {
+		console.log(healthDist);
+	}
 
 	var ctx = document.getElementById('range-chart');
     if (RangeCompare.chart != null) {
@@ -425,15 +428,12 @@ function renderMeters(healthDist) {
 	var survival = 1 - calculateRangeProbability(healthDist, total, '=', 0);
 	var survivalPercent = survival * 100;
 
-	// targets name
 	var targetStr = RangeCompare.targetId && RangeCompare.targetId.split("(")[0] ?
 		 RangeCompare.targetId.split("(")[0] :
 		 "";
 
-	// Create container for meter displays
 	var meterContainer = $('<div class="rc-meter-display"></div>');
 	
-	// Create survival display
 	var survivalColor = getGaugeColor(survivalPercent);
 	var survivalDiv = $('<div class="rc-survival-display" style="color: ' + survivalColor + ';"><b>' + targetStr + ' Survival: ' + survivalPercent.toFixed(2) + '%</b></div>');
 	meterContainer.append(survivalDiv);
@@ -510,7 +510,7 @@ function addSelectedMoveToRange(side, moveIndex) {
 
 	damageResults = calculateAllMoves(gen, p1, p1field, p2, p2field);
 
-	console.log(damageResults[isP1][moveIndex]);
+	// console.log(damageResults[isP1][moveIndex]);
 
 	var entry = {
 		id: Date.now() + '-' + Math.random().toString(36).slice(2, 7),
@@ -596,7 +596,7 @@ function createMoveDisplays() {
 		var attackerName = move.attacker  ?? "";
 		var moveName = move.moveName.split(" ").map(x => x[0]).join("") ?? "";
 
-		console.log(move);
+		// console.log(move); // DEBUG
 
 		var minRoll = Math.min(...move.damageRolls);
 		var maxRoll = Math.max(...move.damageRolls);
