@@ -160,8 +160,8 @@ function prefillEntryFromCalc(entry) {
 		var result = calc.calculate(gen, attacker, defender, move, field);
 		move.isCrit = true;
 		var critResult = calc.calculate(gen, attacker, defender, move, field);
-		var rolls = normalizeDamageRolls(result.damage, move.hits || 1);
-		var critRolls = normalizeDamageRolls(critResult.damage, move.hits || 1);
+		var rolls = result.damage; // normalizeDamageRolls(, move.hits || 1);
+		var critRolls = critResult.damage; // normalizeDamageRolls(, move.hits || 1);
 
 		entry.damageRolls = rolls;
 		entry.critRolls = critRolls;
@@ -174,33 +174,6 @@ function prefillEntryFromCalc(entry) {
 		entry.critRolls = entry.critRolls || [];
 		entry.critRate = entry.critRate || (1 / 16);
 	}
-}
-
-// Normalize different damage result shapes into an array of total damage values
-function normalizeDamageRolls(dmg, hits) {
-	if (typeof dmg === 'number') {
-		var arr = new Array(16).fill(dmg);
-		return arr.map(function (n) { return n * hits; });
-	}
-	if (Array.isArray(dmg)) {
-		if (dmg.length && typeof dmg[0] === 'number') {
-			return dmg.map(function (n) { return n * hits; });
-		}
-		// probably pointless
-		// hasn't been hit in a lot of testing, probably TODO: remove, or just catch an error
-		if (Array.isArray(dmg[0])) {
-			// console.log("per roll array entered"); // I don't think this ever gets hit...
-			var length = dmg[0].length;
-			var summed = [];
-			for (var i = 0; i < length; i++) {
-				var s = 0;
-				for (var j = 0; j < dmg.length; j++) s += (dmg[j][i] || 0);
-				summed.push(s);
-			}
-			return summed;
-		}
-	}
-	return [];
 }
 
 function rcListFromDamageRollString(str) {
@@ -424,7 +397,7 @@ function renderMeters(healthDist) {
 	var meterContainer = $('<div class="rc-meter-display"></div>');
 	
 	var survivalColor = getGaugeColor(survivalPercent);
-	var survivalDiv = $('<div class="rc-survival-display" style="color: ' + survivalColor + ';"><b>' + targetStr + ' Survival: ' + survivalPercent.toFixed(2) + '%</b></div>');
+	var survivalDiv = $('<div class="rc-survival-display" style="color: ' + survivalColor + ';"><b>' + targetStr + ' Survival: ' + survivalPercent.toFixed(3) + '%</b></div>');
 	meterContainer.append(survivalDiv);
 	
 	// Create range comparison display (hidden until range is submitted)
@@ -549,8 +522,8 @@ function recalcEntry(entry) {
 		var critResult = calc.calculate(gen, attacker, defender, critMove, field);
 		
 		// Normalize damage rolls (handles multi-hit moves)
-		var rolls = normalizeDamageRolls(result.damage, move.hits || 1);
-		var critRolls = normalizeDamageRolls(critResult.damage, critMove.hits || 1);
+		var rolls = result.damage;
+		var critRolls = critResult.damage;
 		
 		entry.damageRolls = rolls;
 		entry.critRolls = critRolls;
@@ -781,9 +754,21 @@ $(function () {
 			var rangeLabel = 'HP ' + RangeCompare.rangeComparator + ' ' + RangeCompare.rangeHPVal;
 			var rangeColor = getGaugeColor(p * 100);
 			$('.rc-range-display')
-				.html('<b>' + rangeLabel + ': ' + (p * 100).toFixed(2) + '%</b>')
+				.html('<b>' + rangeLabel + ': ' + (p * 100).toFixed(3) + '%</b>')
 				.css('color', rangeColor)
 				.show();
+		}
+	});
+
+	$(document).on('keypress', '#rc-range-hp', function(e) {
+		if (e.which === 13) { // enter
+			$('#rc-range-submit').click();
+		}
+	});
+
+	$(document).on('keypress', '#rc-currentHP, #rc-maxHP', function(e) {
+		if (e.which === 13) { // enter
+			$('#rc-calc').click();
 		}
 	});
 });
