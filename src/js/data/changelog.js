@@ -33,4 +33,5 @@ const CHANGELOG = [
     new ChangelogLine(1, 3, 6, "Thunder Wave no longer sees it can para Limber mons"),
     new ChangelogLine(1, 3, 7, "Morning Sun, Synthesis, and Moonlight now properly calc even out of the sun. First Impression now has first turn out checkbox"),
     new ChangelogLine(1, 3, 8, "Implemented Smack Down AI"),
+    new ChangelogLine(1, 3, 9, "Elite Four Drake Zygarde now has correct ability"),
 ];
