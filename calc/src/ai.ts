@@ -2581,6 +2581,10 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
         });
     }
 
+    if ((window as any).umami) {
+        (window as any).umami.track('AI Move Distribution Generated');
+    }
+
     // console.log(finalDist);
     return finalDist;
 }

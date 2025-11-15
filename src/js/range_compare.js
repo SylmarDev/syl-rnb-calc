@@ -730,7 +730,10 @@ $(function () {
 		syncFormToEntries();
 		recalcAllEntries();
 
-		console.log(RangeCompare);
+
+		if (window.umami) {
+			window.umami.track('Health Dist Render');
+		}
 
 		var out = rcCalculateDistributions(RangeCompare.moves, RangeCompare.currentHP, RangeCompare.maxHP, RangeCompare.itemId, null);
 		
@@ -748,6 +751,11 @@ $(function () {
 		RangeCompare.rangeHPVal = parseInt($('#rc-range-hp').val() || '0', 10);
 		RangeCompare.rangeComparator = $('#rc-range-op').val();
 		var p = calculateRangeProbability(RangeCompare.lastHealthDist, RangeCompare.lastTotal, RangeCompare.rangeComparator, RangeCompare.rangeHPVal);
+		
+		// log range compare event here
+		if (window.umami) {
+			window.umami.track('Range Compare');
+		}
 		
 		// Update and show range display
 		if (RangeCompare.lastHealthDist) {

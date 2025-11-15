@@ -210,6 +210,10 @@ function performCalculations() {
 		stickyMoves.setSelectedMove(bestResult.prop("id"));
 	}
 
+	if (window.umami) {
+		window.umami.track('Damage Calculation Performed');
+	}
+
 	bestResult.prop("checked", true);
 	bestResult.change();
 	$("#resultHeaderL").text(p1.name + "'s Moves (select one to show detailed results)");
@@ -525,6 +529,11 @@ $(document).ready(function () {
 		if (document.getElementById("cc-auto-refr").checked) {
 			window.refreshColorCode();
 		}
+		// log calc trigger event here
+		if (window.umami) {
+			window.umami.track('calc-trigger');
+		}
+		
 		performCalculations();
 	});
 

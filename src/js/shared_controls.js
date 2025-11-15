@@ -630,13 +630,11 @@ $(".set-selector").change(function () {
 				$(this).closest('.poke-info').find(".move-pool").hide();
 			}
 		}
-		if (typeof getSelectedTiers === "function") { // doesn't exist when in 1vs1 mode
+		if (typeof getSelectedTiers === "function") {
 			var format = getSelectedTiers()[0];
 			var is50lvl = startsWith(format, "VGC") || startsWith(format, "Battle Spot");
-			//var isDoubles = format === 'Doubles' || has50lvl; *TODO*
 			if (format === "LC") pokeObj.find(".level").val(5);
 			if (is50lvl) pokeObj.find(".level").val(50);
-			//if (isDoubles) field.gameType = 'Doubles'; *TODO*
 		}
 		var formeObj = $(this).siblings().find(".forme").parent();
 		itemObj.prop("disabled", false);
@@ -1710,6 +1708,12 @@ function setDisclaimVisibility(moveNames) {
 	if (isNamed("Shore Up", ...moveNames)) {
 		showDisclaimers();
 		$("#shoreUpDisclaim").show();
+	}
+
+	// triple axel
+	if (isNamed("Triple Axel", ...moveNames)) {
+		showDisclaimers();
+		$("#tripleAxelDisclaim").show();
 	}
 }
 
