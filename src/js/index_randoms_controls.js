@@ -423,22 +423,34 @@ $(document).ready(function () {
 		}
 	});
 
+	updateSearchVisibility($("#toggleSearch").is(":checked"));
+
 	$("#toggleSearch").change(function () {
 		var showSearch = $(this).is(":checked");
+		updateSearchVisibility(showSearch);
+	});
+
+	function updateSearchVisibility(showSearch) {
 		if (showSearch) {
 			$(".search-inline").show();
 		} else {
 			$(".search-inline").hide();
 		}
-	});
+	}
+
+	updateRangeCompareVisibility($("#rangeCompare").is(":checked"));
 
 	$("#rangeCompare").change(function() {
 		var rangeCompare = $(this).is(":checked");
+		updateRangeCompareVisibility(rangeCompare);
+	});
+
+	function updateRangeCompareVisibility(rangeCompare) {
 		if (rangeCompare) {
-			$(".wrapper").css({"width": "1685px"});
+			// $(".wrapper").css({"width": "1685px"});
 			$(".range-compare").show();
 		} else {
-			$(".wrapper").css({"width": "1285px"});
+			// $(".wrapper").css({"width": "1285px"});
 			$(".range-compare").hide();
 		}
 		// Update add buttons visibility based on Range Compare state
@@ -451,7 +463,8 @@ $(document).ready(function () {
 		} else {
 			$("#targetLeft, #targetRight").hide();
 		}
-	});
+	}
+
 
 	function setBoxPosition(onTop) {
 		var elements = [$('#trainer-mons').parent(), $('#opp-trainer-mons').parent()];

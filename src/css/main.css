@@ -996,20 +996,24 @@ table.field {
 .team-legend {
     display: flex;
     align-items: center;
-    justify-content: inital;
+    justify-content: flex-start;
+    text-align: left;
+    width: 100%;
 }
 
 #team-box-legend {
     min-width: 6em;
     padding: 2px 6px;
+    flex-shrink: 0;
+    text-align: left;
 }
 
 #search-inline {
-    width: 0px;
+    margin-left: 8em;
+    flex-shrink: 0;
 }
 
 #search {
-    margin-left: 8em;
     min-width: 14em;
     padding: 2px 6px;
     border-radius: 4px;
