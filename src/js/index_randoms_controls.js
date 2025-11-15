@@ -529,10 +529,6 @@ $(document).ready(function () {
 		if (document.getElementById("cc-auto-refr").checked) {
 			window.refreshColorCode();
 		}
-		// log calc trigger event here
-		if (window.umami) {
-			window.umami.track('calc-trigger');
-		}
 		
 		performCalculations();
 	});
