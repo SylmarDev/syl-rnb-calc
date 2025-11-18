@@ -304,6 +304,61 @@ th {
     width: 8.5em;
 }
 
+button svg {
+ display: block;
+ margin: auto;
+ position: absolute;
+}
+
+.bi-plus {
+    bottom: -0.15em;
+    right: 6px;
+}
+
+.bi-x {
+    bottom: 0.3em;
+    right: 5px;
+}
+
+.btn-range-add {
+    height: 1em;
+    width: 2.25em;
+    padding: 3px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    background: var(--background);
+    border: 1px solid #aaaaaa;
+    cursor: pointer;
+    position: relative;
+}
+
+.btn-range-compare-body {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    background: var(--background);
+    border: 1px solid #aaaaaa;
+    cursor: pointer;
+    position: relative;
+}
+
+.btn-range-add:active {
+    background-color:  var(--button-selected);
+}
+
+.btn-range-add.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.btn-range-compare-body:active {
+    background-color:  var(--button-selected);
+}
+
 .visually-hidden:focus + .btn, /* Add visual indication when focusing on visually hidden elements */
 .btn:hover {
     z-index: 10;
@@ -318,6 +373,146 @@ th {
 .visually-hidden[type="radio"]:checked + .btn {
     cursor: default;
 }
+
+.numbersOnly {
+    width: 70px;
+}
+
+/* Chrome, Safari, Edge, Opera */
+#rc-maxHP::-webkit-outer-spin-button,
+#rc-maxHP::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+#rc-maxHP[type=number] {
+  -moz-appearance: textfield;
+}
+
+#range-compare-top-fields {
+    display: flex;
+}
+
+#range-target-fields {
+    justify-content: flex-start;
+}
+
+#range-moves {
+    display: flex;
+    justify-content: flex-end;
+}
+
+#range-compare-moves {
+    display: flex;
+}
+
+.range-move {
+    width: auto;
+    text-align: center;
+    max-width: 250px;
+    display: flex;
+    flex-direction: column;
+    padding: 8px;
+    margin: 4px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #3c3c3c;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.range-move:hover {
+    border-color: #bbb;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.range-move-controls {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+}
+
+.range-move-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 4px 0;
+}
+
+.range-move-name {
+    font-weight: bold;
+    font-size: 12px;
+    margin-bottom: 2px;
+}
+
+.range-move-damage {
+    font-size: 11px;
+}
+
+.range-move-crit {
+    font-size: 11px;
+    color: #d32f2f;
+}
+
+.range-move-navigation {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 4px;
+}
+
+.range-copy-move {
+    cursor: pointer;
+    background: #28a745;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    padding: 4px 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+}
+
+.range-copy-move:hover {
+    background: #218838;
+}
+
+.range-delete-move {
+    cursor: pointer;
+    background: #ff4444;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    padding: 4px 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+}
+
+.range-delete-move:hover {
+    background: #cc0000;
+}
+
+.range-move-left,
+.range-move-right {
+    cursor: pointer;
+    color: white; 
+    padding: 4px 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+}
+
+.critBold {
+    font-weight: 700;
+}
+
 
 /* Hide element visually, but not from screen readers. See http://adrianroselli.com/2017/05/under-engineered-custom-radio-buttons-and-checkboxen.html */
 .visually-hidden {
@@ -384,6 +579,21 @@ th {
     justify-content: center;
     flex-wrap: wrap;
     gap: 1rem;
+}
+
+#disclaims {
+    margin-top: 0.75rem;
+    margin-right: 15%;
+}
+
+#disclaims ul {
+    width: fit-content;
+    margin: 0 auto;
+    padding: 0;
+}
+
+#disclaims li {
+    color: rgb(236, 56, 56);
 }
 
 .row .col {
@@ -471,7 +681,6 @@ select.toxic-counter {
     height: 1em;
     padding: 3px 3px;
     margin: 0px 1px;
-    
 }
 
 .small-crit-btn[id*="TopL"] {
@@ -772,6 +981,10 @@ table.field {
     padding-right: 15px;
 }
 
+#changelog-content-list {
+    padding: 0px 25px;
+}
+
 #changelog-content li {
     margin-bottom: 4px;
 }
@@ -783,22 +996,192 @@ table.field {
 .team-legend {
     display: flex;
     align-items: center;
-    justify-content: inital;
+    justify-content: flex-start;
+    text-align: left;
+    width: 100%;
 }
 
 #team-box-legend {
     min-width: 6em;
     padding: 2px 6px;
+    flex-shrink: 0;
+    text-align: left;
 }
 
 #search-inline {
-    width: 0px;
+    margin-left: 8em;
+    flex-shrink: 0;
 }
 
 #search {
-    margin-left: 8em;
     min-width: 14em;
     padding: 2px 6px;
     border-radius: 4px;
     border: 1px solid #AAAAAA;
+}
+
+#trashFieldset {
+    margin-top: 5px;
+    width: 400px;
+}
+
+.select2-container.set-selector {
+    display: block;
+    width: 400px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.select2-choice {
+    padding-right: 8px !important;
+}
+
+.range-compare fieldset {
+    width: 1244px;
+}
+
+/* Range Compare: selection/highlight */
+body.rc-selecting-target .trainer-pok,
+body.rc-selecting-target .trainer-pok-opposing {
+    cursor: crosshair;
+}
+.rc-selectable {
+    outline: 2px dashed #90caf9;
+    outline-offset: 2px;
+}
+
+#range-target.rc-need-target {
+    box-shadow: inset 0 0 0 3px #ff9800;
+    animation: rcPulse 0.6s ease-in-out 2;
+}
+@keyframes rcPulse {
+    0% { box-shadow: inset 0 0 0 0 rgba(255,152,0,.7); }
+    100% { box-shadow: inset 0 0 0 6px rgba(255,152,0,0); }
+}
+
+/* Range Compare */
+#range-moves {
+    margin-top: 6px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    width: 60%;
+    
+}
+.rc-move-pill {
+    background: #2b2b2b;
+    border: 1px solid #444;
+    border-radius: 12px;
+    padding: 2px 8px;
+    font-size: 12px;
+}
+#range-chart {
+    margin-top: 8px;
+}
+.rc-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 6px 0;
+}
+.rc-label {
+    width: 240px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 12px;
+}
+.rc-track {
+    position: relative;
+    flex: 1;
+    height: 16px;
+    background: linear-gradient(90deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.08) 100%);
+    border: 1px solid #555;
+    border-radius: 8px;
+}
+.rc-track .rc-segment {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    border-radius: 8px;
+}
+.rc-pct {
+    width: 110px;
+    text-align: right;
+    font-size: 12px;
+}
+
+.rc-range-ui {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.rc-range-ui > div:first-child {
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+#rc-range-hp {
+    width: 80px;
+}
+
+#rc-range-result {
+    margin-top: 6px;
+}
+
+.rc-gauge-container {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    margin-top: 15px;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.rc-gauge-wrapper {
+    flex: 0 0 auto;
+    width: 300px;
+    height: 150px;
+}
+
+.rc-gauge-wrapper canvas {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.btn-target-select {
+    height: 1.6em;
+    width: 2.25em;
+    padding: 3px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    background: var(--background);
+    border: 1px solid #aaaaaa;
+    cursor: pointer;
+    position: relative;
+    vertical-align: middle;
+    margin-left: 0.8em;
+    flex-shrink: 0;
+}
+
+/* Ensure proper alignment with level input - use flexbox on parent divs containing level inputs */
+.poke-info .info-group > div:has(input.level) {
+    display: flex;
+    align-items: center;
+    gap: 0.8em;
+}
+
+.poke-info .info-group > div:has(input.level) label {
+    flex-shrink: 0;
+}
+
+.poke-info .info-group > div:has(input.level) input.level {
+    flex-shrink: 0;
 }

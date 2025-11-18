@@ -905,6 +905,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
     const encoreIncentive = aiOptions["encoreAiOpt"];
     const playerFirstTurnOut = aiOptions["playerFirstTurnOutAiOpt"]; // or encored
     const aiMagnetRisen = aiOptions["magnetRiseAiOpt"];
+    const playerMagnetRisen = aiOptions["playerMagnetRisenAiOpt"];
 
     // protect yayyy
     const protectIncentive = aiOptions["protectIncentiveAiOpt"];
@@ -2488,6 +2489,16 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                     });
             }
 
+            // Per Grintoul and Berry, Smack Down/Thousand Arrows get +6 if it can ground you
+            var playerCanBeGrounded = playerTypes.includes("Flying") || playerAbility == "Levitate";
+            if (isNamed(moveName, "Smack Down", "Thousand Arrows") && playerCanBeGrounded) { 
+                moveStringsToAdd.push({
+                    move: moveName,
+                    score: 6,
+                    rate: 1
+                });
+            }
+
             // end of the hell loop
         });
 
@@ -2568,6 +2579,10 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
         moves.forEach((move) => {
             finalDist[move] += dist.value / moves.length;
         });
+    }
+
+    if ((window as any).umami) {
+        (window as any).umami.track('AI Move Distribution Generated');
     }
 
     // console.log(finalDist);

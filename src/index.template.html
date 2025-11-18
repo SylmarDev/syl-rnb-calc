@@ -81,6 +81,7 @@
                 <span id="resultDamageL1">??? - ???%</span>
                 <input aria-describedby="criticalHitInstruction" class="result-move visually-hidden top-crit" type="checkbox" id="critTopL1" />
                 <label class="btn small-crit-btn" for="critTopL1" title="Force this attack to be a critical hit?">Crit</label>
+                <button class="btn-range-add" id="rangeL1" data-side="L" data-idx="1" title="Add to Range Compare"></button>
             </div>
             <div>
                 <input class="result-move visually-hidden" type="radio" name="resultMove" id="resultMoveL2" aria-describedby="resultDamageL2" />
@@ -88,6 +89,7 @@
                 <span id="resultDamageL2">??? - ???%</span>
                 <input aria-describedby="criticalHitInstruction" class="result-move visually-hidden top-crit" type="checkbox" id="critTopL2" />
                 <label class="btn small-crit-btn" for="critTopL2" title="Force this attack to be a critical hit?">Crit</label>
+                <button class="btn-range-add" id="rangeL2" data-side="L" data-idx="2" title="Add to Range Compare"></button>
             </div>
             <div>
                 <input class="result-move visually-hidden" type="radio" name="resultMove" id="resultMoveL3" aria-describedby="resultDamageL3" />
@@ -95,6 +97,7 @@
                 <span id="resultDamageL3">??? - ???%</span>
                 <input aria-describedby="criticalHitInstruction" class="result-move visually-hidden top-crit" type="checkbox" id="critTopL3" />
                 <label class="btn small-crit-btn" for="critTopL3" title="Force this attack to be a critical hit?">Crit</label>
+                <button class="btn-range-add" id="rangeL3" data-side="L" data-idx="3" title="Add to Range Compare"></button>
             </div>
             <div>
                 <input class="result-move visually-hidden" type="radio" name="resultMove" id="resultMoveL4" aria-describedby="resultDamageL4" />
@@ -102,12 +105,14 @@
                 <span id="resultDamageL4">??? - ???%</span>
                 <input aria-describedby="criticalHitInstruction" class="result-move visually-hidden top-crit" type="checkbox" id="critTopL4" />
                 <label class="btn small-crit-btn" for="critTopL4" title="Force this attack to be a critical hit?">Crit</label>
+                <button class="btn-range-add" id="rangeL4" data-side="L" data-idx="4" title="Add to Range Compare"></button>
             </div>
         </div>
         <div aria-labelledby="resultHeaderR" class="move-result-subgroupR" id="move-result-subgroupR" role="radiogroup">
             <div class="result-move-header"><span id="resultHeaderR">Pok&eacute;mon 2's Moves (select one to show detailed results)</span>
             </div>
             <div>
+                <button class="btn-range-add" id="rangeR1" data-side="R" data-idx="1" title="Add to Range Compare"></button>
                 <input aria-describedby="criticalHitInstruction" class="result-move visually-hidden top-crit" type="checkbox" id="critTopR1" />
                 <label class="btn small-crit-btn" for="critTopR1" title="Force this attack to be a critical hit?">Crit</label>
                 <input class="result-move visually-hidden" type="radio" name="resultMove" id="resultMoveR1" aria-describedby="resultDamageR1" />
@@ -116,6 +121,7 @@
                 <span id="resultMoveRateR1" class="resultMoveRateR">??%</span>
             </div>
             <div>
+                <button class="btn-range-add" id="rangeR2" data-side="R" data-idx="2" title="Add to Range Compare"></button>
                 <input aria-describedby="criticalHitInstruction" class="result-move visually-hidden top-crit" type="checkbox" id="critTopR2" />
                 <label class="btn small-crit-btn" for="critTopR2" title="Force this attack to be a critical hit?">Crit</label>
                 <input class="result-move visually-hidden" type="radio" name="resultMove" id="resultMoveR2" aria-describedby="resultDamageR2" />
@@ -124,6 +130,7 @@
                 <span id="resultMoveRateR2" class="resultMoveRateR">??%</span>
             </div>
             <div>
+                <button class="btn-range-add" id="rangeR3" data-side="R" data-idx="3" title="Add to Range Compare"></button>
                 <input aria-describedby="criticalHitInstruction" class="result-move visually-hidden top-crit" type="checkbox" id="critTopR3" />
                 <label class="btn small-crit-btn" for="critTopR3" title="Force this attack to be a critical hit?">Crit</label>
                 <input class="result-move visually-hidden" type="radio" name="resultMove" id="resultMoveR3" aria-describedby="resultDamageR3" />
@@ -132,6 +139,7 @@
                 <span id="resultMoveRateR3" class="resultMoveRateR">??%</span>
             </div>
             <div>
+                <button class="btn-range-add" id="rangeR4" data-side="R" data-idx="4" title="Add to Range Compare"></button>
                 <input aria-describedby="criticalHitInstruction" class="result-move visually-hidden top-crit" type="checkbox" id="critTopR4" />
                 <label class="btn small-crit-btn" for="critTopR4" title="Force this attack to be a critical hit?">Crit</label>
                 <input class="result-move visually-hidden" type="radio" name="resultMove" id="resultMoveR4" aria-describedby="resultDamageR4" />
@@ -142,67 +150,79 @@
         </div>
         
     </div>
-    <div id="aiOptions" aria-labelledby="aiOptions" class="ai-options-subgroup" role="checkboxgroup">
-        <div class="result-move-header"><span id="aiOptionsHeader">Ai Options</span></div>
-        <div class="row">
-            <div class="col" id="firstTurnOutOpt">
-                <label class="unselectable" for="firstTurnOutAiOpt">First Turn Out:</label>
-                <input class="calc-trigger" type="checkbox" name="firstTurnOutAiOpt" id="firstTurnOutAiOpt" aria-describedby="aiOption" />
-            </div>
-            <div class="col" id="suckerPunchOpt">
-                <label class="unselectable" for="suckerPunchAiOpt">Sucker Punch Used Last Turn:</label>
-                <input class="calc-trigger" type="checkbox" name="suckerPunchAiOpt" id="suckerPunchAiOpt" aria-describedby="aiOption" />
-            </div>
-            <div class="col" id="lastMonOpt">
-                <label class="unselectable" for="lastMonAiOpt">AI's last mon:</label>
-                <input class="calc-trigger" type="checkbox" name="lastMonAiOpt" id="lastMonAiOpt" aria-describedby="aiOption" />
-            </div>
-            <div class="col" id="playerLastMonOpt">
-                <label class="unselectable" for="playerLastMonAiOpt">Player's last mon:</label>
-                <input class="calc-trigger" type="checkbox" name="playerLastMonAiOpt" id="playerLastMonAiOpt" aria-describedby="aiOption" />
-            </div>
-            <div class="col" id="playerCharmedOrConfusedOpt">
-                <label class="unselectable" for="playerCharmedOrConfusedAiOpt">Player Charmed or Confused:</label>
-                <input class="calc-trigger" type="checkbox" name="playerCharmedOrConfusedAiOpt" id="playerCharmedOrConfusedAiOpt" aria-describedby="aiOption" />
-            </div>
-            <div class="col" id="tauntOpt">
-                <label class="unselectable" for="tauntAiOpt">Taunt Up:</label>
-                <input class="calc-trigger" type="checkbox" name="tauntAiOpt" id="tauntAiOpt" aria-describedby="aiOption" />
-            </div>
-            <div class="col" id="imprisonOpt">
-                <label class="unselectable" for="imprisonAiOpt">Imprison Up:</label>
-                <input class="calc-trigger" type="checkbox" name="imprisonAiOpt" id="imprisonAiOpt" aria-describedby="aiOption" />
-            </div>
-            <div class="col" id="encoreOpt">
-                <label class="unselectable" for="encoreAiOpt">Encore Encouraged:</label>
-                <input class="calc-trigger" type="checkbox" name="encoreAiOpt" id="encoreAiOpt" aria-describedby="aiOption" />
-            </div>
-            <div class="col" id="playerFirstTurnOutOpt">
-                <label class="unselectable" for="playerFirstTurnOutAiOpt">Player First Turn Out or Encored:</label>
-                <input class="calc-trigger" type="checkbox" name="playerFirstTurnOutAiOpt" id="playerFirstTurnOutAiOpt" aria-describedby="aiOption" />
-            </div>
-            <div class="col" id="magnetRiseOpt">
-                <label class="unselectable" for="magnetRiseAiOpt">AI Magnet Risen:</label>
-                <input class="calc-trigger" type="checkbox" name="magnetRiseAiOpt" id="magnetRiseAiOpt" aria-describedby="aiOption" />
-            </div>
-            <div class="col" id="protectIncentiveOpt">
-                <label class="unselectable" for="protectIncentiveAiOpt">Protect Incentive:</label>
-                <input class="calc-trigger" type="checkbox" name="protectIncentiveAiOpt" id="protectIncentiveAiOpt" aria-describedby="aiOption" />
-            </div>
-            <div class="col" id="protectDisincentiveOpt">
-                <label class="unselectable" for="protectDisincentiveAiOpt">Protect Disincentive:</label>
-                <input class="calc-trigger" type="checkbox" name="protectDisincentiveAiOpt" id="protectDisincentiveAiOpt" aria-describedby="aiOption" />
-            </div>
-            <div class="col" id="protectLastOpt">
-                <label class="unselectable" for="protectLastAiOpt">Protect Last Turn:</label>
-                <input class="calc-trigger" type="checkbox" name="protectLastAiOpt" id="protectLastAiOpt" aria-describedby="aiOption" />
-            </div>
-            <div class="col" id="protectLastTwoOpt">
-                <label class="unselectable" for="protectLastTwoAiOpt">Protect Last Two Turns:</label>
-                <input class="calc-trigger" type="checkbox" name="protectLastTwoAiOpt" id="protectLastTwoAiOpt" aria-describedby="aiOption" />
-            </div>
+    <div id="aiOptionsAndDisclaims">
+        <div id="aiOptions" aria-labelledby="aiOptions" class="ai-options-subgroup" role="checkboxgroup">
+                <div class="result-move-header"><span id="aiOptionsHeader">Ai Options</span></div>
+                <div class="row">
+                    <div class="col" id="firstTurnOutOpt">
+                        <label class="unselectable" for="firstTurnOutAiOpt">First Turn Out:</label>
+                        <input class="calc-trigger" type="checkbox" name="firstTurnOutAiOpt" id="firstTurnOutAiOpt" aria-describedby="aiOption" />
+                    </div>
+                    <div class="col" id="suckerPunchOpt">
+                        <label class="unselectable" for="suckerPunchAiOpt">Sucker Punch Used Last Turn:</label>
+                        <input class="calc-trigger" type="checkbox" name="suckerPunchAiOpt" id="suckerPunchAiOpt" aria-describedby="aiOption" />
+                    </div>
+                    <div class="col" id="lastMonOpt">
+                        <label class="unselectable" for="lastMonAiOpt">AI's last mon:</label>
+                        <input class="calc-trigger" type="checkbox" name="lastMonAiOpt" id="lastMonAiOpt" aria-describedby="aiOption" />
+                    </div>
+                    <div class="col" id="playerLastMonOpt">
+                        <label class="unselectable" for="playerLastMonAiOpt">Player's last mon:</label>
+                        <input class="calc-trigger" type="checkbox" name="playerLastMonAiOpt" id="playerLastMonAiOpt" aria-describedby="aiOption" />
+                    </div>
+                    <div class="col" id="playerCharmedOrConfusedOpt">
+                        <label class="unselectable" for="playerCharmedOrConfusedAiOpt">Player Charmed or Confused:</label>
+                        <input class="calc-trigger" type="checkbox" name="playerCharmedOrConfusedAiOpt" id="playerCharmedOrConfusedAiOpt" aria-describedby="aiOption" />
+                    </div>
+                    <div class="col" id="tauntOpt">
+                        <label class="unselectable" for="tauntAiOpt">Taunt Up:</label>
+                        <input class="calc-trigger" type="checkbox" name="tauntAiOpt" id="tauntAiOpt" aria-describedby="aiOption" />
+                    </div>
+                    <div class="col" id="imprisonOpt">
+                        <label class="unselectable" for="imprisonAiOpt">Imprison Up:</label>
+                        <input class="calc-trigger" type="checkbox" name="imprisonAiOpt" id="imprisonAiOpt" aria-describedby="aiOption" />
+                    </div>
+                    <div class="col" id="encoreOpt">
+                        <label class="unselectable" for="encoreAiOpt">Encore Encouraged:</label>
+                        <input class="calc-trigger" type="checkbox" name="encoreAiOpt" id="encoreAiOpt" aria-describedby="aiOption" />
+                    </div>
+                    <div class="col" id="playerFirstTurnOutOpt">
+                        <label class="unselectable" for="playerFirstTurnOutAiOpt">Player First Turn Out or Encored:</label>
+                        <input class="calc-trigger" type="checkbox" name="playerFirstTurnOutAiOpt" id="playerFirstTurnOutAiOpt" aria-describedby="aiOption" />
+                    </div>
+                    <div class="col" id="magnetRiseOpt">
+                        <label class="unselectable" for="magnetRiseAiOpt">AI Magnet Risen:</label>
+                        <input class="calc-trigger" type="checkbox" name="magnetRiseAiOpt" id="magnetRiseAiOpt" aria-describedby="aiOption" />
+                    </div>
+                    <div class="col" id="protectIncentiveOpt">
+                        <label class="unselectable" for="protectIncentiveAiOpt">Protect Incentive:</label>
+                        <input class="calc-trigger" type="checkbox" name="protectIncentiveAiOpt" id="protectIncentiveAiOpt" aria-describedby="aiOption" />
+                    </div>
+                    <div class="col" id="protectDisincentiveOpt">
+                        <label class="unselectable" for="protectDisincentiveAiOpt">Protect Disincentive:</label>
+                        <input class="calc-trigger" type="checkbox" name="protectDisincentiveAiOpt" id="protectDisincentiveAiOpt" aria-describedby="aiOption" />
+                    </div>
+                    <div class="col" id="protectLastOpt">
+                        <label class="unselectable" for="protectLastAiOpt">Protect Last Turn:</label>
+                        <input class="calc-trigger" type="checkbox" name="protectLastAiOpt" id="protectLastAiOpt" aria-describedby="aiOption" />
+                    </div>
+                    <div class="col" id="protectLastTwoOpt">
+                        <label class="unselectable" for="protectLastTwoAiOpt">Protect Last Two Turns:</label>
+                        <input class="calc-trigger" type="checkbox" name="protectLastTwoAiOpt" id="protectLastTwoAiOpt" aria-describedby="aiOption" />
+                    </div>
+                </div>
+        </div>
+        <div id="disclaims" aria-labelledby="disclaims" role="">
+            <ul>
+                <li id="doublesDisclaim"><i>Doubles not implemented yet, be careful!</i></li>
+                <li id="flameChargeDisclaim"><i>Not certain on Flame Charge, but they can click it sometimes when its slower. Calc assumes its like speed-reducing AI, but I think it's wrong still</i></li>
+                <li id="sleepTalkDisclaim"><i>No docs or consensus, on Sleep Talk score, I assume +6 if asleep</i></li>
+                <li id="shoreUpDisclaim"><i>Shore Up not implemented yet, be careful!</i></li>
+                <li id="tripleAxelDisclaim"><i>Triple Axel bugged, be careful!</i></li>
+            </ul>
         </div>
     </div>
+    
     <div aria-label="Calculation results" class="main-result-group" role="region">
         <div class="big-text" title="Click to copy.">
             <span id="mainResult">Loading...</span>
@@ -232,6 +252,32 @@
         </button>
     </div>
     <div class="panel">
+        <div aria-label="trainer-poks" role="region">
+            <fieldset class="poke-info" id="trainer-mons">
+                <legend class="team-legend">
+                    <span id="team-box-legend">Team/Box</span>
+                    <span id="search-inline" class="search-inline">
+                        <input type="text" id="search" placeholder="Search" />
+                    </span>
+                </legend>
+                <div>
+                    <legend align="center">Team</legend>
+                    <div id="team-poke-list" class="box-poke dropzone">
+                    </div>
+                </div>
+                <hr>
+                <div>
+                    <legend align="center">Box</legend>
+                    <div id="box-poke-list" class="box-poke dropzone">
+                    </div>
+                </div>
+                <div>
+                    <legend align="center">Box 2</legend>
+                    <div id="box-poke-list2" class="box-poke dropzone">
+                    </div>
+                </div>
+            </fieldset>
+        </div>
         <div aria-label="Pok&eacute;mon 1" role="region">
             <fieldset class="poke-info" id="p1">
                 <legend align="center">Pok&eacute;mon 1
@@ -262,9 +308,23 @@
                         <select class="gender calc-trigger"><option></option><option selected="selected">Male</option><option>Female</option></select>
                     </div>
                     <div>
-                        <label for="levelL1">Level</label>
-                        <input class="level calc-trigger" id="levelL1" value="100" />
+                        <div>
+                            <label for="levelL1">Level</label>
+                            <input class="level calc-trigger" id="levelL1" value="100" />
+                        </div>
+                        <button type="button" class="btn-target-select" id='targetLeft' data-side='l' title="Assign Target">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bullseye" viewBox="0 0 16 16">
+                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                <path d="M8 13A5 5 0 1 1 8 3a5 5 0 0 1 0 10m0 1A6 6 0 1 0 8 2a6 6 0 0 0 0 12"/>
+                                <path d="M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6m0 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8"/>
+                                <path d="M9.5 8a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
+                              </svg>
+                        </button>
                     </div>
+                    <!-- Target button, floats out to the left 
+                    <div>
+                        
+                    </div> -->
                     <div class="hide">
                         <label for="weightL1">Weight (kg)</label>
                         <input class="weight calc-trigger" id="weightL1" value="10.0" />
@@ -745,36 +805,14 @@
                 </div>
             </fieldset>
         </div>
-        <div aria-label="trainer-poks" role="region">
-            <fieldset class="poke-info" id="trainer-mons">
-                <legend class="team-legend">
-                    <span id="team-box-legend">Team/Box</span>
-                    <span id="search-inline" class="search-inline">
-                        <input type="text" id="search" placeholder="Search" />
-                    </span>
-                </legend>
-                <div>
-                    <legend align="center">Team</legend>
-                    <div id="team-poke-list" class="box-poke dropzone">
-                    </div>
-                </div>
-                <hr>
-                <div>
-                    <legend align="center">Box</legend>
-                    <div id="box-poke-list" class="box-poke dropzone">
-                    </div>
-                </div>
-                <div>
-                    <legend align="center">Box 2</legend>
-                    <div id="box-poke-list2" class="box-poke dropzone">
-                    </div>
-                </div>
-                <hr>
+        <div aria-label="trash" role="region">
+            <fieldset id="trashFieldset">
                 <div>
                     <legend align="center">Trash</legend>
                     <div id="trash-box" class="box-poke dropzone">
                     </div>
                     <button class="deadzone" id="trash-pok">Remove Pokémon from the trash</button>
+                    <br>
                     <button class="deadzone" id="clearSets">Remove Pokémon from all boxes</button>
                 </div>
                 <hr>
@@ -819,12 +857,13 @@
                         <input type="checkbox" name="cc-auto-refr" id="cc-auto-refr" autocomplete="off">Auto-Refresh
                     </div>
                 </div>
+            
             </fieldset>
-        </div>
+        </div> 
     </div>
     <div class="panel">
         <div aria-label="Field information" role="region">
-            <fieldset class="field-info">
+            <fieldset class="field-info" id="fieldInfo">
                 <legend align="center">Field
                     <img id="monSingle" src="https://raw.githubusercontent.com/May8th1995/sprites/master/Minun.png" alt="">
                     <img id="monDouble" src="https://raw.githubusercontent.com/May8th1995/sprites/master/Plusle.png" alt="" hidden>
@@ -1182,6 +1221,24 @@
         </div>
     </div>
     <div class="panel">
+        <div aria-label="trainer-poks" role="region">
+            <fieldset class="poke-info" id="opp-trainer-mons">
+                <legend align="center"> OPPOSING TEAM</legend>
+                <div class="trainer-poks">
+                    <div class="trainer-pok-list-opposing">
+                        <div class="trainer-pok-container"> 
+                            <img class="trainer-pok-opposing" src="https://raw.githubusercontent.com/May8th1995/sprites/master/charizard.png" title="Focus Blast 120">
+                        </div>
+                    </div>
+                </div>
+                <!--hr>
+                <button id="set-double-opp">Set in doubles</button-->
+                <hr>
+                <button type="button" id="previous-trainer"> Previous Trainer</button>
+                <button type="button" id="next-trainer"> Next Trainer</button>
+                <button type="button" id="reset-trainer" style="float: right">🚚</button>
+            </fieldset>
+        </div>
         <div aria-label="Pok&eacute;mon 2" role="region">
             <fieldset class="poke-info" id="p2">
                 <legend align="center">Pok&eacute;mon 2
@@ -1212,8 +1269,18 @@
                         <select class="gender calc-trigger"><option></option><option selected="selected">Male</option><option>Female</option></select>
                     </div>
                     <div>
-                        <label for="levelR1">Level</label>
-                        <input class="level calc-trigger" id="levelR1" value="100" />
+                        <div>
+                            <label for="levelR1">Level</label>
+                            <input class="level calc-trigger" id="levelR1" value="100" />
+                        </div>
+                        <button type="button" class="btn-target-select" id='targetRight' data-side='r' title="Assign Target">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bullseye" viewBox="0 0 16 16">
+                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                <path d="M8 13A5 5 0 1 1 8 3a5 5 0 0 1 0 10m0 1A6 6 0 1 0 8 2a6 6 0 0 0 0 12"/>
+                                <path d="M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6m0 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8"/>
+                                <path d="M9.5 8a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
+                              </svg>
+                        </button>
                     </div>
                     <div class="hide">
                         <label for="weightR1">Weight (kg)</label>
@@ -1693,24 +1760,6 @@
                 </div>
             </fieldset>
         </div>
-        <div aria-label="trainer-poks" role="region">
-            <fieldset class="poke-info" id="trainer-mons">
-                <legend align="center"> OPPOSING TEAM</legend>
-                <div class="trainer-poks">
-                    <div class="trainer-pok-list-opposing">
-                        <div class="trainer-pok-container"> 
-                            <img class="trainer-pok-opposing" src="https://raw.githubusercontent.com/May8th1995/sprites/master/charizard.png" title="Focus Blast 120">
-                        </div>
-                    </div>
-                </div>
-                <!--hr>
-                <button id="set-double-opp">Set in doubles</button-->
-                <hr>
-                <button type="button" id="previous-trainer"> Previous Trainer</button>
-                <button type="button" id="next-trainer"> Next Trainer</button>
-                <button type="button" id="reset-trainer" style="float: right">🚚</button>
-            </fieldset>
-        </div>
     </div>
     <div class="right-side-pannel side-pannel">
         <button data-set="i-f-o-type" class="r-side-button">
@@ -1730,6 +1779,33 @@
             <span>Moves</span>
         </button>
     </div>
+    <div class="panel range-compare">
+        <div aria-label="range-compare" role="region">
+            <fieldset>
+                <legend align="center">Range Compare</legend>
+                <div id="range-compare-top-fields">
+                    <div id="range-target-fields">
+                        <div id="range-move-options">
+                        </div>
+                        <div id="range-target">
+                            <label for="targetSpr">Target</label>
+                            <img id="targetSpr"></img>
+                            <label>PLAYER</label>
+                        </div>
+                    </div>
+                    <div id="range-moves">
+                    </div>
+                </div>
+                <hr>
+                <canvas id="range-chart">
+
+                </canvas>
+                <div id="range-meters">
+
+                </div>
+            </fieldset>
+        </div>
+    </div>
     <script type="text/javascript">
         var linkExtension = '.template.html';
     </script>
@@ -1743,6 +1819,7 @@
         var calc = exports = {};
         function require() { return exports };
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script type="text/javascript" src="./calc/util.js?"></script>
     <script type="text/javascript" src="./calc/stats.js?"></script>
     <script type="text/javascript" src="./calc/ai.js?"></script>
@@ -1782,13 +1859,14 @@
     <script type="text/javascript" src="./js/shared_controls.js?"></script>
     <script type="text/javascript" src="./js/index_randoms_controls.js?"></script>
     <script type="text/javascript" src="./js/moveset_import.js?"></script>
+    <script type="text/javascript" src="./js/range_compare.js?"></script>
 </div>
 
-<div class="credits">Run and Bun AI % work done by SylmarDev. Modified by dekzeh, ForwardFeed, Originaly Created by Honko, maintained by Austin and Kris, Special thanks to Hzla
+<div class="credits">Run and Bun AI %, Range Compare, and Quality of Life work done by SylmarDev. <br>Modified by dekzeh, ForwardFeed, Originaly Created by Honko, maintained by Austin and Kris, Special thanks to Hzla
     <ul>
-        <li><p class="p-noPadding">Hosted by SylmarDev. This project is MIT Licensed.</p></li>
+        <!-- This is coming back just as soon as vulnerabilities are fixed
         <li><a href="https://github.com/SylmarDev/syl-rnb-calc/tree/main" class="links-lighten" target="_blank">Modification Repository</a></li>
-        <li><a href="https://github.com/SylmarDev/syl-rnb-calc/issues/new" class="links-lighten" target="_blank">Report an issue</a></li>
+        <li><a href="https://github.com/SylmarDev/syl-rnb-calc/issues/new" class="links-lighten" target="_blank">Report an issue</a></li> -->
         <li><button id="show-changelog">Show Changelog</button></li>
         <li>
             <label class="unselectable" for="enableDebugLogging">Enable Debug Logging</label>
@@ -1801,6 +1879,14 @@
         <li>
             <label class="unselectable" for="toggleSearch">Show Search</label>
             <input class="" type="checkbox" name="toggleSearch" id="toggleSearch" aria-describedby="aiOption" checked />
+        </li>
+        <li>
+            <label class="unselectable" for="rangeCompare">Enable Range Compare</label>
+            <input class="" type="checkbox" name="rangeCompare" id="rangeCompare" aria-describedby="aiOption" checked />
+        </li>
+        <li>
+            <label class="unselectable" for="teamsOnTop">Box On Top</label>
+            <input class="" type="checkbox" name="teamsOnTop" id="teamsOnTop" aria-describedby="aiOption" />
         </li>
         <li><a href="https://twitch.tv/princesssylmar" class="links-lighten" target="_blank">My twitch :3</a></li>
         <li><p>Shoutouts to the original <a href="https://github.com/smogon/damage-calc/contributors" class="links-lighten" target="_blank">Smogon Contributors</a></p></li>

@@ -630,13 +630,11 @@ $(".set-selector").change(function () {
 				$(this).closest('.poke-info').find(".move-pool").hide();
 			}
 		}
-		if (typeof getSelectedTiers === "function") { // doesn't exist when in 1vs1 mode
+		if (typeof getSelectedTiers === "function") {
 			var format = getSelectedTiers()[0];
 			var is50lvl = startsWith(format, "VGC") || startsWith(format, "Battle Spot");
-			//var isDoubles = format === 'Doubles' || has50lvl; *TODO*
 			if (format === "LC") pokeObj.find(".level").val(5);
 			if (is50lvl) pokeObj.find(".level").val(50);
-			//if (isDoubles) field.gameType = 'Doubles'; *TODO*
 		}
 		var formeObj = $(this).siblings().find(".forme").parent();
 		itemObj.prop("disabled", false);
@@ -1600,12 +1598,20 @@ function hasMove(affectedMoves, aiMoves) {
 	return false;
 }
 
-function setAiOptionVisibility(side) {
+function getMoveNames(side) {
 	let moveNames = [];
-	// console.log($(`#${side} .i-f-o-move div.move-selector a.select2-choice span.select2-chosen`));
 	$(`#${side} .i-f-o-move div.move-selector a.select2-choice span.select2-chosen`).each(function() { moveNames.push($(this).text())}); // trust the process
-	// console.log(moveNames);
+	return moveNames;
+}
 
+function setAiOptionAndDisclaimVisibility(side) {
+	let moveNames = getMoveNames(side);
+	setAiOptionVisibility(moveNames);
+	setDisclaimVisibility(moveNames);
+}
+
+function setAiOptionVisibility(moveNames) {
+	// console.log(moveNames);
 	hideAiOptions();
 	
 	// if Stealth Rocks, Spikes, Toxic Spikes, Sticky Web, Fake Out, Or Encore
@@ -1677,6 +1683,40 @@ function setAiOptionVisibility(side) {
 	}
 }
 
+function setDisclaimVisibility(moveNames) {
+	hideDisclaimers();
+
+	// doubles
+	if ($('#doubles-format:checked').val() !== undefined) {
+		showDisclaimers();
+		$("#doublesDisclaim").show();
+	}
+
+	// flame charge
+	if (isNamed("Flame Charge", ...moveNames)) {
+		showDisclaimers();
+		$("#flameChargeDisclaim").show();
+	}
+
+	// sleep talk
+	if (isNamed("Sleep Talk", ...moveNames)) {
+		showDisclaimers();
+		$("#sleepTalkDisclaim").show();
+	}
+
+	// shore up
+	if (isNamed("Shore Up", ...moveNames)) {
+		showDisclaimers();
+		$("#shoreUpDisclaim").show();
+	}
+
+	// triple axel
+	if (isNamed("Triple Axel", ...moveNames)) {
+		showDisclaimers();
+		$("#tripleAxelDisclaim").show();
+	}
+}
+
 $(document).on('click', '.right-side', function () {
 	var set = $(this).attr('data-id');
 	topPokemonIcon(set, $("#p2mon")[0])
@@ -1684,7 +1724,7 @@ $(document).on('click', '.right-side', function () {
 	$('input.opposing').prop('title', $(this).prop('title').split("]")[0].slice(1));
 	$('.opposing').change();
 	$('.opposing .select2-chosen').text(set);
-	setAiOptionVisibility('p2');
+	setAiOptionAndDisclaimVisibility('p2');
 })
 
 $(document).on('click', '.left-side', function () {
@@ -1696,7 +1736,11 @@ $(document).on('click', '.left-side', function () {
 })
 
 $(document).on('change', '#p2 .i-f-o-move select.move-selector', function () {
-	setAiOptionVisibility('p2');
+	setAiOptionAndDisclaimVisibility('p2');
+})
+
+$(document).on('change', '#p1, #fieldInfo, #p2', function() {
+	setDisclaimVisibility(getMoveNames('p2'));
 })
 
 //select first mon of the box when loading
@@ -1996,19 +2040,25 @@ function collapseArrow(arrow){
 	}
 }
 
-/* although those two function could be factorised in one, i may think about more in depth 
-functionality laters that may involve two separate functions, i will remove this comment if i do*/
-function switchIconSingle(){
-	document.getElementById("monDouble").toggleAttribute("hidden")
-}
-
-function switchIconDouble(){
-	document.getElementById("monDouble").toggleAttribute("hidden")
+function updateSingleDoublesIcon() {
+	const isDoubles = $("#doubles-format").is(':checked');
+	if (isDoubles) {
+		document.getElementById("monDouble").removeAttribute('hidden');
+	} else {
+		document.getElementById("monDouble").setAttribute('hidden', '');
+	}
 }
 
 function hideAiOptions() {
 	$("#aiOptions").hide();
 	$("#aiOptions div:has(input)").each(function () {
+		$(this).hide();
+	});
+}
+
+function hideDisclaimers() {
+	$("#disclaims").hide();
+	$("#disclaims li").each(function () {
 		$(this).hide();
 	});
 }
@@ -2020,6 +2070,28 @@ function showAiOptionsDiv() {
 	
 	$("#aiOptions").show();
 	$("#aiOptions .row").show();
+}
+
+function showDisclaimers() {
+	if ($("#disableAiMovePercentage").is(":checked")) {
+		return;
+	}
+
+	$("#disclaims").show();
+}
+
+function hideAiOptionsAndDisclaimers() {
+	hideAiOptions();
+	hideDisclaimers();
+}
+
+function showAiOptionsAndDisclaimers() {
+	if ($("#disableAiMovePercentage").is(":checked")) {
+		return;
+	}
+
+	showAiOptionsDiv();
+	showDisclaimers();
 }
 
 function showChangelog() {
@@ -2058,8 +2130,8 @@ $(document).ready(function () {
 	$('#cc-ohko-color').change(ColorCodeSetsChange);
 	$('#cc-spe-border')[0].checked=true;
 	$('#cc-ohko-color')[0].checked=true;
-	$('#singles-format').click(switchIconDouble);
-	$('#doubles-format').click(switchIconSingle);
+	$('#singles-format').click(updateSingleDoublesIcon);
+	$('#doubles-format').click(updateSingleDoublesIcon);
 	for (let dropzone of document.getElementsByClassName("dropzone")) {
 		dropzone.ondragenter=handleDragEnter;
 		dropzone.ondragleave=handleDragLeave;
@@ -2092,7 +2164,7 @@ $(document).ready(function () {
 	});
 
 	// hide ai options
-	hideAiOptions();
+	hideAiOptionsAndDisclaimers();
 
 	// set changelog text
 	for (var changeLogLine of CHANGELOG) {

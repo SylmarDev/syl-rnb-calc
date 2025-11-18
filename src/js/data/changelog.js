@@ -31,5 +31,8 @@ const CHANGELOG = [
     new ChangelogLine(1, 3, 4, "Fixed issue with non-mega abilities transferring over when a different mon was chosen"),
     new ChangelogLine(1, 3, 5, "Bug Maniac Jeffrey now works as intended"),
     new ChangelogLine(1, 3, 6, "Thunder Wave no longer sees it can para Limber mons"),
-    new ChangelogLine(1, 3, 7, "Morning Sun, Synthesis, and Moonlight now properly calc even out of the sun. First Impression now has first turn out checkbox")
+    new ChangelogLine(1, 3, 7, "Morning Sun, Synthesis, and Moonlight now properly calc even out of the sun. First Impression now has first turn out checkbox"),
+    new ChangelogLine(1, 3, 8, "Implemented Smack Down AI"),
+    new ChangelogLine(1, 3, 9, "Elite Four Drake Zygarde now has correct ability"),
+    new ChangelogLine(2, 0, 0, "Added Range Compare, teams on top, fixed many bugs"),
 ];

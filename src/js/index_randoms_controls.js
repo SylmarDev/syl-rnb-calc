@@ -28,22 +28,25 @@ for (var i = 0; i < 4; i++) {
 function createAiOptionsDict() {
 	var dict = {};
 	$("#aiOptions :input").each(function () {
-		dict[$(this).attr('id')] = $(this).is(":checked");
+		var id = $(this).attr('id');
+		if (id) {
+			dict[id] = $(this).is(":checked");
+		}
 	});
 
-	if ($("#enableDebugLogging").length) {
-		dict["enableDebugLogging"] = $("#enableDebugLogging").is(":checked");
-	}
-
-	if ($("#searchToggle").length) {
-		dict["searchToggle"] = $("#searchToggle").is(":checked");
-	}
-
+	// Include any checkboxes in the credits section of index.template.html
+	$(".credits input[type='checkbox']").each(function () {
+		var id = $(this).attr('id');
+		if (id) {
+			dict[id] = $(this).is(":checked");
+		}
+	});
+	
 	// console.log(dict); // DEBUG
 	return dict;
 }
 
-// --- AI Options persistence helpers ---
+// AI Options persistence helpers
 var AI_OPTIONS_STORAGE_KEY = 'aiOptionsDict';
 
 function saveAiOptionsToStorage() {
@@ -74,14 +77,14 @@ function applyAiOptionsDict(dict, triggerChange) {
 			if (triggerChange) $(this).change();
 		}
 	});
-	if ($("#enableDebugLogging").length && dict.hasOwnProperty("enableDebugLogging")) {
-		$("#enableDebugLogging").prop('checked', !!dict["enableDebugLogging"]);
-		if (triggerChange) $("#enableDebugLogging").change();
-	}
-	if ($("#toggleSearch").length && dict.hasOwnProperty("toggleSearch")) {
-		$("#toggleSearch").prop('checked', !!dict["toggleSearch"]);
-		if (triggerChange) $("#toggleSearch").change();
-	}
+	// Apply any checkboxes in the credits section of index.template.html
+	$(".credits input[type='checkbox']").each(function () {
+		var id = $(this).attr('id');
+		if (id && dict.hasOwnProperty(id)) {
+			$(this).prop('checked', !!dict[id]);
+			if (triggerChange) $(this).change();
+		}
+	});
 	window.NO_CALC = prevNoCalc;
 }
 
@@ -94,20 +97,10 @@ function initAiOptionsPersistence() {
 		saveAiOptionsToStorage();
 	}
 
-	// Keep storage in sync on any checkbox change within AI options or debug logging
-	$("#aiOptions :input").on('change', function () {
+	// Keep storage in sync on any checkbox change within AI options or in the credits section (index.template.html)
+	$("#aiOptions :input, .credits input[type='checkbox']").on('change', function () {
 		saveAiOptionsToStorage();
 	});
-	if ($("#enableDebugLogging").length) {
-		$("#enableDebugLogging").on('change', function () {
-			saveAiOptionsToStorage();
-		});
-	}
-	if ($("#toggleSearch").length) {
-		$("#toggleSearch").on('change', function () {
-			saveAiOptionsToStorage();
-		});
-	}
 }
 
 function showAIPercentages() {
@@ -215,6 +208,10 @@ function performCalculations() {
 		bestResult = $('.locked-move');
 	} else {
 		stickyMoves.setSelectedMove(bestResult.prop("id"));
+	}
+
+	if (window.umami) {
+		window.umami.track('Damage Calculation Performed');
 	}
 
 	bestResult.prop("checked", true);
@@ -415,23 +412,86 @@ $(document).ready(function () {
 	$("#disableAiMovePercentage").change(function () {
 		var disableAiMovePercentage = $(this).is(":checked");
 		if (disableAiMovePercentage) {
+			hideAiOptionsAndDisclaimers();
 			hideAiPercentages();
 		} else {
+			// turn on ai options and disclaimers
+			showAiOptionsAndDisclaimers();
+			setAiOptionAndDisclaimVisibility('p2');
+			
 			showAIPercentages();
 		}
 	});
 
+	updateSearchVisibility($("#toggleSearch").is(":checked"));
+
 	$("#toggleSearch").change(function () {
 		var showSearch = $(this).is(":checked");
+		updateSearchVisibility(showSearch);
+	});
+
+	function updateSearchVisibility(showSearch) {
 		if (showSearch) {
 			$(".search-inline").show();
 		} else {
 			$(".search-inline").hide();
 		}
+	}
+
+	updateRangeCompareVisibility($("#rangeCompare").is(":checked"));
+
+	$("#rangeCompare").change(function() {
+		var rangeCompare = $(this).is(":checked");
+		updateRangeCompareVisibility(rangeCompare);
 	});
 
-	// clear search if escape pressed
+	function updateRangeCompareVisibility(rangeCompare) {
+		if (rangeCompare) {
+			// $(".wrapper").css({"width": "1685px"});
+			$(".range-compare").show();
+		} else {
+			// $(".wrapper").css({"width": "1285px"});
+			$(".range-compare").hide();
+		}
+		// Update add buttons visibility based on Range Compare state
+		if (typeof ensureAddButtons === 'function') {
+			ensureAddButtons();
+		}
+		// Update target buttons visibility based on Range Compare state
+		if (rangeCompare) {
+			$("#targetLeft, #targetRight").show();
+		} else {
+			$("#targetLeft, #targetRight").hide();
+		}
+	}
 
+
+	function setBoxPosition(onTop) {
+		var elements = [$('#trainer-mons').parent(), $('#opp-trainer-mons').parent()];
+
+		for (var i = 0; i < elements.length; i++) {
+			var $e = elements[i];
+			if (onTop) {
+				$e.prev().insertAfter($e); // move up
+			} else {
+				$e.next().insertBefore($e); // move down
+			}
+		}
+	}
+	
+	$("#teamsOnTop").change(function() {
+		var onTop = $(this).is(":checked");
+		
+		setBoxPosition(onTop);
+	});
+	
+	if ($("#teamsOnTop").is(":checked")) {
+		$("#teamsOnTop").change();
+	}
+
+	setBoxPosition($("#teamsOnTop").is(":checked"));
+
+	// clear search if escape pressed
 	document.onkeydown = function(evt) {
 		evt = evt || window.event;
 		isEscape = evt.key === 'Escape';
@@ -482,6 +542,7 @@ $(document).ready(function () {
 		if (document.getElementById("cc-auto-refr").checked) {
 			window.refreshColorCode();
 		}
+		
 		performCalculations();
 	});
 
