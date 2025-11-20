@@ -10,7 +10,7 @@ Thank you for your interest in the calculator! If you aren't familiar with progr
 
 ## Github Issues
 
-If you have feature requests, bug reports, or anything addition you think could make this better, please leave a github issue. You can find the button near the top of the page on github, or at [this link](https://github.com/SylmarDev/syl-rnb-calc/issues), as well as on the calculator under "Report an Issue". To create an issue, choose the "New Issue" button.
+If you have feature requests, bug reports, or anything else you think could make this project better, please leave a github issue. You can find the button near the top of the page on github, or at [this link](https://github.com/SylmarDev/syl-rnb-calc/issues), as well as on the calculator under "Report an Issue". To create an issue, choose the "New Issue" button.
 
 From there you can give it a title and label it, and write up a description. Be descriptive! You can even add images to this to help me better understand what the issue/request is.
 
