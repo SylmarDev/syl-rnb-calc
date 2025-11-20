@@ -35,4 +35,5 @@ const CHANGELOG = [
     new ChangelogLine(1, 3, 8, "Implemented Smack Down AI"),
     new ChangelogLine(1, 3, 9, "Elite Four Drake Zygarde now has correct ability"),
     new ChangelogLine(2, 0, 0, "Added Range Compare, teams on top, fixed many bugs"),
+    new ChangelogLine(2, 1, 0, "Open source once again! Link to repository and issue reporting added back to the credits, removed many package vulnerabilities"),
 ];
