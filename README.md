@@ -5,7 +5,7 @@ This is a fork of the damage calculator for Pokemon Run and Bun, created by dekz
 *This project is a fork of [dekzeh/calc](https://github.com/dekzeh/calc) which itself is a fork of [smogon/damage-calc](https://github.com/smogon/damage-calc), they are linked here if you'd like to see those.*
 
 - **Interested in helping the project? Read [CONTRIBUTING.md](CONTRIBUTING.md)**
-- License: [LICENSE.md](LICENSE.md)
+- License: [LICENSE](LICENSE)
 
 *The rest of the readme is lifted from the EKalc original, until I rewrite it if I decide I need to*
 
