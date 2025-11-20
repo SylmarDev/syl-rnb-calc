@@ -1,17 +1,15 @@
-# EKalc
+# Syl R&B Calc
 
-This is a fork of the damage calculator that contains all the R&B stat changes, and has every trainer pre imported.
-Additionally some bugs are fixed, weather doesn't auto toggle off, and there are clickable icons for Pokemon to navigate.
-The working version can be seen at ![Calc](https://dekzeh.github.io/calc/)
+This is a fork of the damage calculator for Pokemon Run and Bun, created by dekzeh. It adds configurable AI move prediction percentages, a range visualizer tool, as well as many quality of life changes and bug fixes. The working version is hosted [here](https://rnbcalc.sylmar.dev).
 
-Damage calculator for all generations of Pokémon battling.
+*This project is a fork of [dekzeh/calc](https://github.com/dekzeh/calc) which itself is a fork of [smogon/damage-calc](https://github.com/smogon/damage-calc), they are linked here if you'd like to see those.*
 
-If you are currently looking at [smogon/damage-calc][0] and not
-a fork, this is the official repository for the Pokémon Showdown! damage calculator:
-https://calc.pokemonshowdown.com.
+- **Interested in helping the project? Read [CONTRIBUTING.md](CONTRIBUTING.md)**
+- License: [LICENSE.md](LICENSE.md)
 
-This repository houses both the package implementing the core damage formula mechanics in each
-generation ([`@smogon/calc`][1]) as well as [logic and markup for the official UI][2].
+*The rest of the readme is lifted from the EKalc original, until I rewrite it if I decide I need to*
+
+---
 
 ## `@smogon/calc`
 
