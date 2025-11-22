@@ -36,4 +36,5 @@ const CHANGELOG = [
     new ChangelogLine(1, 3, 9, "Elite Four Drake Zygarde now has correct ability"),
     new ChangelogLine(2, 0, 0, "Added Range Compare, teams on top, fixed many bugs"),
     new ChangelogLine(2, 1, 0, "Open source once again! Link to repository and issue reporting added back to the credits, removed many package vulnerabilities"),
+    new ChangelogLine(2, 1, 1, "Added Breaking Swipe to Guaranteed Atk/SpAtk drop logic, weather can't be clicked if that weather is up"),
 ];

@@ -1015,9 +1015,9 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
 
             // Damaging Atk/SpAtk reduction moves w/ guaranteed effect
             // TODO: there are probably more
-            // TODO: need to take kill bonus into account, unsure how to rn
-            if (isNamed(moveName, "Skitter Smack", "Trop Kick", "Snarl", "Mystical Fire") && moveScore == 0) {
-                const affectedMoveType = moveName == "Trop Kick" ? "Physical" : "Special";
+            // scores are additive, so these should stack with kill bonuses
+            if (isNamed(moveName, "Skitter Smack", "Trop Kick", "Snarl", "Mystical Fire", "Breaking Swipe") && moveScore == 0) {
+                const affectedMoveType = moveName == "Trop Kick" || moveName == "Breaking Swipe" ? "Physical" : "Special";
                 if (playerAbility != "Contrary" && playerAbility != "Clear Body" && playerAbility != "White Smoke" &&
                     playerMoves.findIndex((x: { move: { category: string; }; }) => x.move.category === affectedMoveType) != -1)
                 {
@@ -2468,7 +2468,11 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
 
             // Status appliers should get -40 when player already has a status
             if (playerHasStatusCond && isNamed(moveName, ...statusApplyingMoves)) {
-
+                moveStringsToAdd.push({
+                    move: moveName,
+                    score: -40,
+                    rate: 1
+                });
             }
             
             // Leech seed
@@ -2499,6 +2503,18 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                 });
             }
 
+            // weather shouldn't be reused when that weather is up
+            if (weather == "Sun" && moveName == "Sunny Day" ||
+                weather == "Rain" && moveName == "Rain Dance" ||
+                weather == "Sand" && moveName == "Sandstorm" ||
+                weather == "Hail" && moveName == "Hail") {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: -40,
+                        rate: 1
+                    });
+            }
+            
             // end of the hell loop
         });
 
