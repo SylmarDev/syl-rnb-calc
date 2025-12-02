@@ -2597,9 +2597,10 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
         });
     }
 
+    /* // COMMENTING OUT FOR NOW
     if ((window as any).umami) {
         (window as any).umami.track('AI Move Distribution Generated');
-    }
+    } */
 
     // console.log(finalDist);
     return finalDist;

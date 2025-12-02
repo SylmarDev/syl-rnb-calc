@@ -210,9 +210,10 @@ function performCalculations() {
 		stickyMoves.setSelectedMove(bestResult.prop("id"));
 	}
 
+	/* // COMMENTING OUT FOR NOW
 	if (window.umami) {
 		window.umami.track('Damage Calculation Performed');
-	}
+	} */
 
 	bestResult.prop("checked", true);
 	bestResult.change();
