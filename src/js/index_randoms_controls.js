@@ -41,6 +41,14 @@ function createAiOptionsDict() {
 			dict[id] = $(this).is(":checked");
 		}
 	});
+
+	// Include any checkboxes in the color coding section
+	$("#cc-sets input[type='checkbox']").each(function () {
+		var id = $(this).attr('id');
+		if (id) {
+			dict[id] = $(this).is(":checked");
+		}
+	});
 	
 	// console.log(dict); // DEBUG
 	return dict;
@@ -98,7 +106,7 @@ function initAiOptionsPersistence() {
 	}
 
 	// Keep storage in sync on any checkbox change within AI options or in the credits section (index.template.html)
-	$("#aiOptions :input, .credits input[type='checkbox']").on('change', function () {
+	$("#aiOptions :input, .credits input[type='checkbox'], #cc-sets input[type='checkbox']").on('change', function () {
 		saveAiOptionsToStorage();
 	});
 }
