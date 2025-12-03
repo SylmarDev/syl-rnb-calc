@@ -238,6 +238,14 @@ function calculationsColors(p1info, p2) {
 	p2.maxDamages = [];
 	var p1s = p1.stats.spe;
 	var p2s = p2.stats.spe;
+
+	// unburden change
+	var p1AbilityToggle = $("#p1").find(".abilityToggle").is(":checked");
+
+	if (p1.ability == "Unburden" && !p1AbilityToggle) {
+		p1s = p1s / 2;
+	}
+
 	//Faster Tied Slower
 	var fastest = p1s > p2s ? "F" : p1s < p2s ? "S" : p1s === p2s ? "T" : undefined;
 	var result, highestRoll, lowestRoll, damage = 0;
