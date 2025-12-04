@@ -27,23 +27,7 @@ for (var i = 0; i < 4; i++) {
 // create object for all ai options
 function createAiOptionsDict() {
 	var dict = {};
-	$("#aiOptions :input").each(function () {
-		var id = $(this).attr('id');
-		if (id) {
-			dict[id] = $(this).is(":checked");
-		}
-	});
-
-	// Include any checkboxes in the credits section of index.template.html
-	$(".credits input[type='checkbox']").each(function () {
-		var id = $(this).attr('id');
-		if (id) {
-			dict[id] = $(this).is(":checked");
-		}
-	});
-
-	// Include any checkboxes in the color coding section
-	$("#cc-sets input[type='checkbox']").each(function () {
+	$("#aiOptions :input, .credits input[type='checkbox'], #cc-sets input[type='checkbox']").each(function () {
 		var id = $(this).attr('id');
 		if (id) {
 			dict[id] = $(this).is(":checked");
@@ -78,6 +62,7 @@ function applyAiOptionsDict(dict, triggerChange) {
 	if (!dict) return;
 	var prevNoCalc = window.NO_CALC;
 	window.NO_CALC = true;
+
 	$("#aiOptions :input").each(function () {
 		var id = $(this).attr('id');
 		if (dict.hasOwnProperty(id)) {
@@ -85,8 +70,9 @@ function applyAiOptionsDict(dict, triggerChange) {
 			if (triggerChange) $(this).change();
 		}
 	});
-	// Apply any checkboxes in the credits section of index.template.html
-	$(".credits input[type='checkbox']").each(function () {
+	
+	// Apply any checkboxes in the credits section or color coding section of index.template.html
+	$(".credits input[type='checkbox'], #cc-sets input[type='checkbox']").each(function () {
 		var id = $(this).attr('id');
 		if (id && dict.hasOwnProperty(id)) {
 			$(this).prop('checked', !!dict[id]);
