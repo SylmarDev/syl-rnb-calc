@@ -37,5 +37,6 @@ const CHANGELOG = [
     new ChangelogLine(2, 0, 0, "Added Range Compare, teams on top, fixed many bugs"),
     new ChangelogLine(2, 1, 0, "Open source once again! Link to repository and issue reporting added back to the credits, removed many package vulnerabilities"),
     new ChangelogLine(2, 1, 1, "Added Breaking Swipe to Guaranteed Atk/SpAtk drop logic, weather can't be clicked if that weather is up"),
-    new ChangelogLine(2, 2, 0, "Color codings persist so you don't have to select them every time. Player Unburden mons only show doubled speed if the ability checkbox is checked")
+    new ChangelogLine(2, 2, 0, "Color codings persist so you don't have to select them every time. Player Unburden mons only show doubled speed if the ability checkbox is checked"),
+    new ChangelogLine(2, 3, 0, "Added Export All button")
 ];

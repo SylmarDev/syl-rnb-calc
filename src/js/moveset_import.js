@@ -11,6 +11,36 @@ function placeBsBtn() {
 	});
 }
 
+function formatIVs(ivs) {
+	const fullStatName = {
+		hp: "HP",
+		at: "Atk",
+		df: "Def",
+		sa: "SpA",
+		sd: "SpD",
+		sp: "Spe",
+	};
+
+	var text = "";
+	var non31IVCount = Object.values(ivs).filter(iv => iv !== 31).length;
+
+	var i = 0;
+	for (var key in ivs) {
+		var iv = ivs[key];
+		if (iv === 31) { continue; } // seems to be skipped anyways but its fine
+
+		text += `${iv} ${fullStatName[key]}`;
+
+		if (i < non31IVCount - 1) {
+			text += " / ";
+		}
+
+		i++;
+	}
+
+	return text;
+}
+
 function ExportPokemon(pokeInfo) {
 	var pokemon = createPokemon(pokeInfo);
 	var EV_counter = 0;
@@ -60,6 +90,34 @@ function ExportPokemon(pokeInfo) {
 	$("textarea.import-team-text").val(finalText);
 }
 
+function parseSetsFromCustomSets(customSets) {
+	var finalText = "";
+
+	for (var monName in customSets) {
+		for (var setName in customSets[monName]) {
+			var poke = customSets[monName][setName];
+			var item = poke.hasOwnProperty('item') ? ` @ ${poke.item}` : '';
+			var ivs = poke.hasOwnProperty('ivs') ? formatIVs(poke.ivs) : '';
+			
+			var ivLine = ivs !== "" ? `IVs: ${ivs}\n` : '';
+
+			var text = 
+`${monName}${item}
+Level: ${poke.level ?? 100}
+${poke.nature ?? 'Serious'} Nature
+Ability: ${poke.ability}\n${ivLine !== "" ? `${ivLine}` : ''}`;
+
+			for (var move of poke.moves) {
+				text += `- ${move}\n`;
+			}
+
+			finalText += `${text}\n`;
+		}
+	}
+
+	return finalText;
+}
+
 $("#exportL").click(function () {
 	ExportPokemon($("#p1"));
 });
@@ -67,6 +125,39 @@ $("#exportL").click(function () {
 $("#exportR").click(function () {
 	ExportPokemon($("#p2"));
 });
+
+$("#massExport").click(function () {
+	// parse all sets from custom sets
+	exportAll = parseSetsFromCustomSets(JSON.parse(localStorage.customsets));
+
+	// create window that displays all player exported sets
+	$("#massExport-text").text(exportAll);
+
+	// show the export all window
+	showMassExport();
+});
+
+// Copy button functionality
+$("#massExport-copy").click(function () {
+	copyMassExportToClipboard();
+});
+
+function copyMassExportToClipboard() {
+	var text = $("#massExport-text").text();
+	if (text) {
+		navigator.clipboard.writeText(text).then(function () {
+			var $btn = $("#massExport-copy");
+			var originalText = $btn.html();
+			$btn.html('<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/></svg> Copied!');
+			setTimeout(function () {
+				$btn.html(originalText);
+			}, 2000);
+		}).catch(function (err) {
+			console.error('Failed to copy text: ', err);
+			alert('Failed to copy to clipboard');
+		});
+	}
+}
 
 function serialize(array, separator) {
 	var text = "";

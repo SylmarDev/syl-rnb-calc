@@ -2098,6 +2098,10 @@ function showChangelog() {
 	$('#changelog-overlay').fadeIn(200);
 }
 
+function showMassExport() {
+	$('#massExport-overlay').fadeIn(200);
+}
+
 $(document).ready(function () {
 	var params = new URLSearchParams(window.location.search);
 	var g = GENERATION[params.get('gen')] || 8;
@@ -2191,6 +2195,12 @@ $(document).ready(function () {
 	  if (localStorage.getItem("lastChangelogVersion") !== latestChangelogVersion) {
 		localStorage.setItem("lastChangelogVersion", latestChangelogVersion);
 	  }
+    });
+
+    $('#massExport-close, #massExport-overlay').on('click', function (e) {
+      if (e.target.id === 'massExport-close' || e.target.id === 'massExport-overlay') {
+        $('#massExport-overlay').fadeOut(200);
+      }
     });
 });
 
