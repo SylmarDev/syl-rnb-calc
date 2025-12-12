@@ -7,7 +7,7 @@ window.RangeCompare = {
 	moves: [],
 	currentHP: null,
 	maxHP: null,
-	itemId: 0, // 0=None, 1=Oran, 2=Sitrus, 3=Leftovers
+	itemId: 0, // 0=None, 1=Oran, 2=Sitrus, 3=Leftovers, 4=Iapapa
 	rangeHPVal: 0,
 	rangeComparator: "<=",
     chart: null
@@ -130,6 +130,7 @@ function ensureTargetControls() {
 			'    <option value="1">Oran Berry</option>',
 			'    <option value="2">Sitrus Berry</option>',
 			'    <option value="3">Leftovers</option>',
+			'    <option value="4">Iapapa Berry</option>',
 			'  </select>',
 			'  <button id="rc-calc" class="btn-range-compare-body" title="Calc HP distribution">Calc</button>',
 			'</div>'
@@ -188,6 +189,7 @@ function rcGetItemById(id, maxHP) {
 	if (id === 1) return {healthToRestore: 10, usable: true};
 	if (id === 2) return {healthToRestore: Math.trunc(maxHP / 4), usable: true};
 	if (id === 3) return {healthToRestore: Math.trunc(maxHP / 16), usable: false};
+	if (id === 4) return {healthToRestore: Math.trunc(maxHP / 2), usable: true};
 	return null;
 }
 
@@ -262,7 +264,7 @@ function rcCalculateDistributions(moves, currentHP, maxHP, itemId, existingHealt
 	for (var i = 0; i < moves.length; i++) {
 		var md = rcMoveDist(moves[i]);
 		dmgDist = rcCombineDists(dmgDist, md);
-		healthDist = rcCombineHealthDists(healthDist, md, Math.trunc(maxHP / 2), item, maxHP);
+		healthDist = rcCombineHealthDists(healthDist, md, itemId === 4 ? Math.trunc(maxHP / 4) : Math.trunc(maxHP / 2), item, maxHP);
 		// Cap at max HP
 		var capped = {};
 		for (var hk in healthDist) {
