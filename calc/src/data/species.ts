@@ -2100,7 +2100,7 @@ const ADV_PATCH: {[name: string]: DeepPartial<SpeciesData>} = {
   Kecleon: {
     types: ['Normal'],
     bs: {hp: 60, at: 90, df: 70, sa: 60, sd: 120, sp: 40},
-    weightkg: 22,
+    weightkg: 2.2,
     abilities: {0: 'Color Change'},
   },
   Kirlia: {
@@ -6675,7 +6675,7 @@ const SM_PATCH: {[name: string]: DeepPartial<SpeciesData>} = {
   Melmetal: {
     types: ['Steel'],
     bs: {hp: 135, at: 143, df: 143, sa: 80, sd: 65, sp: 34},
-    weightkg: 800,
+    weightkg: 80.0,
     gender: 'N',
     abilities: {0: 'Iron Fist'},
   },
