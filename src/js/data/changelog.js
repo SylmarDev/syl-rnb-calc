@@ -39,5 +39,6 @@ const CHANGELOG = [
     new ChangelogLine(2, 1, 1, "Added Breaking Swipe to Guaranteed Atk/SpAtk drop logic, weather can't be clicked if that weather is up"),
     new ChangelogLine(2, 2, 0, "Color codings persist so you don't have to select them every time. Player Unburden mons only show doubled speed if the ability checkbox is checked"),
     new ChangelogLine(2, 3, 0, "Added Export All button"),
-    new ChangelogLine(2, 4, 0, "Changed Space Center Tag to one fight, Range Compare: added Iapapa Berry.")
+    new ChangelogLine(2, 4, 0, "Changed Space Center Tag to one fight, Range Compare: added Iapapa Berry"),
+    new ChangelogLine(2, 4, 1, "Fixed Kecleon's and Melmetal's weight to match the game (1/10th of the actual weight in RnB). Counter and Mirror Coat cannot be clicked into immunities, or clicked when they're useless."),
 ];

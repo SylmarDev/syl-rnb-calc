@@ -634,12 +634,12 @@ function calculateHighestDamage(moves: any[]): KVP[] {
        let keys = choice.map(([key, value]) => key);
        let moveProbabilities: number[] = choice.map(([key, value]) => Number(value));
 
-       let keysForMaximumCheck = [];
+       let keysForMaximumCheck = [1];
        let i = 0;
        for (const key of keys) {
           if (moves[i].move.category === "Status" || 
             isNamed(moves[i].move.name, "Explosion", "Final Gambit", "Rollout", "Misty Explosion",
-            "Self-Destruct", "Relic Song", "Meteor Beam", "Future Sight") ||
+            "Self-Destruct", "Relic Song", "Meteor Beam", "Future Sight", "Counter", "Mirror Coat") ||
             isTrapping(moves[i].move))
             {
                 i++;
@@ -651,7 +651,6 @@ function calculateHighestDamage(moves: any[]): KVP[] {
        }
 
        // console.log(keysForMaximumCheck);
-
        let maximumKey = Math.max(...keysForMaximumCheck);
 
        // generate keystring
@@ -729,6 +728,8 @@ function calculateHighestDamage(moves: any[]): KVP[] {
 
     // update probabilities with variance
     let probabilitiesWithVariance: KVP[] = [];
+
+    // console.log(probabilities); // DEBUG
     
     for (const probability of probabilities) {
         if (probability.key.includes("HD")) {
@@ -2332,8 +2333,18 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
 
             // Counter, Mirror Coat
             if (moveName == "Counter" || moveName == "Mirror Coat") {
-                // aiDeadToPlayer, -20
-                if (aiDeadToPlayer) {
+                // aiDeadToPlayer, immunities, or no moves to counter, -20
+
+                const playerImmune = (moveName == "Counter" && playerTypes.includes("Ghost")) ||
+                (moveName == "Mirror Coat" && playerTypes.includes("Dark"));
+
+                const correspondingMoveSplit = moveName == "Counter" ? "Physical": "Special";
+                const playerOnlyHasMovesOfCorrespondingSplit = playerMoves.every(x => x.move.category == correspondingMoveSplit && x.move.bp > 0);
+                const playerNoMovesOfCorrespondingSplit = playerMoves.every(x => x.move.category != correspondingMoveSplit || x.move.bp == 0);
+
+                if ((aiDeadToPlayer && aiAbility != "Sturdy" && aiItem != "Focus Sash") ||
+                    playerImmune ||
+                    playerNoMovesOfCorrespondingSplit) {
                     moveStringsToAdd.push({
                         move: moveName,
                         score: -20,
@@ -2341,13 +2352,11 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                     });
                 } else {
                     let counterScore = 6;
-                    const correspondingMoveSplit = moveName == "Counter" ? "Physical": "Special";
-                    const playerOnlyHasMovesOfCorrespondingSplit = playerMoves.every(x => x.move.category == correspondingMoveSplit && x.move.bp > 0);
-    
+
                     if (playerHighestRoll >= moves[0].attacker.originalCurHP &&
                        (aiAbility == "Sturdy" || aiItem == "Focus Sash") &&
-                    aiHealthPercentage == 100 &&
-                    playerOnlyHasMovesOfCorrespondingSplit) {
+                        aiHealthPercentage == 100 &&
+                        playerOnlyHasMovesOfCorrespondingSplit) {
                         counterScore += 2;
                     }
     
