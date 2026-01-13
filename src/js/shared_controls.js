@@ -1715,6 +1715,11 @@ function setDisclaimVisibility(moveNames) {
 		showDisclaimers();
 		$("#tripleAxelDisclaim").show();
 	}
+
+	if (isNamed("Psywave", ...moveNames)) {
+		showDisclaimers();
+		$("#psywaveDisclaim").show();
+	}
 }
 
 $(document).on('click', '.right-side', function () {
@@ -1740,7 +1745,7 @@ $(document).on('change', '#p2 .i-f-o-move select.move-selector', function () {
 })
 
 $(document).on('change', '#p1, #fieldInfo, #p2', function() {
-	setDisclaimVisibility(getMoveNames('p2'));
+	setDisclaimVisibility(getMoveNames('p2'), );
 })
 
 //select first mon of the box when loading

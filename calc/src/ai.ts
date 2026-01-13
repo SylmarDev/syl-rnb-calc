@@ -822,8 +822,6 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
         });
     }
 
-
-
     //console.log(moves); // DEBUG
     
     let damagingMoveDist = calculateHighestDamage(moves);
