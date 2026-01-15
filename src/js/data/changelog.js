@@ -41,5 +41,6 @@ const CHANGELOG = [
     new ChangelogLine(2, 3, 0, "Added Export All button"),
     new ChangelogLine(2, 4, 0, "Changed Space Center Tag to one fight, Range Compare: added Iapapa Berry"),
     new ChangelogLine(2, 4, 1, "Fixed Kecleon's and Melmetal's weight to match the game (1/10th of the actual weight in RnB). Counter and Mirror Coat cannot be clicked into immunities, or clicked when they're useless."),
-    new ChangelogLine(2, 4, 2, "Psywave now shows users level, like the AI sees for switch in and in battle")
+    new ChangelogLine(2, 4, 2, "Psywave now shows users level, like the AI sees for switch in and in battle"),
+    new ChangelogLine(2, 4, 3, "Counter and Mirror Coat now correctly check Sash and Sturdy from full")
 ];

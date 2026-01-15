@@ -2336,11 +2336,13 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                 const playerImmune = (moveName == "Counter" && playerTypes.includes("Ghost")) ||
                 (moveName == "Mirror Coat" && playerTypes.includes("Dark"));
 
+                const aiSturdyAndFullHP = (aiAbility == "Sturdy" || aiItem == "Focus Sash") && aiHealthPercentage == 100;
                 const correspondingMoveSplit = moveName == "Counter" ? "Physical": "Special";
                 const playerOnlyHasMovesOfCorrespondingSplit = playerMoves.every(x => x.move.category == correspondingMoveSplit && x.move.bp > 0);
                 const playerNoMovesOfCorrespondingSplit = playerMoves.every(x => x.move.category != correspondingMoveSplit || x.move.bp == 0);
 
-                if ((aiDeadToPlayer && aiAbility != "Sturdy" && aiItem != "Focus Sash") ||
+                if (aiDeadToPlayer ||
+                    !aiSturdyAndFullHP ||
                     playerImmune ||
                     playerNoMovesOfCorrespondingSplit) {
                     moveStringsToAdd.push({
