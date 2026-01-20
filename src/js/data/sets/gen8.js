@@ -696,7 +696,7 @@ var MEGA_BASE_ABILITIES = {
     'Fisherman Roger & Koji': { 'Banette' : 'Insomnia'},
     'Expert Mollie & Conor': { 'Gyarados' : 'Intimidate'},
     'Leader Juan': { 'Glalie' : 'Inner Focus'},
-    'Pokemon Trainer Wally': { 'Gardevoir' : 'Synchronize'},
+    'Trainer Wally VR': { 'Gardevoir' : 'Synchronize'},
     'Cool Trainer Hope & Albert': { 'Venusaur' : 'Overgrow', 'Aerodactyl' : 'Unnerve'},
     'Cool Trainer Katelynn': { 'Pinsir' : 'Hyper Cutter'},
     'Cool Trainer Quincy': { 'Beedrill' : 'Swarm'},
@@ -729,6 +729,8 @@ var MEGA_BASE_ABILITIES = {
     'Cool Trainer Edgar': { 'Charizard' : 'Blaze'},
     // Tag Battle fixes
     'Space Center Tag (Leader Maxie & Admin Tabitha)' : {'Garchomp' : 'Rough Skin', 'Tyranitar' : 'Sand Stream'},
+    // Wally VR
+    'Pokemon Trainer Wally': { 'Gardevoir' : 'Synchronize'},
 }
 
 
