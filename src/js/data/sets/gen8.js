@@ -679,7 +679,7 @@ var MEGA_BASE_ABILITIES = {
     'Magma Admin Tabitha': { 'Absol' : 'Pressure', 'Tyranitar' : 'Sand Stream'},
     'Magma Leader Maxie': { 'Camerupt' : 'Own Tempo', 'Houndoom' : 'Flash Fire', 'Garchomp' : 'Rough Skin'},
     'Bird Keeper Josue & Andres': { 'Beedrill' : 'Swarm'},
-    'Cool Trainer Carolina': { 'Lopunny' : 'Cute Charm'},
+    'Cool Trainer Carolina & Cory': { 'Lopunny' : 'Cute Charm'},
     'Ruin Maniac Garrison & Jani': { 'Audino' : 'Regenerator'},
     'Aqua Admin Shelly': { 'Blastoise' : 'Torrent', 'Slowbro' : 'Oblivious'},
     'Pokemon Trainer May': { 'Sceptile' : 'Overgrow', 'Blaziken' : 'Blaze', 'Swampert' : 'Torrent'},

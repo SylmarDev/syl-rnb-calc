@@ -827,6 +827,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
     let damagingMoveDist = calculateHighestDamage(moves);
 
     // iterate through player moves, get highest damaging roll
+    // TODO: need to half explosion damage here
     let playerHighestRoll = 0;
     damageResults[0].forEach((move: {damage: number[], move: any, attacker: any}, i: number) => {
         let playerDamageRoll: number = move.damage[move.damage.length-1];
@@ -859,6 +860,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
     const aiDeadToPlayer = playerHighestRoll >= moves[0].attacker.originalCurHP &&
          !((moves[0].move.ability == "Sturdy" || moves[0].move.item == "Focus Sash") &&
           moves[0].attacker.originalCurHP == moves[0].attacker.stats.hp);
+    // const aiDeadToPlayerForSetup = aiDeadToPlayer; // TODO: need to half explosion damage here
     const aiTwoHitKOd = playerHighestRoll * 2 >= moves[0].attacker.originalCurHP;
     const aiThreeHitKOd = playerHighestRoll * 3 >= moves[0].attacker.originalCurHP;
     const playerHasStatusCond = playerMon.status != "";
