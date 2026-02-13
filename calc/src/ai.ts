@@ -830,7 +830,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
     // TODO: need to half explosion damage here
     let playerHighestRoll = 0;
     damageResults[0].forEach((move: {damage: number[], move: any, attacker: any}, i: number) => {
-        let playerDamageRoll: number = move.damage[move.damage.length-1];
+        let playerDamageRoll: number = typeof move.damage === 'number' ? move.damage : move.damage[move.damage.length-1];
         
         if (movesetHasMultiHitMove(playerMoves)) {
             const multiHit: number = getMultiHitCount(move.move);
@@ -996,7 +996,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             // Damaging speed reduction moves
             // Only applied if not highest damage already
             const isDamagingSpeedReducing = moveName == "Icy Wind" || moveName == "Electroweb" || moveName == "Rock Tomb"
-            || moveName == "Mud Shot" || moveName == "Low Sweep" || moveName == "Bulldoze" || moveName == "Scary Face";
+            || moveName == "Mud Shot" || moveName == "Low Sweep" || moveName == "Bulldoze";
             if (isDamagingSpeedReducing && moveScore == 0 && anyValidDamageRolls) {
                 if (playerAbility != "Contrary" && playerAbility != "Clear Body" && playerAbility != "White Smoke" && !aiFaster) {
                     moveStringsToAdd.push({
@@ -2527,6 +2527,23 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                         score: -40,
                         rate: 1
                     });
+            }
+
+            // scary face - +6 if ai slower
+            if (moveName == "Scary Face") {
+                if (!aiFaster) {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: 6,
+                        rate: 1
+                    });
+                } else {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: -20,
+                        rate: 1
+                    });
+                }   
             }
             
             // end of the hell loop

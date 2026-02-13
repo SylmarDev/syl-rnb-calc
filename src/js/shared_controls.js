@@ -1720,6 +1720,16 @@ function setDisclaimVisibility(moveNames) {
 		showDisclaimers();
 		$("#psywaveDisclaim").show();
 	}
+
+	if (isNamed("Magnet Rise", ...moveNames)) {
+		showDisclaimers();
+		$("#magnetRiseDisclaim").show();
+	}
+
+	if (isNamed("Scary Face", ...moveNames)) {
+		showDisclaimers();
+		$("#scaryFaceDisclaim").show();
+	}
 }
 
 $(document).on('click', '.right-side', function () {
