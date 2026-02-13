@@ -1019,8 +1019,12 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             // scores are additive, so these should stack with kill bonuses
             if (isNamed(moveName, "Skitter Smack", "Trop Kick", "Snarl", "Mystical Fire", "Breaking Swipe") && moveScore == 0) {
                 const affectedMoveType = moveName == "Trop Kick" || moveName == "Breaking Swipe" ? "Physical" : "Special";
+                const playerHasAnyOfCorrespondingSplit = playerMoves.some(x => x.move.category == affectedMoveType && 
+                    (x.move.bp > 0 || (zeroBPButNotStatus.includes(x.move.name) && x.move.name != "(No Move)")));
+
                 if (playerAbility != "Contrary" && playerAbility != "Clear Body" && playerAbility != "White Smoke" &&
-                    playerMoves.findIndex((x: { move: { category: string; }; }) => x.move.category === affectedMoveType) != -1)
+                    playerHasAnyOfCorrespondingSplit &&
+                    anyValidDamageRolls)
                 {
                     moveStringsToAdd.push({
                         move: moveName,
@@ -1265,10 +1269,10 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                 })
             }
 
-            // Protect, King's Shield, Spiky Shield, Baneful Bunker
+            // Protect, King's Shield, Spiky Shield, Baneful Bunker, Detect, Obstruct
             if (moveName == "Protect" || moveName == "King's Shield" ||
                 moveName == "Spiky Shield" || moveName == "Baneful Bunker" ||
-                moveName == "Detect") {
+                moveName == "Detect" || moveName == "Obstruct") {
                 const aiDeadToSecondaryDamage = getAiDeadToSecondaryDamage(moves[0]);
                 if (aiProtectLastTwoTurns || aiDeadToSecondaryDamage) {
                     moveStringsToAdd.push({
@@ -2343,8 +2347,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                 const playerOnlyHasMovesOfCorrespondingSplit = playerMoves.every(x => x.move.category == correspondingMoveSplit && x.move.bp > 0);
                 const playerNoMovesOfCorrespondingSplit = playerMoves.every(x => x.move.category != correspondingMoveSplit || x.move.bp == 0);
 
-                if (aiDeadToPlayer ||
-                    !aiSturdyAndFullHP ||
+                if ((aiDeadToPlayer && !aiSturdyAndFullHP) ||
                     playerImmune ||
                     playerNoMovesOfCorrespondingSplit) {
                     moveStringsToAdd.push({

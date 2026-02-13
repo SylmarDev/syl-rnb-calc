@@ -44,5 +44,6 @@ const CHANGELOG = [
     new ChangelogLine(2, 4, 2, "Psywave now shows users level, like the AI sees for switch in and in battle"),
     new ChangelogLine(2, 4, 3, "Counter and Mirror Coat now correctly check Sash and Sturdy from full"),
     new ChangelogLine(2, 4, 4, "Wally VR Gardevoir ability now correctly shows Synchronize for base forme"),
-    new ChangelogLine(2, 4, 5, "Fixed Cool Trainer Carolina & Cory Mega Lopunny ability")
+    new ChangelogLine(2, 4, 5, "Fixed Cool Trainer Carolina & Cory Mega Lopunny ability"),
+    new ChangelogLine(2, 5, 0, "Fixed logic issue with Counter/Mirror Coat erroneously showing 0%, guaranteed atk/sp atk dropping moves showing 40% when they should be 0%, Obstruct follows protect logic")
 ];

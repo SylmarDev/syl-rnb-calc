@@ -1673,7 +1673,7 @@ function setAiOptionVisibility(moveNames) {
 		$("#magnetRiseOpt").show();
 	}
 
-	if (hasMove(["Protect", "King's Shield", "Baneful Bunker", "Spiky Shield", "Detect"], moveNames)) {
+	if (hasMove(["Protect", "King's Shield", "Baneful Bunker", "Spiky Shield", "Detect", "Obstruct"], moveNames)) {
 		showAiOptionsDiv();
 		$("#firstTurnOutOpt").show();
 		$("#protectIncentiveOpt").show();
