@@ -46,5 +46,6 @@ const CHANGELOG = [
     new ChangelogLine(2, 4, 4, "Wally VR Gardevoir ability now correctly shows Synchronize for base forme"),
     new ChangelogLine(2, 4, 5, "Fixed Cool Trainer Carolina & Cory Mega Lopunny ability"),
     new ChangelogLine(2, 5, 0, "Fixed logic issue with Counter/Mirror Coat erroneously showing 0%, guaranteed atk/sp atk dropping moves showing 40% when they should be 0%, Obstruct follows protect logic"),
-    new ChangelogLine(2, 5, 1, "Super Fang/Nature's Madness now correctly discentivize setup when showing fast 2HKO, Scary Face changed to be +6 when AI slower, added Magnet Rise warning")
+    new ChangelogLine(2, 5, 1, "Super Fang/Nature's Madness now correctly discentivize setup when showing fast 2HKO, Scary Face changed to be +6 when AI slower, added Magnet Rise warning"),
+    new ChangelogLine(2, 5, 2, "AI can't click leech seed on mons already leech seeded, Glare now correctly discentivized for electric types")
 ];

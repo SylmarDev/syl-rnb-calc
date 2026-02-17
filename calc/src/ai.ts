@@ -1672,7 +1672,9 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
 
                 if (playerHasStatusCond || 
                     (move.type == "Electric" && (playerTypes.includes("Ground") || playerTypes.includes("Electric"))) ||
-                    (playerAbility == "Limber")) {
+                    (playerAbility == "Limber") ||
+                    (moveName == "Glare" && playerTypes.includes("Electric")))  // glare needs its own cause its a normal type move
+                {
                     moveStringsToAdd.push({
                         move: moveName,
                         score: -40,
@@ -2490,7 +2492,8 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             }
             
             // Leech seed
-            if (isNamed(moveName, "Leech Seed") && playerTypes.includes("Grass")) {
+            if (isNamed(moveName, "Leech Seed") && 
+                (playerTypes.includes("Grass") || playerLeechSeeded)) {
                 moveStringsToAdd.push({
                         move: moveName,
                         score: -20,
@@ -2544,8 +2547,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                         rate: 1
                     });
                 }   
-            }
-            
+            }            
             // end of the hell loop
         });
 
