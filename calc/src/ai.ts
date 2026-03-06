@@ -60,8 +60,8 @@ const powderMoves: string[] = [
     "Cotton Spore", "Magic Powder", "Poison Powder", "Powder", "Rage Powder", "Sleep Powder", "Spore", "Stun Spore"
 ];
 const statusApplyingMoves: string[] = [
-    "Grass Whistle", ""
-]
+    "Grass Whistle", "Sleep Powder", "Lovely Kiss"
+];
 
 // move functions
 function isNamed(moveName: string, ...names: string[]) {
