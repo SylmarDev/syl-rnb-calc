@@ -1426,7 +1426,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
 
             // Fake Out
             if (moveName == "Fake Out") {
-                if (firstTurnOut && (playerAbility != "Shield Dust" && playerAbility != "Inner Focus")) {
+                if (firstTurnOut && (playerAbility != "Shield Dust" && playerAbility != "Inner Focus") && anyValidDamageRolls) {
                     moveStringsToAdd.push({
                         move: moveName,
                         score: 9,
