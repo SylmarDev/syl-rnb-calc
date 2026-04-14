@@ -7,6 +7,7 @@
     <link type="text/css" rel="stylesheet" href="./js/vendor/select2/select2.css" />
     <link type="text/css" rel="stylesheet" href="./css/main.css?" />
     <link type="text/css" rel="stylesheet" href="./css/vendor/bootstrap.css" />
+    <link type="text/css" rel="stylesheet" href="./css/round-simulator.css?" />
     <link type="text/css" rel="stylesheet" href="./css/dark-theme.css" id="dark-theme-styles">
     <script defer src="https://analytics.sylmar.dev/script.js" data-website-id="439a9f71-dbd6-4abf-8b55-a3593e3c88a8"></script>
     <script>
@@ -91,6 +92,46 @@
         </span>
     </div>
     <hr />
+
+    <!-- ═══ Round Simulator ═══ -->
+    <div id="rs-toggle-btn" class="rs-toggle-bar" title="Click to open the Round Simulator">
+        <span class="rs-toggle-icon">▶</span>
+        <span class="rs-toggle-title">Round Simulator</span>
+        <span class="rs-toggle-badge" id="rs-round-count">0</span>
+    </div>
+    <div id="rs-panel">
+        <div class="rs-controls">
+            <div class="rs-control-group">
+                <label for="rs-p1-action-type">P1 Action</label>
+                <select id="rs-p1-action-type">
+                    <option value="attack">Attack</option>
+                    <option value="switch">Switch</option>
+                </select>
+            </div>
+            <div class="rs-control-group">
+                <label for="rs-p1-move">P1 Move</label>
+                <select id="rs-p1-move"></select>
+            </div>
+            <div class="rs-control-group">
+                <label for="rs-p2-move">P2 Move (Opponent)</label>
+                <select id="rs-p2-move"></select>
+            </div>
+            <div class="rs-control-group rs-comment-group">
+                <label for="rs-comment">Comment</label>
+                <textarea id="rs-comment" rows="1" placeholder="Optional note for this round..."></textarea>
+            </div>
+            <div class="rs-btn-group">
+                <button class="rs-btn rs-btn-primary" id="rs-log-round">&#9654; Log Round</button>
+                <button class="rs-btn" id="rs-export">&#128203; Copy Log</button>
+                <button class="rs-btn rs-btn-danger" id="rs-clear-all">&#128465; Clear</button>
+            </div>
+        </div>
+        <div id="rs-round-log">
+            <div class="rs-empty">No rounds recorded yet. Use the controls above to log a round.</div>
+        </div>
+    </div>
+    <!-- ═══ End Round Simulator ═══ -->
+
     <div aria-label="Move selection" class="move-result-group" role="region" title="Select a move to show detailed results.">
         <div  aria-labelledby="resultHeaderL" class="move-result-subgroupL" id="move-result-subgroupL" role="radiogroup">
             <div class="result-move-header"><span id="resultHeaderL">Pok&eacute;mon 1's Moves (select one to show detailed results)</span>
@@ -1884,6 +1925,7 @@
     <script type="text/javascript" src="./js/index_randoms_controls.js?"></script>
     <script type="text/javascript" src="./js/moveset_import.js?"></script>
     <script type="text/javascript" src="./js/range_compare.js?"></script>
+    <script type="text/javascript" src="./js/round_simulator.js?"></script>
 </div>
 
 <div class="credits">Run and Bun AI %, Range Compare, and Quality of Life work done by SylmarDev. <br>Modified by dekzeh, ForwardFeed, Originaly Created by Honko, maintained by Austin and Kris, Special thanks to Hzla

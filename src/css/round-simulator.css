@@ -1,0 +1,413 @@
+/* ============================================================
+   Round Simulator Styles
+   ============================================================ */
+
+/* ── Toggle bar ───────────────────────────────────────────── */
+.rs-toggle-bar {
+    background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+    border: 1px solid #4a5568;
+    border-radius: 8px;
+    padding: 8px 16px;
+    margin: 8px 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    user-select: none;
+    transition: background 0.2s;
+}
+.rs-toggle-bar:hover {
+    background: linear-gradient(135deg, #3d4a5c 0%, #2a303c 100%);
+}
+.rs-toggle-icon {
+    font-size: 0.9em;
+    color: #a0aec0;
+}
+.rs-toggle-title {
+    font-weight: bold;
+    font-size: 1.1em;
+    color: #e2e8f0;
+}
+.rs-toggle-badge {
+    background: #4299e1;
+    color: #fff;
+    border-radius: 10px;
+    padding: 1px 8px;
+    font-size: 0.8em;
+    min-width: 20px;
+    text-align: center;
+}
+
+/* ── Panel ────────────────────────────────────────────────── */
+#rs-panel {
+    display: none;
+    border: 1px solid #4a5568;
+    border-radius: 0 0 8px 8px;
+    margin-top: -1px;
+    padding: 12px 16px;
+    background: #1a202c;
+}
+
+/* ── Controls row ─────────────────────────────────────────── */
+.rs-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: flex-end;
+    margin-bottom: 12px;
+}
+.rs-control-group {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+.rs-control-group label {
+    font-size: 0.75em;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #a0aec0;
+    font-weight: 600;
+}
+.rs-control-group select,
+.rs-control-group input[type="text"],
+.rs-control-group textarea {
+    background: #2d3748;
+    border: 1px solid #4a5568;
+    color: #e2e8f0;
+    border-radius: 4px;
+    padding: 5px 8px;
+    font-size: 0.9em;
+}
+.rs-control-group select:focus,
+.rs-control-group input:focus,
+.rs-control-group textarea:focus {
+    outline: none;
+    border-color: #4299e1;
+    box-shadow: 0 0 0 2px rgba(66, 153, 225, 0.3);
+}
+.rs-comment-group {
+    flex: 1;
+    min-width: 180px;
+}
+.rs-comment-group textarea {
+    width: 100%;
+    resize: none;
+    height: 32px;
+    font-size: 0.85em;
+}
+.rs-btn-group {
+    display: flex;
+    gap: 6px;
+    align-items: flex-end;
+}
+
+/* ── Buttons ──────────────────────────────────────────────── */
+.rs-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 14px;
+    border-radius: 5px;
+    border: 1px solid #4a5568;
+    cursor: pointer;
+    font-size: 0.85em;
+    font-weight: 600;
+    transition: all 0.15s;
+    background: #2d3748;
+    color: #e2e8f0;
+}
+.rs-btn:hover {
+    background: #4a5568;
+}
+.rs-btn-primary {
+    background: #3182ce;
+    border-color: #2b6cb0;
+    color: #fff;
+}
+.rs-btn-primary:hover {
+    background: #2b6cb0;
+}
+.rs-btn-danger {
+    background: #742a2a;
+    border-color: #9b2c2c;
+    color: #feb2b2;
+}
+.rs-btn-danger:hover {
+    background: #9b2c2c;
+}
+
+/* ── Round Log ────────────────────────────────────────────── */
+#rs-round-log {
+    max-height: 520px;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+#rs-round-log::-webkit-scrollbar {
+    width: 6px;
+}
+#rs-round-log::-webkit-scrollbar-track {
+    background: #1a202c;
+}
+#rs-round-log::-webkit-scrollbar-thumb {
+    background: #4a5568;
+    border-radius: 3px;
+}
+
+.rs-empty {
+    text-align: center;
+    color: #718096;
+    padding: 30px;
+    font-style: italic;
+}
+
+/* ── Round Card ───────────────────────────────────────────── */
+.rs-round-card {
+    background: #2d3748;
+    border: 1px solid #4a5568;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    overflow: hidden;
+}
+.rs-round-header {
+    background: #1e2533;
+    padding: 6px 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    position: relative;
+}
+.rs-round-num {
+    font-weight: bold;
+    font-size: 1em;
+    color: #63b3ed;
+}
+.rs-speed-info {
+    font-size: 0.85em;
+    color: #a0aec0;
+}
+.rs-speed-info small {
+    color: #718096;
+}
+.rs-conditions {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+.rs-delete-round {
+    position: absolute;
+    right: 8px;
+    top: 4px;
+    background: none;
+    border: none;
+    color: #718096;
+    font-size: 1.3em;
+    cursor: pointer;
+    padding: 0 4px;
+    line-height: 1;
+}
+.rs-delete-round:hover {
+    color: #fc8181;
+}
+
+/* ── Tags ─────────────────────────────────────────────────── */
+.rs-tag {
+    display: inline-block;
+    padding: 1px 8px;
+    border-radius: 4px;
+    font-size: 0.75em;
+    font-weight: 600;
+}
+.rs-weather {
+    background: #744210;
+    color: #fefcbf;
+}
+.rs-terrain {
+    background: #22543d;
+    color: #c6f6d5;
+}
+.rs-trickroom {
+    background: #553c9a;
+    color: #e9d8fd;
+}
+.rs-item {
+    background: #2a4365;
+    color: #bee3f8;
+}
+.rs-ability {
+    background: #285e61;
+    color: #b2f5ea;
+}
+.rs-status {
+    background: #742a2a;
+    color: #feb2b2;
+}
+
+/* ── Round body / action order ────────────────────────────── */
+.rs-round-body {
+    padding: 10px 12px;
+}
+.rs-action-order {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+}
+.rs-action-first,
+.rs-action-second {
+    flex: 1;
+    min-width: 0;
+}
+.rs-action-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5em;
+    color: #4a5568;
+    padding: 0 8px;
+    flex-shrink: 0;
+}
+.rs-order-label {
+    font-size: 0.7em;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #718096;
+    margin-bottom: 4px;
+    font-weight: 700;
+}
+
+/* ── Actor card ───────────────────────────────────────────── */
+.rs-actor {
+    background: #1a202c;
+    border-radius: 6px;
+    padding: 8px 10px;
+    border: 1px solid #4a5568;
+}
+.rs-p1 {
+    border-left: 3px solid #4299e1;
+}
+.rs-p2 {
+    border-left: 3px solid #f56565;
+}
+.rs-actor-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+.rs-sprite {
+    width: 40px;
+    height: 40px;
+    image-rendering: pixelated;
+    flex-shrink: 0;
+}
+.rs-actor-info {
+    flex: 1;
+    min-width: 0;
+}
+.rs-actor-name {
+    font-weight: bold;
+    font-size: 0.95em;
+    color: #e2e8f0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.rs-hp-bar-wrap {
+    background: #1a202c;
+    border: 1px solid #4a5568;
+    border-radius: 3px;
+    height: 8px;
+    overflow: hidden;
+    margin: 3px 0;
+}
+.rs-hp-bar {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.3s;
+}
+.rs-hp-text {
+    font-size: 0.75em;
+    color: #a0aec0;
+}
+.rs-details {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+    margin-bottom: 6px;
+}
+.rs-move-name {
+    font-weight: 700;
+    font-size: 0.9em;
+    color: #fbd38d;
+    margin-bottom: 2px;
+}
+.rs-move-name.rs-switch {
+    color: #90cdf4;
+}
+.rs-damage-text {
+    font-size: 0.8em;
+    color: #cbd5e0;
+    word-break: break-word;
+}
+.rs-ko-chance {
+    font-size: 0.75em;
+    color: #fc8181;
+    font-weight: 600;
+}
+.rs-ai-pct {
+    font-size: 0.75em;
+    color: #b794f4;
+    font-weight: 600;
+    margin-top: 2px;
+}
+
+/* ── Comment ──────────────────────────────────────────────── */
+.rs-comment {
+    background: #1e2533;
+    padding: 6px 12px;
+    font-size: 0.85em;
+    color: #a0aec0;
+    border-top: 1px solid #2d3748;
+    font-style: italic;
+}
+.rs-comment::before {
+    content: '💬 ';
+}
+
+/* ── Crit info ────────────────────────────────────────────── */
+.rs-crit-info {
+    font-size: 0.8em;
+    color: #f6ad55;
+    font-weight: 600;
+}
+.rs-damage-range {
+    font-size: 0.8em;
+    color: #90cdf4;
+}
+.rs-range-label {
+    font-weight: 600;
+    color: #a0aec0;
+}
+
+/* ── HP Simulation ────────────────────────────────────────── */
+.rs-hp-sim {
+    margin-top: 6px;
+    padding-top: 6px;
+    border-top: 1px dashed #4a5568;
+}
+.rs-hp-sim-label {
+    font-size: 0.7em;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #718096;
+    font-weight: 700;
+    margin-bottom: 2px;
+}
+.rs-hp-after-text {
+    font-size: 0.8em;
+    color: #cbd5e0;
+}
+.rs-hp-diff {
+    color: #fc8181;
+    font-weight: 700;
+}
