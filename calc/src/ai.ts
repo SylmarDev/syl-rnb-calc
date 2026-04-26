@@ -62,6 +62,9 @@ const powderMoves: string[] = [
 const statusApplyingMoves: string[] = [
     "Grass Whistle", "Sleep Powder", "Lovely Kiss"
 ];
+const defrostingMoves: string[] = [
+    "Burn Up", "Flame Wheel", "Flare Blitz", "Fusion Flare", "Pyro Ball", "Sacred Fire", "Scald", "Scorching Sands", "Steam Eruption"
+]
 
 // move functions
 function isNamed(moveName: string, ...names: string[]) {
@@ -1674,7 +1677,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                 if (playerHasStatusCond || 
                     (move.type == "Electric" && (playerTypes.includes("Ground") || playerTypes.includes("Electric"))) ||
                     (playerAbility == "Limber") ||
-                    (moveName == "Glare" && playerTypes.includes("Electric")))  // glare needs its own cause its a normal type move
+                    (moveName == "Glare" || moveName == "Stun Spore" && playerTypes.includes("Electric")))  // glare needs its own cause its a normal type move
                 {
                     moveStringsToAdd.push({
                         move: moveName,
