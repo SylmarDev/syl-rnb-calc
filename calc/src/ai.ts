@@ -906,7 +906,8 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
     const encoreIncentive = aiOptions["encoreAiOpt"];
     const playerFirstTurnOut = aiOptions["playerFirstTurnOutAiOpt"]; // or encored
     const aiMagnetRisen = aiOptions["magnetRiseAiOpt"];
-    const playerMagnetRisen = aiOptions["playerMagnetRisenAiOpt"];
+    const playerMagnetRisen = aiOptions["playerMagnetRisenAiOpt"]; // unused, that's not good. TODO: investigate
+    const playerGrounded = aiOptions["playerGroundedAiOpt"];
 
     // protect yayyy
     const protectIncentive = aiOptions["protectIncentiveAiOpt"];
@@ -2512,7 +2513,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
 
             // Per Grintoul and Berry, Smack Down/Thousand Arrows get +6 if it can ground you
             var playerCanBeGrounded = playerTypes.includes("Flying") || playerAbility == "Levitate";
-            if (isNamed(moveName, "Smack Down", "Thousand Arrows") && playerCanBeGrounded) { 
+            if (isNamed(moveName, "Smack Down", "Thousand Arrows") && playerCanBeGrounded && !playerGrounded) { 
                 moveStringsToAdd.push({
                     move: moveName,
                     score: 6,

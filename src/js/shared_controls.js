@@ -1673,6 +1673,11 @@ function setAiOptionVisibility(moveNames) {
 		$("#magnetRiseOpt").show();
 	}
 
+	if (hasMove(["Smack Down", "Thousand Arrows"], moveNames)) {
+		showAiOptionsDiv();
+		$("#playerGroundedOpt").show();
+	}
+
 	if (hasMove(["Protect", "King's Shield", "Baneful Bunker", "Spiky Shield", "Detect", "Obstruct"], moveNames)) {
 		showAiOptionsDiv();
 		$("#firstTurnOutOpt").show();
@@ -1680,7 +1685,7 @@ function setAiOptionVisibility(moveNames) {
 		$("#protectDisincentiveOpt").show();
 		$("#protectLastOpt").show();
 		$("#protectLastTwoOpt").show();
-	}
+	}	
 }
 
 function setDisclaimVisibility(moveNames) {
