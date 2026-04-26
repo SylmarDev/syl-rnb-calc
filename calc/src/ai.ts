@@ -1875,7 +1875,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                 if (isContrary) {
                     if (isNamed(moveName, "Overheat", "Leaf Storm")) {
                         isOffensiveSetup = true;
-                    } else if (moveName == "Superpower") {
+                    } else if (moveName == "Superpower" && anyValidDamageRolls) {
                         actAsBulkUp = true;
                     }
                 }
