@@ -1849,8 +1849,21 @@ function colorCodeUpdate(){
 		else if (ohkoCheck){
 			pMons[i].className = `trainer-pok left-side mon-dmg-${idColor.code}`;
 		}
-		
-		
+
+
+	}
+	var p1monEl = document.getElementById("p1mon");
+	if (p1monEl && p1monEl.src) {
+		try {
+			var p1Color = calculationsColors($("#p1"), p2);
+			if (speCheck && ohkoCheck){
+				p1monEl.className = `mon-speed-${p1Color.speed} mon-dmg-${p1Color.code}`;
+			} else if (speCheck){
+				p1monEl.className = `mon-speed-${p1Color.speed}`;
+			} else if (ohkoCheck){
+				p1monEl.className = `mon-dmg-${p1Color.code}`;
+			}
+		} catch(e) {}
 	}
 }
 function showColorCodes(){
@@ -1867,6 +1880,7 @@ function hideColorCodes(){
 	for (let i = 0; i < pMons.length; i++) {
 		pMons[i].className = "trainer-pok left-side";
 	}
+	document.getElementById("p1mon").className = "";
 	document.getElementById("cc-auto-refr").checked = false;
 	HideShowCCSettings();
 }
@@ -1954,6 +1968,14 @@ function SpeedBorderSetsChange(ev){
 			monImg.classList.add("mon-speed-none")
 		}
 	}
+	var p1monEl = document.getElementById("p1mon");
+	if (p1monEl && p1monEl.className) {
+		if (ev.target.checked) {
+			p1monEl.classList.remove("mon-speed-none");
+		} else {
+			p1monEl.classList.add("mon-speed-none");
+		}
+	}
 }
 
 function ColorCodeSetsChange(ev){
@@ -1965,6 +1987,14 @@ function ColorCodeSetsChange(ev){
 	}else{
 		for (let monImg of monImgs){
 			monImg.classList.add("mon-dmg-none")
+		}
+	}
+	var p1monEl = document.getElementById("p1mon");
+	if (p1monEl && p1monEl.className) {
+		if (ev.target.checked) {
+			p1monEl.classList.remove("mon-dmg-none");
+		} else {
+			p1monEl.classList.add("mon-dmg-none");
 		}
 	}
 }
