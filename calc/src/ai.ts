@@ -1,12 +1,12 @@
-import { Result } from './result';
-import { Move } from './move';
-import { Generations, Pokemon } from '.';
-import { Field } from './field';
-import { MoveName } from './data/interface';
-import { getMoveEffectiveness } from './mechanics/util';
-import { calculateSMSSSV } from './mechanics/gen789';
+import { Generations, Pokemon } from '.'
+import { MoveName } from './data/interface'
+import { Field } from './field'
+import { calculateSMSSSV } from './mechanics/gen789'
+import { getMoveEffectiveness } from './mechanics/util'
+import { Move } from './move'
+import { Result } from './result'
 
-import * as I from './data/interface';
+import * as I from './data/interface'
 
 // interfaces
 interface KVP {
@@ -1670,14 +1670,16 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             }
 
             // Thunder Wave, Stun Spore, Glare, Nuzzle
-            if (moveName == "Thunder Wave" || moveName == "Stun Spore" || moveName == "Nuzzle" || moveName == "Glare") {
+            const nonElectricParalyzingMoves = ["Stun Spore", "Glare"];
+            const paralyzingMoves = ["Thunder Wave", "Stun Spore", ...nonElectricParalyzingMoves];
+            if (paralyzingMoves.includes(moveName)) {
                 const hexIndex = moves.findIndex(x => x.move.name === "Hex"); // hehe inHEX more like
                 var paraIncentive = aiSlowerButFasterAfterPara || hexIndex != -1 || playerCharmedOrConfused;
 
                 if (playerHasStatusCond || 
                     (move.type == "Electric" && (playerTypes.includes("Ground") || playerTypes.includes("Electric"))) ||
                     (playerAbility == "Limber") ||
-                    (moveName == "Glare" || moveName == "Stun Spore" && playerTypes.includes("Electric")))  // glare needs its own cause its a normal type move
+                    (paralyzingMoves.includes(moveName) && playerTypes.includes("Electric")))
                 {
                     moveStringsToAdd.push({
                         move: moveName,
