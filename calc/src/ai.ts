@@ -60,7 +60,7 @@ const powderMoves: string[] = [
     "Cotton Spore", "Magic Powder", "Poison Powder", "Powder", "Rage Powder", "Sleep Powder", "Spore", "Stun Spore"
 ];
 const statusApplyingMoves: string[] = [
-    "Grass Whistle", "Sleep Powder", "Lovely Kiss"
+    "Grass Whistle", "Sleep Powder", "Lovely Kiss", "Spore"
 ];
 const defrostingMoves: string[] = [
     "Burn Up", "Flame Wheel", "Flare Blitz", "Fusion Flare", "Pyro Ball", "Sacred Fire", "Scald", "Scorching Sands", "Steam Eruption"
