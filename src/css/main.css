@@ -241,6 +241,10 @@ th {
     text-align: center;
     width: 27.5em;
 }
+.import-actions {
+    text-align: left;
+    margin-bottom: 4px;
+}
 .holder-0 {
     position: absolute;
     top: 151px;
