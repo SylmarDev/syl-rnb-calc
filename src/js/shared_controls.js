@@ -369,6 +369,73 @@ $(".status").bind("keyup change", function () {
 });
 
 var lockerMove = "";
+
+var guaranteedCritHighRatioMoves = [
+	"Aeroblast", "Air Cutter", "Attack Order",
+	"Blaze Kick", "Crabhammer", "Cross Chop", "Cross Poison", "Drill Run",
+	"Karate Chop", "Leaf Blade", "Night Slash", "Poison Tail", "Psycho Cut",
+	"Razor Leaf", "Razor Wind", "Shadow Claw", "Sky Attack", "Slash",
+	"Spacial Rend", "Stone Edge"
+];
+var guaranteedCritItems = ["Razor Claw", "Scope Lens"];
+var critBlockingAbilities = ["Battle Armor", "Shell Armor", "Magma Armor"];
+
+function matchesAny(value, values) {
+	return values.indexOf(value) !== -1;
+}
+
+function getOpposingPokeInfo(pokeInfo) {
+	return pokeInfo.attr("id") === "p1" ? $("#p2") : $("#p1");
+}
+
+function isGuaranteedCrit(move, moveGroupObj) {
+	var attacker = moveGroupObj.closest(".poke-info");
+	var defender = getOpposingPokeInfo(attacker);
+	var attackerSide = attacker.attr("id") === "p1" ? "L" : "R";
+	var defenderAbility = defender.find(".ability").val();
+	if (matchesAny(defenderAbility, critBlockingAbilities)) return false;
+	if (move.willCrit === true) return true;
+
+	var moveName = move.name || moveGroupObj.children(".move-selector").val();
+	var ability = attacker.find(".ability").val();
+	var item = attacker.find(".item").val();
+	var species = attacker.find(".set-selector").val() || "";
+	var boosts = 0;
+
+	if (matchesAny(moveName, guaranteedCritHighRatioMoves)) boosts++;
+	if (matchesAny(item, guaranteedCritItems)) boosts++;
+	if (ability === "Super Luck") boosts++;
+	if (species.includes("fetch'd") && (item === "Leek" || item === "Stick")) boosts += 2;
+	if (species.indexOf("Chansey") === 0 && item === "Lucky Punch") boosts += 2;
+	if ($("#focusEnergy" + attackerSide).prop("checked")) boosts += 2;
+
+	return boosts >= 3;
+}
+
+function setCritCheckbox(moveGroupObj, checked, autoCrit) {
+	var crit = moveGroupObj.children(".move-crit");
+	crit.data("autoCrit", autoCrit);
+	crit.prop("checked", checked).change();
+}
+
+function updateGuaranteedCritForMove(moveGroupObj, clearNonGuaranteed) {
+	var moveName = moveGroupObj.children(".move-selector").val();
+	var move = moves[moveName] || moves['(No Move)'];
+	var crit = moveGroupObj.children(".move-crit");
+
+	if (isGuaranteedCrit(move, moveGroupObj)) {
+		setCritCheckbox(moveGroupObj, true, true);
+	} else if (clearNonGuaranteed || crit.data("autoCrit")) {
+		setCritCheckbox(moveGroupObj, false, false);
+	}
+}
+
+function updateGuaranteedCrits() {
+	$(".i-f-move, .i-f-o-move").each(function () {
+		updateGuaranteedCritForMove($(this), false);
+	});
+}
+
 // auto-update move details on select
 $(".move-selector").change(function () {
 	var moveName = $(this).val();
@@ -417,7 +484,7 @@ $(".move-selector").change(function () {
 	$(this).attr('data-prev', moveName);
 	moveGroupObj.children(".move-type").val(move.type);
 	moveGroupObj.children(".move-cat").val(move.category);
-	moveGroupObj.children(".move-crit").prop("checked", move.willCrit === true).change();
+	updateGuaranteedCritForMove(moveGroupObj, true);
 
 	var stat = move.category === 'Special' ? 'spa' : 'atk';
 	var dropsStats =
@@ -446,6 +513,10 @@ $(".item").change(function () {
 	} else {
 		$metronomeControl.hide();
 	}
+});
+
+$(".ability, .item, .abilityToggle, #focusEnergyL, #focusEnergyR").change(function () {
+	updateGuaranteedCrits();
 });
 
 function smogonAnalysis(pokemonName) {
