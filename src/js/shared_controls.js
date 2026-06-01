@@ -769,11 +769,12 @@ $(".forme").change(function () {
 
 $("#p2 .forme").change(function(e) {
 	if (!e.originalEvent) { return; }
-	var altForme = pokedex[$(this).val()],
-	container = $(this).closest(".info-group").siblings(),
-	fullSetName = container.find(".select2-chosen").first().text(),
-	pokemonName = fullSetName.substring(0, fullSetName.indexOf(" (")),
-	setName = fullSetName.substring(fullSetName.indexOf("(") + 1, fullSetName.lastIndexOf(")"));
+	var altForme = pokedex[$(this).val()];
+	const container = $(this).closest(".info-group").siblings();
+	const fullSetName = container.find(".select2-chosen").first().text();
+	const pokemonName = fullSetName.substring(0, fullSetName.indexOf(" ("));
+	var setName = fullSetName.substring(fullSetName.indexOf("(") + 1, fullSetName.lastIndexOf(")"));
+	const options = $(this).children("option").map(function() { return $(this).text(); }).get();
 
 	var isRandoms = $("#randoms").prop("checked");
 	var pokemonSets = isRandoms ? randdex[pokemonName] : setdex[pokemonName];
@@ -782,7 +783,7 @@ $("#p2 .forme").change(function(e) {
 	// console.log(setName); // DEBUG
 
 	// overwrite ability if a mega has forme switched
-	if (pokemonName.indexOf("-Mega") !== -1) {
+	if (options.some(option => option.includes("-Mega"))) {
 		if (setName.includes("Trainer Rival")) {
 			setName = "Pokemon Trainer May";
 		}
@@ -1759,6 +1760,7 @@ $(document).on('click', '.right-side', function () {
 			pokeObj.find(".type1").val(basePokemon.types[0]);
 			pokeObj.find(".type2").val(basePokemon.types[1]);
 			pokeObj.find(".hp .base").val(basePokemon.bs.hp);
+			pokeObj.find(".forme").val(baseName);
 			for (var si = 0; si < LEGACY_STATS[gen].length; si++) {
 				pokeObj.find("." + LEGACY_STATS[gen][si] + " .base").val(basePokemon.bs[LEGACY_STATS[gen][si]]);
 			}
