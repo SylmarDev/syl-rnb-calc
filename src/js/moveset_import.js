@@ -96,7 +96,7 @@ function parseSetsFromCustomSets(customSets) {
 	for (var monName in customSets) {
 		for (var setName in customSets[monName]) {
 			var poke = customSets[monName][setName];
-			var item = poke.hasOwnProperty('item') ? ` @ ${poke.item}` : '';
+			var item = poke.item ? ` @ ${poke.item}` : '';
 			var ivs = poke.hasOwnProperty('ivs') ? formatIVs(poke.ivs) : '';
 			
 			var ivLine = ivs !== "" ? `IVs: ${ivs}\n` : '';
@@ -135,6 +135,63 @@ $("#massExport").click(function () {
 
 	// show the export all window
 	showMassExport();
+});
+
+function removeItemsFromCustomSets(customSets) {
+	var removedItems = 0;
+
+	for (var monName in customSets) {
+		for (var setName in customSets[monName]) {
+			var poke = customSets[monName][setName];
+			if (poke.item) {
+				removedItems++;
+			}
+			poke.item = "";
+		}
+	}
+
+	return removedItems;
+}
+
+function getCustomSetFromSelection(customSets, fullSetName) {
+	if (!fullSetName || fullSetName.indexOf(" (") === -1) {
+		return undefined;
+	}
+
+	var pokemonName = fullSetName.substring(0, fullSetName.indexOf(" ("));
+	var setName = fullSetName.substring(fullSetName.indexOf("(") + 1, fullSetName.lastIndexOf(")"));
+
+	if (!customSets[pokemonName]) {
+		return undefined;
+	}
+
+	return customSets[pokemonName][setName];
+}
+
+function refreshVisibleCustomSetItems(customSets) {
+	$(".poke-info").each(function () {
+		var $pokeInfo = $(this);
+		var customSet = getCustomSetFromSelection(customSets, $pokeInfo.find(".set-selector").val());
+		if (!customSet) {
+			return;
+		}
+
+		$pokeInfo.find(".item").val("").change();
+	});
+}
+
+$("#removeAllItems").click(function () {
+	if (!localStorage.customsets) {
+		alert("No imported sets found.");
+		return;
+	}
+
+	var customSets = JSON.parse(localStorage.customsets);
+	var removedItems = removeItemsFromCustomSets(customSets);
+	updateDex(customSets);
+	refreshVisibleCustomSetItems(customSets);
+
+	alert(removedItems > 0 ? `Removed items from ${removedItems} set(s).` : "Imported sets already have no items.");
 });
 
 // Copy button functionality
