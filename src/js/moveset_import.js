@@ -90,6 +90,16 @@ function ExportPokemon(pokeInfo) {
 	$("textarea.import-team-text").val(finalText);
 }
 
+function calcSpeedStat(monName, set) {
+	/* global pokedex, gen, calc */
+	var mon = pokedex[monName];
+	if (!mon) return undefined;
+	var base = mon.bs.sp;
+	var iv = (set.ivs && set.ivs.sp !== undefined) ? set.ivs.sp : 31;
+	var ev = (set.evs && set.evs.sp !== undefined) ? set.evs.sp : 0;
+	return calc.calcStat(gen, 'spe', base, iv, ev, set.level ?? 100, set.nature ?? 'Serious');
+}
+
 function parseSetsFromCustomSets(customSets) {
 	var finalText = "";
 
@@ -98,14 +108,15 @@ function parseSetsFromCustomSets(customSets) {
 			var poke = customSets[monName][setName];
 			var item = poke.hasOwnProperty('item') ? ` @ ${poke.item}` : '';
 			var ivs = poke.hasOwnProperty('ivs') ? formatIVs(poke.ivs) : '';
-			
 			var ivLine = ivs !== "" ? `IVs: ${ivs}\n` : '';
+			var speed = calcSpeedStat(monName, poke);
+			var speedLine = speed !== undefined ? `Speed: ${speed}\n` : '';
 
-			var text = 
+			var text =
 `${monName}${item}
 Level: ${poke.level ?? 100}
 ${poke.nature ?? 'Serious'} Nature
-Ability: ${poke.ability}\n${ivLine !== "" ? `${ivLine}` : ''}`;
+Ability: ${poke.ability}\n${ivLine}${speedLine}`;
 
 			for (var move of poke.moves) {
 				text += `- ${move}\n`;
@@ -140,6 +151,69 @@ $("#massExport").click(function () {
 // Copy button functionality
 $("#massExport-copy").click(function () {
 	copyMassExportToClipboard();
+});
+
+function parseSetsFromTrainerTeam(trainerPoks) {
+	var finalText = "";
+
+	for (var i = 0; i < trainerPoks.length; i++) {
+		var entry = trainerPoks[i];
+		var afterBracket = entry.split("]")[1];
+		if (!afterBracket) continue;
+		var monName = afterBracket.split(" (")[0];
+		var trainerName = entry.split("(")[1].split(")")[0];
+
+		if (!setdex[monName] || !setdex[monName][trainerName]) continue;
+
+		var set = setdex[monName][trainerName];
+		var item = set.item ? ` @ ${set.item}` : '';
+		var ivs = set.ivs ? formatIVs(set.ivs) : '';
+		var ivLine = ivs !== "" ? `IVs: ${ivs}\n` : '';
+		var speed = calcSpeedStat(monName, set);
+		var speedLine = speed !== undefined ? `Speed: ${speed}\n` : '';
+
+		var text =
+`${monName}${item}
+Level: ${set.level ?? 100}
+${set.nature ?? 'Serious'} Nature
+Ability: ${set.ability}\n${ivLine}${speedLine}`;
+
+		for (var move of set.moves) {
+			text += `- ${move}\n`;
+		}
+
+		finalText += `${text}\n`;
+	}
+
+	return finalText;
+}
+
+$("#massExportR").click(function () {
+	/* global CURRENT_TRAINER_POKS */
+	if (typeof CURRENT_TRAINER_POKS === 'undefined' || CURRENT_TRAINER_POKS.length === 0) {
+		alert("No opposing trainer loaded.");
+		return;
+	}
+	var exportAll = parseSetsFromTrainerTeam(CURRENT_TRAINER_POKS);
+	$("#massExportR-text").text(exportAll);
+	showMassExportR();
+});
+
+$("#massExportR-copy").click(function () {
+	var text = $("#massExportR-text").text();
+	if (text) {
+		navigator.clipboard.writeText(text).then(function () {
+			var $btn = $("#massExportR-copy");
+			var originalText = $btn.html();
+			$btn.html('<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/></svg> Copied!');
+			setTimeout(function () {
+				$btn.html(originalText);
+			}, 2000);
+		}).catch(function (err) {
+			console.error('Failed to copy text: ', err);
+			alert('Failed to copy to clipboard');
+		});
+	}
 });
 
 function copyMassExportToClipboard() {

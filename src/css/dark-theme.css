@@ -209,7 +209,8 @@ input.select2-input {
 }
 
 /* Export All */
-#massExport-overlay {
+#massExport-overlay,
+#massExportR-overlay {
     display: none;
     position: fixed;
     top: 0; left: 0;
@@ -218,7 +219,8 @@ input.select2-input {
     z-index: 1000;
 }
 
-#massExport-popup {
+#massExport-popup,
+#massExportR-popup {
     position: relative;
     top: 50%; left: 50%;
     transform: translate(-50%, -50%);
@@ -229,19 +231,22 @@ input.select2-input {
     box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
 }
 
-#massExport-header {
+#massExport-header,
+#massExportR-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 10px;
 }
 
-#massExport-popup h2 {
+#massExport-popup h2,
+#massExportR-popup h2 {
     color: #fff;
     margin: 0;
 }
 
-#massExport-copy {
+#massExport-copy,
+#massExportR-copy {
     gap: 6px;
     padding: 6px 12px;
     background: #2a2a2a;
@@ -255,26 +260,31 @@ input.select2-input {
     width: 130px;
 }
 
-#massExport-copy svg {
+#massExport-copy svg,
+#massExportR-copy svg {
     margin-top: 1px;
 }
 
-#massExport-copy:hover {
+#massExport-copy:hover,
+#massExportR-copy:hover {
     background: #3a3a3a;
     border-color: #777;
 }
 
-#massExport-copy:active {
+#massExport-copy:active,
+#massExportR-copy:active {
     background: #1a1a1a;
 }
 
-#massExport-copy svg {
+#massExport-copy svg,
+#massExportR-copy svg {
     width: 16px;
     height: 16px;
     flex-shrink: 0;
 }
 
-#massExport-close {
+#massExport-close,
+#massExportR-close {
     position: absolute;
     top: 20px;
     right: 20px;
@@ -284,11 +294,13 @@ input.select2-input {
     z-index: 1;
 }
 
-#massExport-close:hover {
+#massExport-close:hover,
+#massExportR-close:hover {
     color: #333;
 }
 
-#massExport-div {
+#massExport-div,
+#massExportR-div {
     margin-top: 7px;
     font-family: Arial, sans-serif;
     font-size: 14px;
@@ -298,7 +310,8 @@ input.select2-input {
     padding-right: 15px;
 }
 
-#massExport-text {
+#massExport-text,
+#massExportR-text {
     white-space: pre-wrap;
     word-wrap: break-word;
     margin: 0;

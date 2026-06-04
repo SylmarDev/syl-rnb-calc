@@ -2224,6 +2224,10 @@ function showMassExport() {
 	$('#massExport-overlay').fadeIn(200);
 }
 
+function showMassExportR() {
+	$('#massExportR-overlay').fadeIn(200);
+}
+
 $(document).ready(function () {
 	var params = new URLSearchParams(window.location.search);
 	var g = GENERATION[params.get('gen')] || 8;
@@ -2323,6 +2327,12 @@ $(document).ready(function () {
     $('#massExport-close, #massExport-overlay').on('click', function (e) {
       if (e.target.id === 'massExport-close' || e.target.id === 'massExport-overlay') {
         $('#massExport-overlay').fadeOut(200);
+      }
+    });
+
+    $('#massExportR-close, #massExportR-overlay').on('click', function (e) {
+      if (e.target.id === 'massExportR-close' || e.target.id === 'massExportR-overlay') {
+        $('#massExportR-overlay').fadeOut(200);
       }
     });
 });
