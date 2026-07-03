@@ -53,4 +53,5 @@ const CHANGELOG = [
     new ChangelogLine(2, 6, 1, "Stun Spore now correctly discentivized for electric types, calc sees Protective Pads as hitting through Fluffy"),
     new ChangelogLine(2, 6, 2, "Contrary Superpower can't be clicked against Ghost types"),
     new ChangelogLine(2, 7, 0, "Added new Credits section, Crit Rate displays, fix edge cases with Glare, Spore, and Belly Drum"),
+    new ChangelogLine(2, 7, 1, "Corrosion now properly shows % to poison Poison and Steel types"),
 ];

@@ -1816,7 +1816,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             // Poisoning Moves
             if (isNamed(moveName, "Toxic", "Poison Gas", "Poison Powder")) {
                 if (playerHasStatusCond ||
-                    ((playerTypes.includes("Poison") || playerTypes.includes("Steel")) && moves[0].ability != "Corrosion")) {
+                    ((playerTypes.includes("Poison") || playerTypes.includes("Steel")) && aiAbility != "Corrosion")) {
                     moveStringsToAdd.push({
                         move: moveName,
                         score: -40,
