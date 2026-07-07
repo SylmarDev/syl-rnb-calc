@@ -1774,7 +1774,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             }
 
             // Yawn, Dark Void, Grass Whistle, Sing
-            if (moveName == "Yawn" || moveName == "Dark Void" || moveName == "Grass Whistle" || moveName == "Sing" || moveName == "Hypnosis") {
+            if (moveName == "Yawn" || moveName == "Dark Void" || moveName == "Grass Whistle" || moveName == "Sing" || moveName == "Hypnosis" || moveName == "Sleep Powder") {
                 const sleepPreventingAbility = playerAbility == "Insomnia" || playerAbility == "Vital Spirit" || playerAbility == "Sweet Veil";
                 if (sleepPreventingAbility || playerHasStatusCond || terrain == "Electric" || terrain == "Misty") { 
                     moveStringsToAdd.push({
