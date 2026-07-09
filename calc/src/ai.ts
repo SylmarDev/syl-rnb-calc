@@ -2006,21 +2006,24 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                 // starts at +6
                 let score: number = 6;
 
+                // commented out a bunch here because of bad docs
+                // don't want to remove so I don't think I missed details later
                 // if player incapacitated +3
                 if (playerIncapacitated) {
                     score += 3;
-                } else if (!aiThreeHitKOd) {
+                } /* else if (!aiThreeHitKOd) {
                     score += 1;
                     if (aiFaster) { score++; }
-                }
+                } */
 
                 if (!aiFaster && aiTwoHitKOd) {
                     score -= 5;
                 }
 
+                /*
                 if (moves[0].attacker.boosts.spatk >= 2) {
                     score--;
-                }
+                } */
 
                 moveStringsToAdd.push({
                     move: moveName,

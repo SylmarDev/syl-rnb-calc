@@ -54,4 +54,5 @@ const CHANGELOG = [
     new ChangelogLine(2, 6, 2, "Contrary Superpower can't be clicked against Ghost types"),
     new ChangelogLine(2, 7, 0, "Added new Credits section, Crit Rate displays, fix edge cases with Glare, Spore, and Belly Drum"),
     new ChangelogLine(2, 7, 1, "Corrosion now properly shows % to poison Poison and Steel types"),
+    new ChangelogLine(2, 7, 2, "Fixed Avalanache to be a spread move, sleep powder can no longer be chosen against Vital Spirit, undocumented issue with Offensive setup was fixed to reflect game behavior, fixed Normalize showing buffed damage for Hidden Power")
 ];
