@@ -2556,7 +2556,25 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                         rate: 1
                     });
                 }   
-            }            
+            }
+
+            // undocumented +1 to Double Team if holding Bright Powder
+            if (moveName == "Double Team" && aiItem == "Bright Powder") {
+                moveStringsToAdd.push({
+                    move: moveName,
+                    score: 1,
+                    rate: 1
+                });
+            }
+
+            // undocumented -20 to dragon tail and counter (and maybe others) if player sees kill
+            if ((moveName == "Counter" || moveName == "Dragon Tail") && aiDeadToPlayer) {
+                moveStringsToAdd.push({
+                    move: moveName,
+                    score: -20,
+                    rate: 1
+                });
+            }
             // end of the hell loop
         });
 
