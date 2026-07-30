@@ -252,44 +252,30 @@ function cartesian(arrays: any[][]): any[][] {
     }, [[]]);
 }
 
-function setKeyStrings(keyString: string, splitKeys: string[]) : string[] {
-    let keyStrings: string[] = [];
-    for (let splitKey in splitKeys) {
-        if (keyString.includes(splitKey)) {
-            keyStrings.push(...splitKeyString(keyString, splitKey));
+function splitHighestDamageTies(keyString: string): string[] {
+    const parts = keyString.split("/");
+    const tiedHighestDamageIndexes = parts.reduce((indexes: number[], part, index) => {
+        const score = part.split(":")[1];
+        if (score === "HD+0") {
+            indexes.push(index);
         }
-    }
 
-    if (keyStrings.length == 0) {
-        keyStrings.push(keyString);
-    }
-
-    return keyStrings;
-}
-
-function splitKeyString(keyString: string, subString: string): string[] {
-    let keyStrings = [];
-
-    // assumes that the keystring has parts to replace
-    let parts = keyString.split("/");
-
-    const indices = parts.reduce((acc: number[], part, i) => {
-        // I have no idea why this needs to be inversed, but it does
-        if (!part.includes(subString)) { 
-            acc.push(i);
-        }
-        return acc;
+        return indexes;
     }, []);
-    
-    //console.log(indices); // Debug
 
-    for (let index in indices) {   
-        let newKeyString = [... parts];
-        newKeyString[index] = newKeyString[index].replace(subString, "0");
-        keyStrings.push(newKeyString.map(String).join("/"));
+    if (tiedHighestDamageIndexes.length <= 1) {
+        return [keyString];
     }
 
-    return keyStrings;
+    return tiedHighestDamageIndexes.map(highestDamageIndex => {
+        return parts.map((part, index) => {
+            if (tiedHighestDamageIndexes.includes(index) && index !== highestDamageIndex) {
+                return `${part.split(":")[0]}:0`;
+            }
+
+            return part;
+        }).join("/");
+    });
 }
 
 // Function to add or update a probability
@@ -660,7 +646,6 @@ function calculateHighestDamage(moves: any[]): KVP[] {
        let keyStrings = [];
        let keyString = "";
        i = 0;
-       let highestDamageSet = false;
        for (let key of keys) {
            if (keyString != "") {
                keyString += "/"
@@ -705,9 +690,8 @@ function calculateHighestDamage(moves: any[]): KVP[] {
            // if multiple moves kill, they are both highest damage 
            if (key === maximumKey && key >= p1CurrentHealth) {
                keyString += `${moveName}:HD+${moveBonus}`;
-           } else if (key === maximumKey && !highestDamageSet) {
+           } else if (key === maximumKey) {
                keyString += `${moveName}:HD+0`;
-               highestDamageSet = true;
            } else {
                keyString += `${moveName}:0`;
            }
@@ -720,7 +704,7 @@ function calculateHighestDamage(moves: any[]): KVP[] {
             probabilityOfChoice *= Number(probability);
         }
 
-        keyStrings = setKeyStrings(keyString, ["HD"]);
+        keyStrings = splitHighestDamageTies(keyString);
 
         for (const keyString of keyStrings) {
             // console.log(keyStrings); // Debug
