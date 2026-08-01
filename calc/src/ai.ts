@@ -632,6 +632,13 @@ function calculateHighestDamage(moves: any[]): KVP[] {
     let allChoices = cartesian(moveDistributions.map(distribution => objectEntriesIntKeys(distribution)));
     
     // console.log(allChoices); // debug
+
+    function considerForHighestDamage(move: Move): boolean {
+        return !(move.category === "Status" || 
+            isNamed(move.name, "Explosion", "Final Gambit", "Rollout", "Misty Explosion",
+            "Self-Destruct", "Relic Song", "Meteor Beam", "Future Sight", "Counter", "Mirror Coat") ||
+            isTrapping(move));
+    }
     
     for (let choice of allChoices) {
        let keys = choice.map(([key, value]) => key);
@@ -640,10 +647,7 @@ function calculateHighestDamage(moves: any[]): KVP[] {
        let keysForMaximumCheck = [1];
        let i = 0;
        for (const key of keys) {
-          if (moves[i].move.category === "Status" || 
-            isNamed(moves[i].move.name, "Explosion", "Final Gambit", "Rollout", "Misty Explosion",
-            "Self-Destruct", "Relic Song", "Meteor Beam", "Future Sight", "Counter", "Mirror Coat") ||
-            isTrapping(moves[i].move))
+          if (!considerForHighestDamage(moves[i].move))
             {
                 i++;
                 continue;
@@ -655,6 +659,7 @@ function calculateHighestDamage(moves: any[]): KVP[] {
 
        // console.log(keysForMaximumCheck);
        let maximumKey = Math.max(...keysForMaximumCheck);
+       const hdmKills = p1CurrentHealth == maximumKey;
 
        // generate keystrings
        let moveBonuses: number[] = [];
@@ -699,7 +704,7 @@ function calculateHighestDamage(moves: any[]): KVP[] {
            }
 
            // Track all HDM to highestDamageIndexes
-           if (key === maximumKey) {
+           if (key === maximumKey && considerForHighestDamage(moves[i].move)) {
                highestDamageIndexes.push(i);
            }
 
@@ -760,16 +765,18 @@ function calculateHighestDamage(moves: any[]): KVP[] {
                    let moveBonus = moveBonuses[i];
                    let key = keys[i];
                    
-                   // Only the selected highest damage move gets HD+ marking
-                   if (i === selectedHighestIdx) {
-                       keyString += `${moveName}:HD+${moveBonus}`;
-                   } else if (key === maximumKey) {
-                       keyString += `${moveName}:HD+0`;
-                   } else if (moveBonus > 0) {
-                       keyString += `${moveName}:${moveBonus}`;
-                   } else {
-                       keyString += `${moveName}:0`;
-                   }
+                // Only the selected highest damage move gets HD+ marking
+                // If multiple moves kill they are both HD, else force choose the one. Chk highestDamageIndexes to continue to exclude
+                // boom and other edge cases defined above
+                if ((hdmKills && key === maximumKey && highestDamageIndexes.includes(i)) || i === selectedHighestIdx) {
+                    keyString += `${moveName}:HD+${moveBonus}`;
+                } else if (key === maximumKey && highestDamageIndexes.includes(i)) { // only go here if HDM doesn't kill
+                    keyString += `${moveName}:HD+0`;
+                } else if (moveBonus > 0) {
+                    keyString += `${moveName}:${moveBonus}`;
+                } else {
+                    keyString += `${moveName}:0`;
+                }
                }
                keyStringsWithProbs.push({ keyString, prob: highestDamageSplitProbs[hdIdx] });
            }
