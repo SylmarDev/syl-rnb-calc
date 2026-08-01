@@ -656,20 +656,16 @@ function calculateHighestDamage(moves: any[]): KVP[] {
        // console.log(keysForMaximumCheck);
        let maximumKey = Math.max(...keysForMaximumCheck);
 
-       // generate keystring
-       let keyStrings = [];
-       let keyString = "";
-       i = 0;
-       let highestDamageSet = false;
-       for (let key of keys) {
-           if (keyString != "") {
-               keyString += "/"
-           }
+       // generate keystrings
+       let moveBonuses: number[] = [];
+       let highestDamageIndexes: number[] = []; // All moves with key === maximumKey
 
-           let moveName = moves[i].move.name;
+       i = 0;
+       for (let key of keys) {
            let moveBonus = 0;
+           let moveName = moves[i].move.name;
            
-           // if damaging move kills
+           // if damaging move kills, calculate kill bonus
            if (key >= p1CurrentHealth) {
                if (aiFaster || moves[i].move.priority > 0) {
                    moveBonus += 6;
@@ -687,45 +683,113 @@ function calculateHighestDamage(moves: any[]): KVP[] {
 
                // skip these moves entirely
                if (moves[i].move.category === "Status" ||
-                isNamed(moves[i].move.name, "Explosion", "Final Gambit", "Rollout", "Misty Explosion", "Self-Destruct"))
+                isNamed(moveName, "Explosion", "Final Gambit", "Rollout", "Misty Explosion", "Self-Destruct"))
                 {
-                    keyString += `${moveName}:0`;
+                    moveBonuses.push(0);
                     i++;
                     continue;
                 }
 
                 // these still get kill bonuses
-                if (isNamed(moves[i].move.name, "Relic Song", "Meteor Beam", "Future Sight") || isTrapping(moves[i].move)) {
-                    keyString += `${moveName}:${moveBonus}`;
+                if (isNamed(moveName, "Relic Song", "Meteor Beam", "Future Sight") || isTrapping(moves[i].move)) {
+                    moveBonuses.push(moveBonus);
                     i++;
                     continue;
                 }
            }
 
-           // if multiple moves kill, they are both highest damage 
-           if (key === maximumKey && key >= p1CurrentHealth) {
-               keyString += `${moveName}:HD+${moveBonus}`;
-           } else if (key === maximumKey && !highestDamageSet) {
-               keyString += `${moveName}:HD+0`;
-               highestDamageSet = true;
-           } else {
-               keyString += `${moveName}:0`;
+           // Track all HDM to highestDamageIndexes
+           if (key === maximumKey) {
+               highestDamageIndexes.push(i);
            }
 
+           moveBonuses.push(moveBonus);
            i++;
-        }
+       }
+
+       // Calculate split probabilities when multiple moves share the highest damage
+       // Pattern: 2 moves = 50/50, 3 moves = 25/25/50, 4 moves = 12.5/12.5/25/50
+       // This function reverse engineers existing functionality from Run and Bun's code- per Terra.
+       let highestDamageSplitProbs: number[] = [];
+       if (highestDamageIndexes.length === 1) {
+           highestDamageSplitProbs.push(1.0);
+       } else if (highestDamageIndexes.length >= 2) {
+           let remainingProb = 1.0;
+           for (let i = 0; i < highestDamageIndexes.length; i++) {
+               if (i === highestDamageIndexes.length - 1) {
+                   highestDamageSplitProbs.push(remainingProb);
+               } else {
+                   let prob = remainingProb / 2;
+                   highestDamageSplitProbs.push(prob);
+                   remainingProb -= prob;
+               }
+           }
+       }
+
+       let keyStringsWithProbs: { keyString: string, prob: number }[] = [];
+       
+       // Build keyStrings if multiple highest damage moves, generate multiple strings with split probabilities
+       if (highestDamageIndexes.length === 0) {
+           // No highest damage move (all moves skipped/excluded) - build single keyString w/ moveBonuses
+           let keyString = "";
+           for (let i = 0; i < keys.length; i++) {
+               if (keyString != "") {
+                   keyString += "/"
+               }
+               let moveName = moves[i].move.name;
+               let moveBonus = moveBonuses[i];
+               if (moveBonus > 0) {
+                   keyString += `${moveName}:${moveBonus}`;
+               } else {
+                   keyString += `${moveName}:0`;
+               }
+           }
+           keyStringsWithProbs.push({ keyString, prob: 1.0 });
+       } else {
+           for (let hdIdx = 0; hdIdx < highestDamageIndexes.length; hdIdx++) {
+               let selectedHighestIdx = highestDamageIndexes[hdIdx];
+
+               let keyString = "";
+               
+               for (let i = 0; i < keys.length; i++) {
+                   if (keyString != "") {
+                       keyString += "/"
+                   }
+
+                   let moveName = moves[i].move.name;
+                   let moveBonus = moveBonuses[i];
+                   let key = keys[i];
+                   
+                   // Only the selected highest damage move gets HD+ marking
+                   if (i === selectedHighestIdx) {
+                       keyString += `${moveName}:HD+${moveBonus}`;
+                   } else if (key === maximumKey) {
+                       keyString += `${moveName}:HD+0`;
+                   } else if (moveBonus > 0) {
+                       keyString += `${moveName}:${moveBonus}`;
+                   } else {
+                       keyString += `${moveName}:0`;
+                   }
+               }
+               keyStringsWithProbs.push({ keyString, prob: highestDamageSplitProbs[hdIdx] });
+           }
+       }
 
         let probabilityOfChoice = 1;
         for (const probability of moveProbabilities) {
             probabilityOfChoice *= Number(probability);
         }
 
-        keyStrings = setKeyStrings(keyString, ["HD"]);
-
-        for (const keyString of keyStrings) {
-            // console.log(keyStrings); // Debug
-            const probabilityToAdd = probabilityOfChoice / keyStrings.length;
-            addOrUpdateProbability(probabilities, keyString, probabilityToAdd);
+        // Process each keyString with its probability weight based on new HDM calcs
+        for (const { keyString, prob } of keyStringsWithProbs) {
+            let keyStrings = setKeyStrings(keyString, ["HD"]);
+            const weightedProb = probabilityOfChoice * prob;
+            
+            for (const ks of keyStrings) {
+                // console.log(keyStrings); // Debug
+                const probabilityToAdd = weightedProb / keyStrings.length;
+                addOrUpdateProbability(probabilities, ks, probabilityToAdd);
+            }
         }
     }
 
