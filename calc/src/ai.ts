@@ -2630,12 +2630,19 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             }
 
             // undocumented +1 to Double Team if holding Bright Powder
-            if (moveName == "Double Team" && aiItem == "Bright Powder") {
+            if (moveName == "Double Team") {
                 moveStringsToAdd.push({
                     move: moveName,
-                    score: 1,
+                    score: 6,
                     rate: 1
                 });
+                if (aiItem == "Bright Powder") {
+                    moveStringsToAdd.push({
+                        move: moveName,
+                        score: 1,
+                        rate: 1
+                    });
+                }
             }
 
             // undocumented -20 to dragon tail and counter (and maybe others) if player sees kill

@@ -57,4 +57,5 @@ const CHANGELOG = [
     new ChangelogLine(2, 7, 2, "Fixed Avalanache to be a spread move, sleep powder can no longer be chosen against Vital Spirit, undocumented issue with Offensive setup was fixed to reflect game behavior, fixed Normalize showing buffed damage for Hidden Power"),
     new ChangelogLine(2, 7, 3, "Fix undocumented -20 to Dragon Tail and Counter when Player sees kill. Fix undocumented +1 to Double Team when holding Bright Powder"),
     new ChangelogLine(2, 7, 4, "Fix HDM tie behavior, overlapping rolls for highest damage no longer default to move order and now split as they do in the game"),
+    new ChangelogLine(2, 7, 5, "Fixed Double Team bug introduced in 2.7.3. Endeavor now calculates damage, Super Fang and Nature's Madness now deal 1 minimum dmg to match in game behavior")
 ];
