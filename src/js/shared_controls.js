@@ -1745,7 +1745,7 @@ function setAiOptionVisibility(moveNames) {
 		$("#lastMonOpt").show();
 	}
 
-	// player charmed or confused
+	// player infatuated or confused
 	if (hasMove(["Thunder Wave", "Stun Spore", "Glare", "Nuzzle"], moveNames)) {
 		showAiOptionsDiv();
 		$("#playerCharmedOrConfusedOpt").show();
