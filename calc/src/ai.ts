@@ -65,6 +65,9 @@ const statusApplyingMoves: string[] = [
 const defrostingMoves: string[] = [
     "Burn Up", "Flame Wheel", "Flare Blitz", "Fusion Flare", "Pyro Ball", "Sacred Fire", "Scald", "Scorching Sands", "Steam Eruption"
 ];
+const guaranteedCritMoves: string[] = [
+  "Flower Trick", "Frost Breath", "Storm Throw", "Surging Strikes", "Wicked Blow", "Zippy Zap"
+]
 
 // move functions
 function isNamed(moveName: string, ...names: string[]) {
@@ -218,13 +221,17 @@ function getAIDeadAfterShellSmash(res: any[], playerMaxDamage: number) {
             playerMaxDamageAfterSS = maxRoll;
         }
     }
-    
+
     return playerMaxDamageAfterSS >= aiCurrentHp;
 }
 
 export function getMoveIsStatus(moveName: string, moveBp: number) {
     return moveBp <= 0 &&
         !isNamed(moveName, ...zeroBPButNotStatus)
+}
+
+function moveIsGuaranteedCrit(moveName: string) {
+  return isNamed(moveName, ...guaranteedCritMoves);
 }
 
 function computeDistribution(array: number[]): { [key: number]: number } {
@@ -275,15 +282,15 @@ function splitKeyString(keyString: string, subString: string): string[] {
 
     const indices = parts.reduce((acc: number[], part, i) => {
         // I have no idea why this needs to be inversed, but it does
-        if (!part.includes(subString)) { 
+        if (!part.includes(subString)) {
             acc.push(i);
         }
         return acc;
     }, []);
-    
+
     //console.log(indices); // Debug
 
-    for (let index in indices) {   
+    for (let index in indices) {
         let newKeyString = [... parts];
         newKeyString[index] = newKeyString[index].replace(subString, "0");
         keyStrings.push(newKeyString.map(String).join("/"));
@@ -327,7 +334,7 @@ function updateProbabilityWithVariance(probabilities: KVP[], key: string, prob: 
         addOrUpdateProbability(probabilities, key, prob);
         return;
     }
-    
+
     const combinations: KVP[] = [];
 
     processHighestDamage(key, 1, combinations);
@@ -395,8 +402,8 @@ function getAISeesKill(moveScores: string[], attackerAbility: string) {
         const moveName = moveStrSplit[0];
         const moveScore: number = +moveStrSplit[1];
 
-        if ((isNamed(moveName, "Relic Song", "Meteor Beam", "Future Sight") 
-            || isTrappingStr(moveName)) && exceptionKillScores.includes(moveScore)) 
+        if ((isNamed(moveName, "Relic Song", "Meteor Beam", "Future Sight")
+            || isTrappingStr(moveName)) && exceptionKillScores.includes(moveScore))
         {
             return true;
         } else if (killScores.includes(moveScore)) {
@@ -449,10 +456,10 @@ function getAiDeadToSecondaryDamage(result: any)
             if (immuneToSand) { break; }
 
             weatherDamage = Math.trunc(maxHP / 16);
-            
+
             break;
         case "Hail":
-            const immuneToHail = types.includes("Ice") || 
+            const immuneToHail = types.includes("Ice") ||
                 (ability == "Ice Body" || ability == "Snow Cloak" ||
                 ability == "Magic Guard" || ability == "Overcoat") ||
                 item == "Safety Goggles";
@@ -475,7 +482,7 @@ function getAiDeadToSecondaryDamage(result: any)
 // return value is used as a modifier on the rate of recover moves in the moveStringsToAdd
 // recoveryPercentage needs to be in decimal form (50% -> 0.5)
 function shouldAIRecover(aiMon: Pokemon, recoveryPercentage: number,
-    playerMaxRoll: number, aiFaster: boolean) : number 
+    playerMaxRoll: number, aiFaster: boolean) : number
 {
     const aiMonCurrentHP = aiMon.originalCurHP;
     const aiMonMaxHP = aiMon.stats.hp;
@@ -515,7 +522,7 @@ function shouldAIRecover(aiMon: Pokemon, recoveryPercentage: number,
 
 function isSuperEffective(move: Move, monTypes: I.TypeName[], gravity: boolean = false, ringTarget: boolean = false) {
     const type1Effectiveness = getMoveEffectiveness(move.gen, move, monTypes[0], false, gravity, ringTarget);
-    const type2Effectiveness = monTypes[1] as string != "" ? 
+    const type2Effectiveness = monTypes[1] as string != "" ?
         getMoveEffectiveness(move.gen, move, monTypes[1], false, gravity, ringTarget) :
         1;
 
@@ -596,7 +603,7 @@ function calculateHighestDamage(moves: any[]): KVP[] {
     let p1CurrentHealth = moves[0].defender.curHP();
 
     // console.log(moves); // DEBUG
-    
+
     // Damaging Trapping Moves should always come back as -1 damage
     // TODO: use this for later if you need to iterate on other things, but for now this isn't nessesary
     /*
@@ -630,16 +637,16 @@ function calculateHighestDamage(moves: any[]): KVP[] {
     // we want to get all possible combinations of keys from each dictionary
 
     let allChoices = cartesian(moveDistributions.map(distribution => objectEntriesIntKeys(distribution)));
-    
+
     // console.log(allChoices); // debug
 
     function considerForHighestDamage(move: Move): boolean {
-        return !(move.category === "Status" || 
+        return !(move.category === "Status" ||
             isNamed(move.name, "Explosion", "Final Gambit", "Rollout", "Misty Explosion",
             "Self-Destruct", "Relic Song", "Meteor Beam", "Future Sight", "Counter", "Mirror Coat") ||
             isTrapping(move));
     }
-    
+
     for (let choice of allChoices) {
        let keys = choice.map(([key, value]) => key);
        let moveProbabilities: number[] = choice.map(([key, value]) => Number(value));
@@ -669,7 +676,7 @@ function calculateHighestDamage(moves: any[]): KVP[] {
        for (let key of keys) {
            let moveBonus = 0;
            let moveName = moves[i].move.name;
-           
+
            // if damaging move kills, calculate kill bonus
            if (key >= p1CurrentHealth) {
                if (aiFaster || moves[i].move.priority > 0) {
@@ -732,7 +739,7 @@ function calculateHighestDamage(moves: any[]): KVP[] {
        }
 
        let keyStringsWithProbs: { keyString: string, prob: number }[] = [];
-       
+
        // Build keyStrings if multiple highest damage moves, generate multiple strings with split probabilities
        if (highestDamageIndexes.length === 0) {
            // No highest damage move (all moves skipped/excluded) - build single keyString w/ moveBonuses
@@ -755,7 +762,7 @@ function calculateHighestDamage(moves: any[]): KVP[] {
                let selectedHighestIdx = highestDamageIndexes[hdIdx];
 
                let keyString = "";
-               
+
                for (let i = 0; i < keys.length; i++) {
                    if (keyString != "") {
                        keyString += "/"
@@ -764,7 +771,7 @@ function calculateHighestDamage(moves: any[]): KVP[] {
                    let moveName = moves[i].move.name;
                    let moveBonus = moveBonuses[i];
                    let key = keys[i];
-                   
+
                 // Only the selected highest damage move gets HD+ marking
                 // If multiple moves kill they are both HD, else force choose the one. Chk highestDamageIndexes to continue to exclude
                 // boom and other edge cases defined above
@@ -791,7 +798,7 @@ function calculateHighestDamage(moves: any[]): KVP[] {
         for (const { keyString, prob } of keyStringsWithProbs) {
             let keyStrings = setKeyStrings(keyString, ["HD"]);
             const weightedProb = probabilityOfChoice * prob;
-            
+
             for (const ks of keyStrings) {
                 // console.log(keyStrings); // Debug
                 const probabilityToAdd = weightedProb / keyStrings.length;
@@ -804,7 +811,7 @@ function calculateHighestDamage(moves: any[]): KVP[] {
     let probabilitiesWithVariance: KVP[] = [];
 
     // console.log(probabilities); // DEBUG
-    
+
     for (const probability of probabilities) {
         if (probability.key.includes("HD")) {
             updateProbabilityWithVariance(probabilitiesWithVariance, probability.key, probability.value);
@@ -897,7 +904,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
     }
 
     //console.log(moves); // DEBUG
-    
+
     let damagingMoveDist = calculateHighestDamage(moves);
 
     // iterate through player moves, get highest damaging roll
@@ -905,7 +912,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
     let playerHighestRoll = 0;
     damageResults[0].forEach((move: {damage: number[], move: any, attacker: any}, i: number) => {
         let playerDamageRoll: number = typeof move.damage === 'number' ? move.damage : move.damage[move.damage.length-1];
-        
+
         if (movesetHasMultiHitMove(playerMoves)) {
             const multiHit: number = getMultiHitCount(move.move);
             if (multiHit > 1) {
@@ -913,8 +920,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             }
         }
 
-        // TODO: don't do this check if move is a guaranteed crit
-        if (move.move.isCrit) {
+        if (move.move.isCrit && !moveIsGuaranteedCrit(move.move.name)) {
             playerDamageRoll = Math.trunc(playerDamageRoll / 1.5);
             if (move.attacker.ability == "Sniper") {
                 playerDamageRoll = Math.trunc(playerDamageRoll / 1.5);
@@ -1269,7 +1275,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                             rate: 1
                         });
                     }
-    
+
                     moveStringsToAdd.push({
                         move: moveName,
                         score: 1,
@@ -1302,15 +1308,15 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                             rate: 1
                         });
                     }
-                    
+
                     moveStringsToAdd.push({
                         move: moveName,
                         score: 1,
                         rate: 0.75
                     });
-                    
+
                     // IF PLAYER SPIKES ARE UP -1 ALWAYS
-                    if ((moveName == "Spikes" && playerSideSpikes) || 
+                    if ((moveName == "Spikes" && playerSideSpikes) ||
                         ((moveName == "Toxic Spikes") && playerSideTSpikes)) {
                         moveStringsToAdd.push({
                             move: moveName,
@@ -1336,7 +1342,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                         rate: 1
                     });
                 }
-                
+
                 moveStringsToAdd.push({
                     move: moveName,
                     score: 3,
@@ -1360,13 +1366,13 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                     let playerBurnedOrPoisoned = false;
                     let aiBurnedOrPoisoned = false;
 
-                    if (aiStatusCond == "brn" || 
+                    if (aiStatusCond == "brn" ||
                         aiStatusCond == "psn" ||
                         aiStatusCond == "tox") {
                         aiBurnedOrPoisoned = true;
                     }
 
-                    if (playerMon.status == "brn" || 
+                    if (playerMon.status == "brn" ||
                         playerMon.status == "psn" ||
                         playerMon.status == "tox") {
                         playerBurnedOrPoisoned = true;
@@ -1552,7 +1558,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             // Terrain
             // If Holding Terrain Extender +9, else +8. If already Terrain -20
             if (moveName.endsWith(" Terrain")) {
-                // I think there's only ever one terrain type per team, so this should be fine. 
+                // I think there's only ever one terrain type per team, so this should be fine.
                 // If it's broken fix it obvs
                 if (!terrain) {
                     if (aiItem === "Terrain Extender") {
@@ -1581,7 +1587,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             // starts at +6, +1 if holding light clay, +1 (50%). If screen is already up -20
             if (moveName == "Light Screen" || moveName == "Reflect") {
                 // useless move check
-                if ((moveName == "Light Screen" && aiLightScreen) || 
+                if ((moveName == "Light Screen" && aiLightScreen) ||
                     ((moveName == "Reflect") && aiReflect)) {
                     moveStringsToAdd.push({
                         move: moveName,
@@ -1591,7 +1597,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                 } else {
                     let screenScore = 6;
                     const correspondingMoveSplit = moveName == "Reflect" ? "Physical": "Special";
-                    const playerHasAnyOfCorrespondingSplit = playerMoves.some(x => x.move.category == correspondingMoveSplit && 
+                    const playerHasAnyOfCorrespondingSplit = playerMoves.some(x => x.move.category == correspondingMoveSplit &&
                         (x.move.bp > 0 || (zeroBPButNotStatus.includes(x.move.name) && x.move.name != "(No Move)")));
 
                     if (playerHasAnyOfCorrespondingSplit) {
@@ -1616,7 +1622,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             // Substitute
             if (moveName == "Substitute") {
                 // if Infiltrator, at or below 50% health, or sub already up
-                if (playerAbility == "Infiltrator" || 
+                if (playerAbility == "Infiltrator" ||
                     aiHealthPercentage <= 50 ||
                     moves[0].field.attackerSide.isSubstitute) {
                     moveStringsToAdd.push({
@@ -1629,7 +1635,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                     if (playerMon.status == "slp") { subScore += 2; }
                     if (playerLeechSeeded && aiFaster) { subScore += 2; }
                     if (movesetHasSoundMove(playerMoves)) { subScore -= 8; }
-    
+
                     moveStringsToAdd.push(...[{
                         move: moveName,
                         score: subScore,
@@ -1746,7 +1752,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                 const hexIndex = moves.findIndex(x => x.move.name === "Hex"); // hehe inHEX more like
                 var paraIncentive = aiSlowerButFasterAfterPara || hexIndex != -1 || playerCharmedOrConfused;
 
-                if (playerHasStatusCond || 
+                if (playerHasStatusCond ||
                     (move.type == "Electric" && (playerTypes.includes("Ground"))) ||
                     (playerAbility == "Limber") ||
                     (playerTypes.includes("Electric")))
@@ -1777,7 +1783,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                     rate: 0.5
                 });
             }
-            
+
             // Will-o-Wisp
             // Starts at +6
             // 37% of the time, the following conditions are checked
@@ -1785,7 +1791,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             // If AI mon or partner has Hex +1
             if (moveName == "Will-O-Wisp") {
                 // any intuitive condition where AI won't click status move
-                if (playerHasStatusCond || playerTypes.findIndex((type: string) => type == "Fire") != -1) { 
+                if (playerHasStatusCond || playerTypes.findIndex((type: string) => type == "Fire") != -1) {
                     moveStringsToAdd.push({
                         move: moveName,
                         score: -20,
@@ -1847,7 +1853,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             // Yawn, Dark Void, Grass Whistle, Sing
             if (moveName == "Yawn" || moveName == "Dark Void" || moveName == "Grass Whistle" || moveName == "Sing" || moveName == "Hypnosis" || moveName == "Sleep Powder") {
                 const sleepPreventingAbility = playerAbility == "Insomnia" || playerAbility == "Vital Spirit" || playerAbility == "Sweet Veil";
-                if (sleepPreventingAbility || playerHasStatusCond || terrain == "Electric" || terrain == "Misty") { 
+                if (sleepPreventingAbility || playerHasStatusCond || terrain == "Electric" || terrain == "Misty") {
                     moveStringsToAdd.push({
                         move: moveName,
                         score: -20,
@@ -1861,16 +1867,16 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                     });
 
                     let sleepScore: number = 0;
-                    
+
                     if (!aiSeesKill) {
                         sleepScore++;
                         const dreamEaterIndex = moves.findIndex(x => x.move.name === "Dream Eater");
                         const nightmareIndex = moves.findIndex(x => x.move.name === "Nightmare");
                         const snoreIndex = playerMoves.findIndex(x => x.move.name == "Snore");
                         const sleepTalkIndex = playerMoves.findIndex(x => x.move.name == "Sleep Talk");
-                        
+
                         if ((dreamEaterIndex != -1 || nightmareIndex != -1) && (snoreIndex == -1 && sleepTalkIndex == -1)) { sleepScore++; }
-                        
+
                         // TODO: needs update for doubles one day
                         const hexIndex = moves.findIndex(x => x.move.name === "Hex"); // hehe inHEX more like
                         if (hexIndex != -1) { sleepScore++; }
@@ -1905,11 +1911,11 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                     if (playerHealthPercentage > 20 && !aiSeesKill) {
                         let toxScore = 0;
 
-                        if (playerHighestRoll == 0 && 
+                        if (playerHighestRoll == 0 &&
                             (movesetHasMoves(moves, "Hex", "Venom Drench") || moves[0].ability == "Merciless")) {
                             toxScore += 2;
                         }
-    
+
                         moveStringsToAdd.push({
                             move: moveName,
                             score: toxScore,
@@ -1931,7 +1937,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                 "Charge Beam", "Tail Glow", "Nasty Plot", "Cosmic Power",
                 "Bulk Up", "Calm Mind", "Dragon Dance", "Coil", "Hone Claws", "Quiver Dance",
                 "Shift Gear", "Shell Smash", "Growth", "Work Up", "Curse", "No Retreat")) {
-                if (aiDeadToPlayer || 
+                if (aiDeadToPlayer ||
                     ((moveName != "Power-Up Punch" && moveName != "Swords Dance" && moveName != "Howl") &&
                     playerAbility == "Unaware")) {
                     moveStringsToAdd.push({
@@ -1996,9 +2002,9 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             if (isOffensiveSetup) {
                 let offensiveScore = 6;
 
-                if (playerIncapacitated) { 
-                    offensiveScore += 3; 
-                } 
+                if (playerIncapacitated) {
+                    offensiveScore += 3;
+                }
                 // comented out because of run and bug
                 /* else if (!aiThreeHitKOd) {
                     offensiveScore++;
@@ -2026,7 +2032,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             if (isDefensiveSetup) {
                 // this may need updating this is off my memory
                 const boostsDefAndSpDef = isNamed(moveName, "Stockpile", "Cosmic Power");
-                
+
                 let initialDefensiveScore = 6;
                 if ((!aiFaster && aiTwoHitKOd) && !isContrary) {
                     initialDefensiveScore -= 5;
@@ -2227,7 +2233,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             // If AI is faster and dies to player mon +7 (81%), +6 (19%)
             // If AI is slower, +5 (50%), +6 (50%)
             if (moveName == "Destiny Bond") {
-                if (aiFaster && aiDeadToPlayer) { 
+                if (aiFaster && aiDeadToPlayer) {
                     moveStringsToAdd.push(...[{
                         move: moveName,
                         score: 6,
@@ -2239,7 +2245,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                         rate: 0.81
                     }]);
                 }
-                
+
                 if (!aiFaster) {
                     moveStringsToAdd.push(...[{
                         move: moveName,
@@ -2287,7 +2293,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                         sunBasedHealingOverflow = true;
                     }
                 }
-                
+
             }
 
             // Recovery Moves
@@ -2313,7 +2319,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                     let sevenRate = sunRecoveryRate != 0 ?
                                         sunRecoveryRate + ((1 - sunRecoveryRate) * aiRecoverRate):
                                         aiRecoverRate;
-                                        
+
                     moveStringsToAdd.push(...[{
                         move: moveName,
                         score: 5,
@@ -2333,7 +2339,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                                                 movesetHasMoves(moves, "Sleep Talk", "Snore") ||
                                                 moves[0].ability == "Shed Skin" || moves[0].ability == "Early Bird" ||
                                                 (moves[0].ability == "Hydration" && weather.includes("Rain")) ? 1 : 0;
-                
+
                 const aiShouldRecover = shouldAIRecover(moves[0].attacker, 1, playerHighestRoll, aiFaster);
 
                 moveStringsToAdd.push(...[{
@@ -2446,13 +2452,13 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                         playerOnlyHasMovesOfCorrespondingSplit) {
                         counterScore += 2;
                     }
-    
+
                     moveStringsToAdd.push({
                         move: moveName,
                         score: counterScore,
                         rate: 1
                     });
-    
+
                     if (!aiDeadToPlayer && playerOnlyHasMovesOfCorrespondingSplit) {
                         moveStringsToAdd.push({
                             move: moveName,
@@ -2460,7 +2466,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                             rate: 0.8
                         });
                     }
-    
+
                     if (aiFaster) {
                         moveStringsToAdd.push({
                             move: moveName,
@@ -2468,7 +2474,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                             rate: 0.25
                         });
                     }
-    
+
                     if (playerHasStatusMove) {
                         moveStringsToAdd.push({
                             move: moveName,
@@ -2501,7 +2507,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                             break;
                         }
                     }
-                    
+
                     if (aiFaster && playerHasDamagingGroundMove) {
                         moveStringsToAdd.push({
                             move: moveName,
@@ -2528,7 +2534,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                     rate: 1
                 });
             }
-            
+
             // Sleep Talk
             if (moveName == "Sleep Talk" && aiStatusCond != "slp") {
                 moveStringsToAdd.push({
@@ -2537,10 +2543,10 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                     rate: 1
                 });
             }
-            
-            // I'm just guessing it's similar to Speed reduction AI, 
+
+            // I'm just guessing it's similar to Speed reduction AI,
             // because I've seen Lass Haley's Numel Flame Charge when its not highest damage
-            if (moveName == "Flame Charge" 
+            if (moveName == "Flame Charge"
                 && moveScore == 0 && !aiFaster && anyValidDamageRolls) {
                 moveStringsToAdd.push({
                     move: moveName,
@@ -2570,9 +2576,9 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                     rate: 1
                 });
             }
-            
+
             // Leech seed
-            if (isNamed(moveName, "Leech Seed") && 
+            if (isNamed(moveName, "Leech Seed") &&
                 (playerTypes.includes("Grass") || playerLeechSeeded)) {
                 moveStringsToAdd.push({
                         move: moveName,
@@ -2592,7 +2598,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
 
             // Per Grintoul and Berry, Smack Down/Thousand Arrows get +6 if it can ground you
             var playerCanBeGrounded = playerTypes.includes("Flying") || playerAbility == "Levitate";
-            if (isNamed(moveName, "Smack Down", "Thousand Arrows") && playerCanBeGrounded && !playerGrounded) { 
+            if (isNamed(moveName, "Smack Down", "Thousand Arrows") && playerCanBeGrounded && !playerGrounded) {
                 moveStringsToAdd.push({
                     move: moveName,
                     score: 6,
@@ -2626,7 +2632,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                         score: -20,
                         rate: 1
                     });
-                }   
+                }
             }
 
             // undocumented +1 to Double Team if holding Bright Powder
@@ -2653,6 +2659,14 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                     rate: 1
                 });
             }
+          // Metal Burst +6
+          if (moveName == "Metal Burst") {
+              moveStringsToAdd.push({
+                  move: moveName,
+                  score: 6,
+                  rate: 1
+              });
+          }
             // end of the hell loop
         });
 
@@ -2678,12 +2692,12 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
 
             i++;
         }
-        
+
         // iterate through all move strings and update the move kvps
         for (const moveStringToAdd of moveStringsToAdd) {
             moveKVPs = updateMoveKVPWithMoveStrings(moveKVPs, moveStringToAdd);
         }
-        
+
         for (const moveKVP of moveKVPs) {
             addOrUpdateProbability(postBoostsMoveDist, moveKVP.key, moveKVP.value);
         }
@@ -2707,7 +2721,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
             }
         });
     }
-    
+
     // actually measure score and calculate probability of each move
     for (const dist of postBoostsMoveDist) {
         let moveArr = dist.key.split('/');
@@ -2729,7 +2743,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
                 moves.push(index);
             }
         });
-        
+
         moves.forEach((move) => {
             finalDist[move] += dist.value / moves.length;
         });
