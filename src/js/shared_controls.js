@@ -1955,7 +1955,8 @@ function colorCodeUpdate(){
 
 	}
 	var p1monEl = document.getElementById("p1mon");
-	if (p1monEl && p1monEl.src) {
+	var colorCodeMonHeader = document.getElementById("colorCodeMonHeader");
+	if (p1monEl && p1monEl.src && colorCodeMonHeader && colorCodeMonHeader.checked) {
 		try {
 			var p1Color = calculationsColors($("#p1"), p2);
 			if (speCheck && ohkoCheck){
@@ -2291,6 +2292,13 @@ $(document).ready(function () {
 	$('#cc-ohko-color').change(ColorCodeSetsChange);
 	$('#cc-spe-border')[0].checked=true;
 	$('#cc-ohko-color')[0].checked=true;
+	$(document).on("change", "#colorCodeMonHeader", function () {
+		if (!this.checked) {
+			document.getElementById("p1mon").className = "";
+		} else {
+			colorCodeUpdate();
+		}
+	});
 	$('#singles-format').click(updateSingleDoublesIcon);
 	$('#doubles-format').click(updateSingleDoublesIcon);
 	for (let dropzone of document.getElementsByClassName("dropzone")) {
