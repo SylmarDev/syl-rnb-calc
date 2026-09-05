@@ -581,6 +581,11 @@ $(".set-selector").change(function () {
 			}
 			
 			// this ruined my day
+			if (pok_name.includes("-Mega")) {
+				var base_name = pok_name.split("-Mega")[0]
+				var mega_data_id = CURRENT_TRAINER_POKS[i].split("]")[1]
+				trpok_html += `<img class="trainer-pok right-side" src="https://raw.githubusercontent.com/May8th1995/sprites/master/${base_name}.png" data-id="${mega_data_id}" data-base-name="${base_name}" title="${next_poks[i]}, ${next_poks[i]} BP">`
+			}
 			var pok = `<img class="trainer-pok right-side" src="https://raw.githubusercontent.com/May8th1995/sprites/master/${pok_name}.png" data-id="${CURRENT_TRAINER_POKS[i].split("]")[1]}" title="${next_poks[i]}, ${next_poks[i]} BP">`
 			trpok_html += pok
 		}
@@ -866,11 +871,13 @@ $(".forme").change(function () {
 
 $("#p2 .forme").change(function(e) {
 	if (!e.originalEvent) { return; }
-	var altForme = pokedex[$(this).val()],
-	container = $(this).closest(".info-group").siblings(),
-	fullSetName = container.find(".select2-chosen").first().text(),
-	pokemonName = fullSetName.substring(0, fullSetName.indexOf(" (")),
-	setName = fullSetName.substring(fullSetName.indexOf("(") + 1, fullSetName.lastIndexOf(")"));
+	topPokemonIcon($(this).val(), $("#p2mon")[0]);
+	var altForme = pokedex[$(this).val()];
+	const container = $(this).closest(".info-group").siblings();
+	const fullSetName = container.find(".select2-chosen").first().text();
+	const pokemonName = fullSetName.substring(0, fullSetName.indexOf(" ("));
+	var setName = fullSetName.substring(fullSetName.indexOf("(") + 1, fullSetName.lastIndexOf(")"));
+	const options = $(this).children("option").map(function() { return $(this).text(); }).get();
 
 	var isRandoms = $("#randoms").prop("checked");
 	var pokemonSets = isRandoms ? randdex[pokemonName] : setdex[pokemonName];
@@ -879,7 +886,7 @@ $("#p2 .forme").change(function(e) {
 	// console.log(setName); // DEBUG
 
 	// overwrite ability if a mega has forme switched
-	if (pokemonName.indexOf("-Mega") !== -1) {
+	if (options.some(option => option.includes("-Mega"))) {
 		if (setName.includes("Trainer Rival")) {
 			setName = "Pokemon Trainer May";
 		}
@@ -893,9 +900,12 @@ $("#p2 .forme").change(function(e) {
 
 		// if forme is != mega
 		if ($(this).val().indexOf("-Mega") === -1) {
-			container.find(".ability").val(MEGA_BASE_ABILITIES[setName][pokemonName.split("-Mega")[0]]);
+			var baseAbility = (MEGA_BASE_ABILITIES[setName] || {})[pokemonName.split("-Mega")[0]];
+			container.find(".ability").val(baseAbility || altForme.ab || "");
 		} else { // if mega form use mega ability
-			container.find(".ability").val(chosenSet.ability);
+			var megaSets = setdex[pokemonName + "-Mega"];
+			var megaSet = megaSets && megaSets[setName];
+			container.find(".ability").val((megaSet || chosenSet || altForme).ability);
 		}
 	}
 });
@@ -1841,12 +1851,36 @@ function setDisclaimVisibility(moveNames) {
 
 $(document).on('click', '.right-side', function () {
 	var set = $(this).attr('data-id');
-	topPokemonIcon(set, $("#p2mon")[0])
+	var baseName = $(this).attr('data-base-name');
 	$('.opposing').val(set);
 	$('input.opposing').prop('title', $(this).prop('title').split("]")[0].slice(1));
 	$('.opposing').change();
-	$('.opposing .select2-chosen').text(set);
+	topPokemonIcon(baseName ? baseName + " (" + set.substring(set.indexOf("(") + 1) : set, $("#p2mon")[0])
+	var displayName = baseName ? baseName + " (" + set.substring(set.indexOf("(") + 1) : set;
+	$('.opposing .select2-chosen').text(displayName);
 	setAiOptionAndDisclaimVisibility('p2');
+	if (baseName) {
+		var basePokemon = pokedex[baseName];
+		var pokeObj = $('.opposing').closest(".poke-info");
+		if (basePokemon) {
+			pokeObj.find(".type1").val(basePokemon.types[0]);
+			pokeObj.find(".type2").val(basePokemon.types[1]);
+			pokeObj.find(".hp .base").val(basePokemon.bs.hp);
+			pokeObj.find(".forme").val(baseName);
+			for (var si = 0; si < LEGACY_STATS[gen].length; si++) {
+				pokeObj.find("." + LEGACY_STATS[gen][si] + " .base").val(basePokemon.bs[LEGACY_STATS[gen][si]]);
+			}
+			calcHP(pokeObj);
+			calcStats(pokeObj);
+		}
+		var trainerName = set.substring(set.indexOf("(") + 1, set.lastIndexOf(")"));
+		if (trainerName.includes("Trainer Rival")) { trainerName = "Pokemon Trainer May"; }
+		var mbaKey = Object.keys(MEGA_BASE_ABILITIES).find(k => trainerName.includes(k)) || trainerName;
+		var baseAbility = (MEGA_BASE_ABILITIES[mbaKey] && MEGA_BASE_ABILITIES[mbaKey][baseName])
+			|| (basePokemon && basePokemon.ab)
+			|| "";
+		pokeObj.find(".ability").val(baseAbility).keyup();
+	}
 })
 
 $(document).on('click', '.left-side', function () {
