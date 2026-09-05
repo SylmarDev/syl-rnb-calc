@@ -872,10 +872,9 @@ function calculateHighestDamage(moves: any[]): KVP[] {
 /**
  * Generates the move distribution.
  * @param {any[]} damageResults - damageResults of current calc state
- * @param {string} fastestSide - 0 if player, 1 if AI. "tie" if tie
  * @returns {number[]} The move distribution.
  */
-export function generateMoveDist(damageResults: any[], _fastestSide: string, aiOptions: {[key: string]: boolean }): number[] {
+export function generateMoveDist(damageResults: any[], aiOptions: {[key: string]: boolean }): number[] {
     // DEBUG
     // console.log(damageResults);
     // console.log(aiOptions);

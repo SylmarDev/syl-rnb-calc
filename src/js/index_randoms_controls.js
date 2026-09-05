@@ -201,7 +201,7 @@ function performCalculations() {
 	var runAIPercentageCode = !($("#disableAiMovePercentage").is(":checked"));
 
 	if (runAIPercentageCode) {
-		var moveRates = calc.generateMoveDist(damageResults, fastestSide, aiOptions);
+		var moveRates = calc.generateMoveDist(damageResults, aiOptions);
 
 		for (var i = 0; i < moveRates.length; i++) {
 			$("#resultMoveRateR" + (i + 1)).text((moveRates[i] * 100).toFixed(2) + "%");
