@@ -2,8 +2,12 @@ function placeBsBtn() {
 	var importBtn = "<button id='import' class='bs-btn bs-btn-default'>Import</button>";
 	$("#import-1_wrapper").append(importBtn);
 
-	var savBtn = "<button id='importSav' class='bs-btn bs-btn-default'>Import from .sav</button><input type='file' id='importSavFile' accept='.sav' style='display:none'>";
+	var savBtn = "<button id='importSav' class='bs-btn bs-btn-default'>Import from .sav</button><input type='file' id='importSavFile' accept='.sav' style='position:absolute;left:-9999px;top:-9999px'>";
 	$("#import-1_wrapper").append(savBtn);
+
+	$("#importSav").click(function () {
+		document.getElementById("importSavFile").click();
+	});
 
 	$("#importSavFile").change(function () {
 		var file = this.files[0];
