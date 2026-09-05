@@ -130,6 +130,10 @@ function performCalculations() {
 	var p2field = p1field.clone().swap();
 
 	damageResults = calculateAllMoves(gen, p1, p1field, p2, p2field);
+	if (critRateLabelsVisible() && typeof updateCritRateLabelsFromPokemon === "function") {
+		updateCritRateLabelsFromPokemon(p1, p2, p1field, p2field);
+	}
+	
 	p1 = damageResults[0][0].attacker;
 	p2 = damageResults[1][0].attacker;
 	var battling = [p1, p2];
@@ -137,7 +141,13 @@ function performCalculations() {
 	p2.maxDamages = [];
 	p1info.find(".sp .totalMod").text(p1.stats.spe);
 	p2info.find(".sp .totalMod").text(p2.stats.spe);
-	var fastestSide = p1.stats.spe > p2.stats.spe ? 0 : 1;
+	var fastestSide = 'tie';
+	if (p1.stats.spe !== p2.stats.spe) {
+		var p1MovesFirst = p1field.isTrickRoom
+			? p1.stats.spe < p2.stats.spe
+			: p1.stats.spe > p2.stats.spe;
+		fastestSide = p1MovesFirst ? 0 : 1;
+	}
 
 	var result, maxDamage;
 	var bestResult;
@@ -191,7 +201,7 @@ function performCalculations() {
 	var runAIPercentageCode = !($("#disableAiMovePercentage").is(":checked"));
 
 	if (runAIPercentageCode) {
-		var moveRates = calc.generateMoveDist(damageResults, fastestSide, aiOptions);
+		var moveRates = calc.generateMoveDist(damageResults, aiOptions);
 
 		for (var i = 0; i < moveRates.length; i++) {
 			$("#resultMoveRateR" + (i + 1)).text((moveRates[i] * 100).toFixed(2) + "%");

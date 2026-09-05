@@ -4,7 +4,7 @@ import {Move} from './move';
 import {Pokemon} from './pokemon';
 import {Result} from './result';
 
-import { generateMoveDist } from "./ai";
+import { generateMoveDist, getMoveIsStatus } from "./ai";
 
 import {calculateRBYGSC} from './mechanics/gen12';
 import {calculateADV} from './mechanics/gen3';

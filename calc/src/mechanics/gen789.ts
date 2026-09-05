@@ -206,6 +206,7 @@ export function calculateSMSSSV(
     'Natural Gift',
     'Weather Ball',
     'Terrain Pulse',
+    'Hidden Power',
   ) || (move.named('Tera Blast') && attacker.teraType);
 
   if (!move.isZ && !noTypeChange) {
@@ -383,7 +384,13 @@ export function calculateSMSSSV(
   }
 
   if (move.named("Super Fang", 'Nature\'s Madness')) {
-    const lostHP = field.defenderSide.isProtected ? 0 : Math.floor(defender.curHP() / 2);
+    const lostHP = field.defenderSide.isProtected ? 0 : Math.max(Math.floor(defender.curHP() / 2), 1);
+    result.damage = lostHP;
+    return result;
+  }
+
+  if (move.named('Endeavor')) {
+    const lostHP = field.defenderSide.isProtected ? 0 : Math.max(defender.curHP() - attacker.curHP(), 0);
     result.damage = lostHP;
     return result;
   }

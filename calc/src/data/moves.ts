@@ -815,6 +815,7 @@ const DPP_PATCH: {[name: string]: DeepPartial<MoveData>} = {
     type: 'Ice',
     makesContact: true,
     category: 'Physical',
+    target: 'allAdjacentFoes'
   },
   'Brave Bird': {
     bp: 120,

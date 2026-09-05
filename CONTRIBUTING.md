@@ -16,14 +16,14 @@ From there you can give it a title and label it, and write up a description. Be 
 
 ## Documentation
 
-I have various markdown files I need to get to and parse through in this repo with ideas and speculation on where to go from here with the calculator. This very file needs updated with better descriptions.
+I have various markdown files I need to get to and parse through in this repo with ideas and speculation on where to go from here with the calculator. This very file needs updated with better descriptions!
 
 ## Development
 
-To build locally, run ``node build`` in the root directory. You will need to do this to have changes apply when working. Then you can navigate to the dist/ folder instance of ``index.template.html``. 
+To build locally, run ``node build`` in the root directory (alternatively, run ``node server.js`` from root to run the server). You will need to do this to have changes apply when working. Then you can navigate to the dist/ folder instance of ``index.template.html``. Please make sure all PR's build!
 
 Feel free to make a branch and target your pull requests to ``dev``. I can't promise I'll accept changes, but as this project is [MIT Licensed](LICENSE.md) you are free to make your own modifications. I value configurability, and ease of use to make this project usable for all players regardless of how many features they want to use.
 
 ## Contact
 
-You can reach me on discord or twitch at ``princess`` + ``my github username minus the "dev"`` if you'd like to talk more about contributing, the calculator, or have any questions.
+You can reach me on discord or twitch at ``PrincessSylmar`` if you'd like to talk more about contributing, the calculator, or have any questions.
