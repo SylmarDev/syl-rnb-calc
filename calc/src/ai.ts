@@ -253,6 +253,15 @@ function objectEntriesIntKeys(obj: { [key: number]: number }): [number, number][
     return Object.entries(obj).map(([key, value]) => [parseInt(key), value]);
 }
 
+function aiMovesFirst(moves: any[]): boolean {
+    const aiSpeed = moves[0].attacker.stats.spe;
+    const playerSpeed = moves[0].defender.stats.spe;
+
+    return moves[0].field.isTrickRoom
+        ? aiSpeed <= playerSpeed
+        : aiSpeed >= playerSpeed;
+}
+
 function cartesian(arrays: any[][]): any[][] {
     return arrays.reduce((acc, curr) => {
         return acc.flatMap(d => curr.map(e => [...d, e]));
@@ -624,7 +633,7 @@ function calculateHighestDamage(moves: any[]): KVP[] {
     // console.log(moves); // DEBUG
 
     let arrays = moves.map(move => move.damageRolls().map((roll: number) => Math.min(p1CurrentHealth, roll)));
-    let aiFaster = moves[0].attacker.stats.spe >= moves[0].defender.stats.spe;
+    let aiFaster = aiMovesFirst(moves);
 
     // list of damage distributions for the move
     let moveDistributions = arrays.map(array => computeDistribution(array));
@@ -866,7 +875,7 @@ function calculateHighestDamage(moves: any[]): KVP[] {
  * @param {string} fastestSide - 0 if player, 1 if AI. "tie" if tie
  * @returns {number[]} The move distribution.
  */
-export function generateMoveDist(damageResults: any[], fastestSide: string, aiOptions: {[key: string]: boolean }): number[] {
+export function generateMoveDist(damageResults: any[], _fastestSide: string, aiOptions: {[key: string]: boolean }): number[] {
     // DEBUG
     // console.log(damageResults);
     // console.log(aiOptions);
@@ -874,7 +883,7 @@ export function generateMoveDist(damageResults: any[], fastestSide: string, aiOp
     // set variables, parsed from move dist
     let moves: any[] = damageResults[1];
     const playerMoves: any[] = damageResults[0];
-    const aiFaster: boolean = fastestSide != "0";
+    const aiFaster = aiMovesFirst(moves);
     const playerMon: Pokemon = moves[0].defender;
 
     let finalDist: number[] = [];
