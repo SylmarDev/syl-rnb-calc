@@ -2,6 +2,32 @@ function placeBsBtn() {
 	var importBtn = "<button id='import' class='bs-btn bs-btn-default'>Import</button>";
 	$("#import-1_wrapper").append(importBtn);
 
+	var savBtn = "<button id='importSav' class='bs-btn bs-btn-default'>Import from .sav</button><input type='file' id='importSavFile' accept='.sav' style='display:none'>";
+	$("#import-1_wrapper").append(savBtn);
+
+	$("#importSavFile").change(function () {
+		var file = this.files[0];
+		this.value = "";
+		if (!file) return;
+		var reader = new FileReader();
+		reader.onload = function () {
+			var text = parseSaveToShowdownText(new Uint8Array(reader.result));
+			if (text === null) {
+				alert("Not a recognizable save file.");
+				return;
+			}
+			if (text === "") {
+				alert("Save decoded but no Pokémon found in party or box.");
+				return;
+			}
+			document.getElementsByClassName("import-team-text")[0].value = text;
+		};
+		reader.onerror = function () {
+			alert("Could not read file.");
+		};
+		reader.readAsArrayBuffer(file);
+	});
+
 	$("#import.bs-btn").click(function () {
 		var pokes = document.getElementsByClassName("import-team-text")[0].value;
 		var name = document.getElementsByClassName("import-name-text")[0].value.trim() === "" ? "Custom Set" : document.getElementsByClassName("import-name-text")[0].value;
