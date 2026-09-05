@@ -769,6 +769,7 @@ $(".forme").change(function () {
 
 $("#p2 .forme").change(function(e) {
 	if (!e.originalEvent) { return; }
+	topPokemonIcon($(this).val(), $("#p2mon")[0]);
 	var altForme = pokedex[$(this).val()];
 	const container = $(this).closest(".info-group").siblings();
 	const fullSetName = container.find(".select2-chosen").first().text();
@@ -797,9 +798,12 @@ $("#p2 .forme").change(function(e) {
 
 		// if forme is != mega
 		if ($(this).val().indexOf("-Mega") === -1) {
-			container.find(".ability").val(MEGA_BASE_ABILITIES[setName][pokemonName.split("-Mega")[0]]);
+			var baseAbility = (MEGA_BASE_ABILITIES[setName] || {})[pokemonName.split("-Mega")[0]];
+			container.find(".ability").val(baseAbility || altForme.ab || "");
 		} else { // if mega form use mega ability
-			container.find(".ability").val(chosenSet.ability);
+			var megaSets = setdex[pokemonName + "-Mega"];
+			var megaSet = megaSets && megaSets[setName];
+			container.find(".ability").val((megaSet || chosenSet || altForme).ability);
 		}
 	}
 });
