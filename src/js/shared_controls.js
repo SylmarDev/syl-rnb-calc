@@ -871,7 +871,21 @@ $(".forme").change(function () {
 
 $("#p2 .forme").change(function(e) {
 	if (!e.originalEvent) { return; }
-	topPokemonIcon($(this).val(), $("#p2mon")[0]);
+	// jump to forme by clicking its icon
+	var formeVal = $(this).val();
+	var rosterIcon = $(".trainer-pok-list-opposing .right-side").filter(function () {
+		return !$(this).attr("data-base-name") && $(this).attr("data-id").split(" (")[0] === formeVal;
+	}).first();
+	if (!rosterIcon.length) {
+		rosterIcon = $(".trainer-pok-list-opposing .right-side").filter(function () {
+			return $(this).attr("data-base-name") === formeVal;
+		}).first();
+	}
+	if (rosterIcon.length) {
+		rosterIcon.click();
+		return;
+	}
+	topPokemonIcon(formeVal, $("#p2mon")[0]);
 	var altForme = pokedex[$(this).val()];
 	const container = $(this).closest(".info-group").siblings();
 	const fullSetName = container.find(".select2-chosen").first().text();
@@ -1857,7 +1871,7 @@ $(document).on('click', '.right-side', function () {
 	$('.opposing').change();
 	topPokemonIcon(baseName ? baseName + " (" + set.substring(set.indexOf("(") + 1) : set, $("#p2mon")[0])
 	var displayName = baseName ? baseName + " (" + set.substring(set.indexOf("(") + 1) : set;
-	$('.opposing .select2-chosen').text(displayName);
+	$('.opposing').siblings('.select2-container').find('.select2-chosen').text(displayName);
 	setAiOptionAndDisclaimVisibility('p2');
 	if (baseName) {
 		var basePokemon = pokedex[baseName];
