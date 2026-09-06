@@ -59,4 +59,5 @@ const CHANGELOG = [
     new ChangelogLine(2, 7, 4, "Fix HDM tie behavior, overlapping rolls for highest damage no longer default to move order and now split as they do in the game"),
 	new ChangelogLine(2, 7, 5, "Fixed Double Team bug introduced in 2.7.3. Endeavor now calculates damage, Super Fang and Nature's Madness now deal 1 minimum dmg to match in game behavior"),
     new ChangelogLine(2, 7, 6, "AI now sees always crit moves for the player as always critting, and considers that in its check for if it is dead to player this turn. Added Metal Burst"),
+    new ChangelogLine(3, 0, 0, "Upload save files, megas display alongside and can now change from party list or forme dropdown seamlessly, color coding on top mon, fix some trick room speed edge cases"),
 ];
