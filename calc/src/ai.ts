@@ -982,7 +982,7 @@ export function generateMoveDist(damageResults: any[], aiOptions: {[key: string]
     // console.log(moves[0].attacker.boosts);
 
     // console.log(moves);
-    
+
     // ai options
     const firstTurnOut = aiOptions["firstTurnOutAiOpt"];
     const suckerPunchUsedLastTurn = aiOptions["suckerPunchAiOpt"];
@@ -1047,7 +1047,7 @@ export function generateMoveDist(damageResults: any[], aiOptions: {[key: string]
             // console.log(move);
 
             // Damaging Priority moves
-            // if AI is dead to player mon and slower, 
+            // if AI is dead to player mon and slower,
             // all attacking moves with priority get an additional +11
             const moveHasPriority = move.priority > 0 || (moveName == "Grassy Glide" && terrain == "Grassy");
             if (moveHasPriority && !aiFaster && aiDeadToPlayer && anyValidDamageRolls) {
@@ -1108,7 +1108,7 @@ export function generateMoveDist(damageResults: any[], aiOptions: {[key: string]
             // scores are additive, so these should stack with kill bonuses
             if (isNamed(moveName, "Skitter Smack", "Trop Kick", "Snarl", "Mystical Fire", "Breaking Swipe") && moveScore == 0) {
                 const affectedMoveType = moveName == "Trop Kick" || moveName == "Breaking Swipe" ? "Physical" : "Special";
-                const playerHasAnyOfCorrespondingSplit = playerMoves.some(x => x.move.category == affectedMoveType && 
+                const playerHasAnyOfCorrespondingSplit = playerMoves.some(x => x.move.category == affectedMoveType &&
                     (x.move.bp > 0 || (zeroBPButNotStatus.includes(x.move.name) && x.move.name != "(No Move)")));
 
                 if (playerAbility != "Contrary" && playerAbility != "Clear Body" && playerAbility != "White Smoke" &&
@@ -1132,7 +1132,7 @@ export function generateMoveDist(damageResults: any[], aiOptions: {[key: string]
 
             // Damaging -2 SpDef reduction moves w/ guaranteed effect
             // Always +6, stacks with other boosts
-            if (moveName == "Acid Spray") {
+            if (moveName == "Acid Spray" && anyValidDamageRolls) {
                 moveStringsToAdd.push({
                     move: moveName,
                     score: 6,
@@ -1142,21 +1142,17 @@ export function generateMoveDist(damageResults: any[], aiOptions: {[key: string]
 
             // Future Sight
             // +8 if ai is faster and dead to player, +6 otherwise
-            if (moveName == "Future Sight") {
-                if (aiFaster && aiDeadToPlayer) {
-                    moveStringsToAdd.push({
-                        move: moveName,
-                        score: 8,
-                        rate: 1
-                    });
-                } else {
-                    moveStringsToAdd.push({
-                        move: moveName,
-                        score: 6,
-                        rate: 1
-                    });
-                }
-            }
+          if (moveName == "Future Sight") {
+            let fsScore = anyValidDamageRolls ?
+              aiFaster && aiDeadToPlayer ? 8 : 6
+              : -20;
+
+              moveStringsToAdd.push({
+                      move: moveName,
+                      score: fsScore,
+                      rate: 1
+                  });
+          }
 
             // Relic Song
             // +10 if Meloetta base form
