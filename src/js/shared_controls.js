@@ -229,6 +229,30 @@ $(".percent-hp").keyup(function () {
 	var percent = $(this).val();
 	calcCurrentHP($(this).parent(), max, percent);
 });
+function getHpActionAmount(max, numerator, denominator) {
+	var amount = Math.floor(max * Math.abs(numerator) / denominator);
+	if (amount < 1 && max > 0) {
+		amount = 1;
+	}
+
+	return numerator < 0 ? -amount : amount;
+}
+$(".hp-action").click(function () {
+	var poke = $(this).closest(".poke-info");
+	var max = Number(poke.find(".max-hp").text());
+	var currentHP = poke.find(".current-hp");
+	var current = Number(currentHP.val());
+	var numerator = Number($(this).attr("data-hp-numerator"));
+	var denominator = Number($(this).attr("data-hp-denominator"));
+
+	if (!max || !denominator) {
+		return;
+	}
+
+	var next = current + getHpActionAmount(max, numerator, denominator);
+	currentHP.val(Math.min(max, Math.max(0, next)));
+	currentHP.keyup();
+});
 
 $(".ability").bind("keyup change", function () {
 	$(this).closest(".poke-info").find(".move-hits").val($(this).val() === 'Skill Link' ? 5 : 3);
