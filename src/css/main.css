@@ -641,16 +641,62 @@ button svg {
     margin: 1em 0;
 }
 .hp-actions {
-    display: flex;
-    justify-content: left;
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
     gap: 2px;
-    margin-top: 4px;
+    margin: 4px 0;
 }
 .hp-action {
-    font-size: 0.8em;
-    line-height: 1.2;
-    min-width: 4.25em;
-    padding: 2px 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 14px;
+    min-width: 14px;
+    padding: 0 2px;
+    font-size: 9px;
+    font-weight: bold;
+    line-height: 1;
+    color: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.55);
+    border-radius: 2px;
+    cursor: pointer;
+}
+.hp-action.hp-heal {
+    background: #2e7d32;
+}
+.hp-action.hp-dmg {
+    background: #c62828;
+}
+.hp-action .hp-action-img {
+    height: 14px;
+    width: 14px;
+    image-rendering: pixelated;
+    margin: 0 -2px;
+}
+/* status icon crops of src/img/status.png (six 24x8 chips stacked; PSN at y=0, BRN at y=32) */
+.hp-action .status-icon {
+    display: inline-block;
+    width: 20px;
+    height: 8px;
+    background-image: url(../img/status.png);
+    background-repeat: no-repeat;
+    background-size: 24px 48px;
+    image-rendering: pixelated;
+}
+.status-icon.psn {
+    background-position: 0 0;
+}
+.status-icon.brn {
+    background-position: 0 -32px;
+}
+.status-icon.tox {
+    background-image: url(../img/tox.png);
+    background-size: 24px 8px;
+    background-position: 0 0;
+}
+body.hide-hp-actions .hp-actions {
+    display: none;
 }
 .set-selector {
     width: 100%;
