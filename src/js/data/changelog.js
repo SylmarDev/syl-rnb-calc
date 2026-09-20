@@ -61,5 +61,6 @@ const CHANGELOG = [
     new ChangelogLine(2, 7, 6, "AI now sees always crit moves for the player as always critting, and considers that in its check for if it is dead to player this turn. Added Metal Burst"),
     new ChangelogLine(3, 0, 0, "Upload save files, megas display alongside and can now change from party list or forme dropdown seamlessly, color coding on top mon, fix some trick room speed edge cases"),
     new ChangelogLine(3, 1, 0, "Added ability toggle to Download, Magma Armor doesn't allow crits, fix Future Sight and Acid Spray being clickable against immune types"),
-    new ChangelogLine(3, 1, 1, "Upload save accepts .srm (may not 100% work, haven't tested, it just accepts the file extension now)")
+    new ChangelogLine(3, 1, 1, "Upload save accepts .srm (may not 100% work, haven't tested, it just accepts the file extension now)"),
+    new ChangelogLine(3, 1, 2, "Fixed Player Grounded checkbox from Skitter Smack to Smack Down")
 ];
