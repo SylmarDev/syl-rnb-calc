@@ -62,5 +62,5 @@ const CHANGELOG = [
     new ChangelogLine(3, 0, 0, "Upload save files, megas display alongside and can now change from party list or forme dropdown seamlessly, color coding on top mon, fix some trick room speed edge cases"),
     new ChangelogLine(3, 1, 0, "Added ability toggle to Download, Magma Armor doesn't allow crits, fix Future Sight and Acid Spray being clickable against immune types"),
     new ChangelogLine(3, 1, 1, "Upload save accepts .srm (may not 100% work, haven't tested, it just accepts the file extension now)"),
-    new ChangelogLine(3, 1, 2, "Fixed Player Grounded checkbox from Skitter Smack to Smack Down")
+    new ChangelogLine(3, 2, 0, 'Added Base Stat Override functionality for the fans/challenge runners that change BSTs, fixed Player Grounded checkbox from "Skitter Smack" to Smack Down')
 ];

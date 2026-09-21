@@ -1400,3 +1400,29 @@ body.rc-selecting-target .trainer-pok-opposing {
     background-position-y:1em;
   }
 }
+
+.btn-bso {
+    height: 1.6em;
+    width: 3.5rem;
+    padding: 3px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    background: var(--background);
+    border: 1px solid #aaaaaa;
+    cursor: pointer;
+    position: relative;
+    vertical-align: middle;
+}
+
+.btn-bso[hidden] {
+    display: none;
+}
+
+.bso-buttons {
+    display: inline-block;
+    width: 7.4rem;
+    white-space: nowrap;
+    text-align: left;
+}
