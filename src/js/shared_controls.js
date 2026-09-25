@@ -741,16 +741,21 @@ $(".set-selector").change(function () {
 			}
 		}
 		if (!$(this).hasClass('opposing')) {
-			var bsOverrides = JSON.parse(localStorage.getItem("bsOverrides") || "{}");
-			var ov = bsOverrides[pokemonName];
+			var ov = getOverrides()[pokemonName];
 			if (ov) {
-				pokeObj.find(".hp .base").val(ov.hp !== undefined ? ov.hp : pokemon.bs.hp);
-				for (i = 0; i < LEGACY_STATS_GSC.length; i++) {
-					pokeObj.find("." + LEGACY_STATS_GSC[i] + " .base").val(
-						ov[LEGACY_STATS_GSC[i]] !== undefined ? ov[LEGACY_STATS_GSC[i]] : pokemon.bs[LEGACY_STATS_GSC[i]]);
+				if (ov.bs) {
+					pokeObj.find(".hp .base").val(ov.bs.hp !== undefined ? ov.bs.hp : pokemon.bs.hp);
+					for (i = 0; i < LEGACY_STATS_GSC.length; i++) {
+						pokeObj.find("." + LEGACY_STATS_GSC[i] + " .base").val(
+							ov.bs[LEGACY_STATS_GSC[i]] !== undefined ? ov.bs[LEGACY_STATS_GSC[i]] : pokemon.bs[LEGACY_STATS_GSC[i]]);
+					}
+				}
+				if (ov.types) {
+					pokeObj.find(".type1").val(ov.types[0] || "");
+					pokeObj.find(".type2").val(ov.types[1] || "");
 				}
 			}
-			bsoButtonVisibility();
+			overrideButtonVisibility();
 		}
 		if (typeof getSelectedTiers === "function") {
 			var format = getSelectedTiers()[0];
@@ -1931,75 +1936,7 @@ $(document).on('change', '#p1, #fieldInfo, #p2', function() {
 
 //select first mon of the box when loading
 
-// Manage base stat overrides
-// TODO: break this into its own .js someday
-function getBSO() {
-	return JSON.parse(localStorage.getItem("bsOverrides") || "{}");
-}
 
-// if = to base stats with no override, or if = to override stats if override
-// tldr "should save button show"
-function currentBSEqualNormalBS(monName, hasOverride) {
-	if (!pokedex[monName]) return false; // unknown mon: leave save visible
-	var currentBaseline = hasOverride ? getBSO()[monName] : pokedex[monName].bs;
-	console.log(currentBaseline);
-	for (var i = 0; i < LEGACY_STATS_GSC.length; i++) {
-		var standardCheck = currentBaseline[LEGACY_STATS_GSC[i]] != ~~$("#p1 ." + LEGACY_STATS_GSC[i] + " .base").val();
-		if (hasOverride) {
-			// if has override, we still want to hide save button when we have restored base stats to originals
-			// in this case (override exists), normal includes both override AND original base stats
-			standardCheck = standardCheck && pokedex[monName].bs[LEGACY_STATS_GSC[i]] != ~~$("#p1 ." + LEGACY_STATS_GSC[i] + " .base").val();
-		}
-		if (standardCheck) {
-			// console.log("current BS != Normal BS;", LEGACY_STATS_GSC[i], " differs"); // DEBUG
-			return false;
-		}
-	}
-
-	return true;
-}
-
-// hide until a bs doesn't match
-function bsoButtonVisibility() {
-	if (!$("#p1 input.set-selector").length) return;
-	var pokemonName = $("#p1 input.set-selector").val().split(" (")[0];
-	var hasOverride = !!getBSO()[pokemonName];
-	$("#save-bso").prop("hidden", currentBSEqualNormalBS(pokemonName, hasOverride));
-	$("#reset-bso").prop("hidden", !hasOverride); // if !has -> hidden true
-}
-
-$("#p1 input.base").on('change keyup', function() {
-	bsoButtonVisibility();
-})
-
-$("#save-bso").click(function () {
-	var fullSetName = $("#p1 input.set-selector").val();
-	var pokemonName = fullSetName.substring(0, fullSetName.indexOf(" ("));
-	var bs = {hp: ~~$("#p1 .hp .base").val()};
-	for (var i = 0; i < LEGACY_STATS_GSC.length; i++) {
-		bs[LEGACY_STATS_GSC[i]] = ~~$("#p1 ." + LEGACY_STATS_GSC[i] + " .base").val();
-	}
-	var overrides = getBSO();
-	overrides[pokemonName] = bs;
-	localStorage.setItem("bsOverrides", JSON.stringify(overrides));
-	bsoButtonVisibility();
-});
-
-$("#reset-bso").click(function () {
-	var fullSetName = $("#p1 input.set-selector").val();
-	var pokemonName = fullSetName.substring(0, fullSetName.indexOf(" ("));
-	var bs = pokedex[pokemonName].bs;
-	var overrides = getBSO();
-	delete overrides[pokemonName];
-	localStorage.setItem("bsOverrides", JSON.stringify(overrides));
-	$("#p1 .hp .base").val(bs.hp);
-	for (var i = 0; i < LEGACY_STATS_GSC.length; i++) {
-		$("#p1 ." + LEGACY_STATS_GSC[i] + " .base").val(bs[LEGACY_STATS_GSC[i]]);
-	}
-	calcHP($("#p1"));
-	calcStats($("#p1"));
-	bsoButtonVisibility();
-});
 
 function selectFirstMon() {
 	var pMons = document.getElementsByClassName("trainer-pok left-side");
