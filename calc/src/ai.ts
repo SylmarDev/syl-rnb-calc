@@ -1751,7 +1751,7 @@ export function generateMoveDist(damageResults: any[], aiOptions: {[key: string]
             }
 
             // Thunder Wave, Stun Spore, Glare, Nuzzle
-            const paralyzingMoves = ["Thunder Wave", "Stun Spore", "Nuzzle", "Glare"];
+            const paralyzingMoves = ["Thunder Wave", "Stun Spore", "Nuzzle", "Glare", "Zap Cannon"];
             if (paralyzingMoves.includes(moveName)) {
                 const hexIndex = moves.findIndex(x => x.move.name === "Hex"); // hehe inHEX more like
                 var paraIncentive = aiSlowerButFasterAfterPara || hexIndex != -1 || playerCharmedOrConfused;
@@ -1763,7 +1763,7 @@ export function generateMoveDist(damageResults: any[], aiOptions: {[key: string]
                 {
                     moveStringsToAdd.push({
                         move: moveName,
-                        score: -40,
+                        score: -20,
                         rate: 1
                     });
                 } else if (paraIncentive) {
