@@ -562,36 +562,87 @@ function sortmons(a, b) {
 	return parseInt(a.split("[")[1].split("]")[0]) - parseInt(b.split("[")[1].split("]")[0])
 }
 
+const showGauntlets = true;
+// GAUNTLETS
+const GAUNTLETS = [
+	["Team Aqua Grunt Museum #1", "Team Aqua Grunt Museum #2"],
+	["Rich Boy Dawson", "School Kid Jerry & Johnson"],
+	["Pokemaniac Steve", "Collector Hector"],
+	["Triathlete Julio", "Camper Ethan", "Picnicker Diana"]
+];
+
+function positionInTwoDList(cri, li) {
+	console.log(li);
+	var i = 0;
+	for (l in li) {
+		console.log('l :: ' + l)
+		for (s in l) {
+			console.log('s :: ' + s);
+			if (s == cri) {
+				return i;
+			}
+		}
+		i++;
+	}
+
+	return -1; // not in list
+}
+
+function createOppTrPokRow(setName) {
+	CURRENT_TRAINER_POKS = get_trainer_poks(setName);
+	var next_poks = CURRENT_TRAINER_POKS.sort(sortmons);
+
+	var trpok_html = ""
+	for (i in next_poks) {
+		if (next_poks[i][0].includes($('input.opposing').val())) {
+			continue
+		}
+		var pok_name = next_poks[i].split("]")[1].split(" (")[0]
+		if (pok_name == "Zygarde-10%") {
+			pok_name = "Zygarde-10%25"
+		}
+		if (pok_name.includes("Vivillon")) {
+			pok_name = "Vivillon";
+		}
+		
+		// this ruined my day
+		if (pok_name.includes("-Mega")) {
+			var base_name = pok_name.split("-Mega")[0]
+			var mega_data_id = CURRENT_TRAINER_POKS[i].split("]")[1]
+			trpok_html += `<img class="trainer-pok right-side" src="https://raw.githubusercontent.com/May8th1995/sprites/master/${base_name}.png" data-id="${mega_data_id}" data-base-name="${base_name}" title="${next_poks[i]}, ${next_poks[i]} BP">`
+		}
+		var pok = `<img class="trainer-pok right-side" src="https://raw.githubusercontent.com/May8th1995/sprites/master/${pok_name}.png" data-id="${CURRENT_TRAINER_POKS[i].split("]")[1]}" title="${next_poks[i]}, ${next_poks[i]} BP">`
+		trpok_html += pok
+	}
+
+	return trpok_html;
+}
+
 // auto-update set details on select
 $(".set-selector").change(function () {
+	console.log("set selector");
 	window.NO_CALC = true;
 	var fullSetName = $(this).val();
+	var trName = fullSetName.split('(')[1].slice(0, -1);
 	if ($(this).hasClass('opposing')) {
+		
 		topPokemonIcon(fullSetName, $("#p2mon")[0]);
-		CURRENT_TRAINER_POKS = get_trainer_poks(fullSetName);
-		var next_poks = CURRENT_TRAINER_POKS.sort(sortmons);
+		var trpok_html = "";
+		console.log(trName);
 
-		var trpok_html = ""
-		for (i in next_poks) {
-			if (next_poks[i][0].includes($('input.opposing').val())) {
-				continue
+		// if show gauntlets ai option is on
+		// if full set name is in any gauntlet keys
+		var gauntletKey = positionInTwoDList(trName, GAUNTLETS);
+		console.log(GAUNTLETS);
+		console.log(typeof(GAUNTLETS));
+		if (showGauntlets &&
+		 	gauntletKey != -1) {
+			console.log(trName + " is in GAUNTLETS FLattened");
+			for (trainer in GAUNTLETS[gauntletKey]) {
+				trpok_html += createOppTrPokRow(fullSetName);
 			}
-			var pok_name = next_poks[i].split("]")[1].split(" (")[0]
-			if (pok_name == "Zygarde-10%") {
-				pok_name = "Zygarde-10%25"
-			}
-			if (pok_name.includes("Vivillon")) {
-				pok_name = "Vivillon";
-			}
-			
-			// this ruined my day
-			if (pok_name.includes("-Mega")) {
-				var base_name = pok_name.split("-Mega")[0]
-				var mega_data_id = CURRENT_TRAINER_POKS[i].split("]")[1]
-				trpok_html += `<img class="trainer-pok right-side" src="https://raw.githubusercontent.com/May8th1995/sprites/master/${base_name}.png" data-id="${mega_data_id}" data-base-name="${base_name}" title="${next_poks[i]}, ${next_poks[i]} BP">`
-			}
-			var pok = `<img class="trainer-pok right-side" src="https://raw.githubusercontent.com/May8th1995/sprites/master/${pok_name}.png" data-id="${CURRENT_TRAINER_POKS[i].split("]")[1]}" title="${next_poks[i]}, ${next_poks[i]} BP">`
-			trpok_html += pok
+		} else {
+			trpok_html = createOppTrPokRow(fullSetName);
 		}
 	} else {
 		topPokemonIcon(fullSetName, $("#p1mon")[0])
@@ -1948,13 +1999,15 @@ function selectFirstMon() {
 
 function selectTrainer(value) {
 	localStorage.setItem("lasttimetrainer", value);
-	all_poks = SETDEX_SS
+	all_poks = SETDEX_SS;
+
+	// if ai option for display 
+
 	for (const [pok_name, poks] of Object.entries(all_poks)) {
 		var pok_tr_names = Object.keys(poks)
 		var monName = pok_name;
 		if (pok_name.includes("Vivillon")) { monName = "Vivillon"; }
 		for (i in pok_tr_names) {
-
 			var index = (poks[pok_tr_names[i]]["index"])
 			if (index == value) {
 				var set = `${monName} (${pok_tr_names[i]})`;
@@ -2330,6 +2383,9 @@ function showCredits() {
 function showMassExport() {
 	$('#massExport-overlay').fadeIn(200);
 }
+
+// Stack gauntlet fights
+
 
 $(document).ready(function () {
 	var params = new URLSearchParams(window.location.search);
