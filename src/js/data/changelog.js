@@ -63,5 +63,6 @@ const CHANGELOG = [
     new ChangelogLine(3, 1, 0, "Added ability toggle to Download, Magma Armor doesn't allow crits, fix Future Sight and Acid Spray being clickable against immune types"),
     new ChangelogLine(3, 1, 1, "Upload save accepts .srm (may not 100% work, haven't tested, it just accepts the file extension now)"),
     new ChangelogLine(3, 2, 0, 'Added Base Stat Override functionality for the fans/challenge runners that change BSTs, fixed Player Grounded checkbox from "Skitter Smack" to Smack Down'),
-    new ChangelogLine(3, 3, 0, 'Gauntlets display together, useless moves no longer show a chance of being selected')
+    new ChangelogLine(3, 3, 0, 'Gauntlets display together, useless moves no longer show a chance of being selected'),
+    new ChangelogLine(3, 3, 1, 'Right click moves mon from team to box and vice versa, removed some double calculations for efficiency and speedup, added some gauntlets I missed'),
 ];
