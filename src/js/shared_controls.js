@@ -571,6 +571,8 @@ const GAUNTLETS = [
 	["Triathlete Julio", "Camper Ethan", "Picnicker Diana"],
 	["Cool Trainer Gerald", "Kindler Keegan", "Kindler Axle"],
 	["Team Aqua Grunt Mt Pyre #1", "Team Aqua Grunt Mt Pyre #2"],
+	["Leader Tate", "Leader Liza"],
+	["Team Magma Grunt Space Center #5", "Team Magma Grunt Space Center #6", "Team Magma Grunt Space Center #7"],
 	["Team Aqua Grunt Seafloor Cavern #3", "Team Aqua Grunt Seafloor Cavern #4"],
 	["Lady Brianna", "Lass Pearl"],
 	["Lass Andrea & Connie", "Beauty Bridget"]
