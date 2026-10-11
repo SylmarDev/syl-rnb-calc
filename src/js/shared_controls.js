@@ -217,13 +217,13 @@ function drawHealthBar(poke, max, current) {
 	healthbar.css("background", "linear-gradient(to right, " + fillColor + " " + fillPercent + "%, white 0%");
 }
 // TODO: these HP inputs should really be input type=number with min=0, step=1, constrained by max=maxHP or 100
-$(".current-hp").keyup(function () {
+$(".current-hp").on("focus", function () { $(this).select(); }).keyup(function () {
 	var max = $(this).parent().children(".max-hp").text();
 	validate($(this), 0, max);
 	var current = $(this).val();
 	calcPercentHP($(this).parent(), max, current);
 });
-$(".percent-hp").keyup(function () {
+$(".percent-hp").on("focus", function () { $(this).select(); }).keyup(function () {
 	var max = $(this).parent().children(".max-hp").text();
 	validate($(this), 0, 100);
 	var percent = $(this).val();
