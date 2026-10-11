@@ -1046,15 +1046,6 @@ export function generateMoveDist(damageResults: any[], aiOptions: {[key: string]
 
             // console.log(move);
 
-            // Non-damaging move
-            if (!anyValidDamageRolls) {
-                moveStringsToAdd.push({
-                    move: moveName,
-                    score: -10,
-                    rate: 1
-                });
-            }
-
             // Damaging Priority moves
             // if AI is dead to player mon and slower,
             // all attacking moves with priority get an additional +11
