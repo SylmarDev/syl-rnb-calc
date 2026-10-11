@@ -562,44 +562,42 @@ function sortmons(a, b) {
 	return parseInt(a.split("[")[1].split("]")[0]) - parseInt(b.split("[")[1].split("]")[0])
 }
 
-const showGauntlets = true;
 // GAUNTLETS
 const GAUNTLETS = [
 	["Team Aqua Grunt Museum #1", "Team Aqua Grunt Museum #2"],
 	["Rich Boy Dawson", "School Kid Jerry & Johnson"],
-	["Pokemaniac Steve", "Collector Hector"],
-	["Triathlete Julio", "Camper Ethan", "Picnicker Diana"]
+	["Winstrate Victor, Winstrate Victoria", "Winstrate Vivi", "Winstrate Vicky"],
+	["Pokémaniac Steve", "Hiker Lucas", "Hiker Lenny", "Black Belt Nob", "Battle Girl Cyndy", "Psychic Marlene", "Collector Hector"],
+	["Triathlete Julio", "Camper Ethan", "Picnicker Diana"],
+	["Cool Trainer Gerald", "Kindler Keegan", "Kindler Axle"],
+	["Team Aqua Grunt Mt Pyre #1", "Team Aqua Grunt Mt Pyre #2"],
+	["Team Aqua Grunt Seafloor Cavern #3", "Team Aqua Grunt Seafloor Cavern #4"],
+	["Lady Brianna", "Lass Pearl"]
 ];
 
 function positionInTwoDList(cri, li) {
-	console.log(li);
-	var i = 0;
-	for (l in li) {
-		console.log('l :: ' + l)
-		for (s in l) {
-			console.log('s :: ' + s);
-			if (s == cri) {
+	for (var i = 0; i < li.length; i++) {
+		for (var s = 0; s < li[i].length; s++) {
+			if (li[i][s] === cri) {
 				return i;
 			}
 		}
-		i++;
 	}
-
-	return -1; // not in list
+	return -1;
 }
 
 function createOppTrPokRow(setName) {
 	CURRENT_TRAINER_POKS = get_trainer_poks(setName);
 	var next_poks = CURRENT_TRAINER_POKS.sort(sortmons);
 
-	var trpok_html = ""
+	var trpok_html = '<div class="trainer-pok-list-opposing">';
 	for (i in next_poks) {
 		if (next_poks[i][0].includes($('input.opposing').val())) {
-			continue
+			continue;
 		}
 		var pok_name = next_poks[i].split("]")[1].split(" (")[0]
 		if (pok_name == "Zygarde-10%") {
-			pok_name = "Zygarde-10%25"
+			pok_name = "Zygarde-10%25";
 		}
 		if (pok_name.includes("Vivillon")) {
 			pok_name = "Vivillon";
@@ -607,39 +605,32 @@ function createOppTrPokRow(setName) {
 		
 		// this ruined my day
 		if (pok_name.includes("-Mega")) {
-			var base_name = pok_name.split("-Mega")[0]
-			var mega_data_id = CURRENT_TRAINER_POKS[i].split("]")[1]
+			var base_name = pok_name.split("-Mega")[0];
+			var mega_data_id = CURRENT_TRAINER_POKS[i].split("]")[1];
 			trpok_html += `<img class="trainer-pok right-side" src="https://raw.githubusercontent.com/May8th1995/sprites/master/${base_name}.png" data-id="${mega_data_id}" data-base-name="${base_name}" title="${next_poks[i]}, ${next_poks[i]} BP">`
 		}
 		var pok = `<img class="trainer-pok right-side" src="https://raw.githubusercontent.com/May8th1995/sprites/master/${pok_name}.png" data-id="${CURRENT_TRAINER_POKS[i].split("]")[1]}" title="${next_poks[i]}, ${next_poks[i]} BP">`
-		trpok_html += pok
+		trpok_html += pok;
 	}
+
+	trpok_html += '</div>';
 
 	return trpok_html;
 }
 
-// auto-update set details on select
-$(".set-selector").change(function () {
-	console.log("set selector");
-	window.NO_CALC = true;
-	var fullSetName = $(this).val();
+// takes jquery of the set selector
+function drawOppTrainers(fullSetName, isOpposing) {
 	var trName = fullSetName.split('(')[1].slice(0, -1);
-	if ($(this).hasClass('opposing')) {
-		
+	if (isOpposing) {		
 		topPokemonIcon(fullSetName, $("#p2mon")[0]);
 		var trpok_html = "";
-		console.log(trName);
 
-		// if show gauntlets ai option is on
-		// if full set name is in any gauntlet keys
+		var showGauntlets = $("#showGauntlets").is(':checked');
 		var gauntletKey = positionInTwoDList(trName, GAUNTLETS);
-		console.log(GAUNTLETS);
-		console.log(typeof(GAUNTLETS));
-		if (showGauntlets &&
-		 	gauntletKey != -1) {
-			console.log(trName + " is in GAUNTLETS FLattened");
-			for (trainer in GAUNTLETS[gauntletKey]) {
-				trpok_html += createOppTrPokRow(fullSetName);
+		if (showGauntlets && gauntletKey != -1) {
+			for (var i = 0; i < GAUNTLETS[gauntletKey].length; i++) {
+				var trainer = GAUNTLETS[gauntletKey][i];
+				trpok_html += createOppTrPokRow('Mon (' + trainer + ')');
 			}
 		} else {
 			trpok_html = createOppTrPokRow(fullSetName);
@@ -649,6 +640,15 @@ $(".set-selector").change(function () {
 	}
 
 	$('.trainer-pok-list-opposing').html(trpok_html);
+}
+
+// auto-update set details on select
+$(".set-selector").change(function () {
+	window.NO_CALC = true;
+	var fullSetName = $(this).val();
+
+	drawOppTrainers(fullSetName, $(this).hasClass('opposing'));
+
 	var setIndex = $(this).prop('title');
 	var pokemonName = fullSetName.substring(0, fullSetName.indexOf(" ("));
 	var setName = fullSetName.substring(fullSetName.indexOf("(") + 1, fullSetName.lastIndexOf(")"));
@@ -2505,6 +2505,12 @@ $(document).ready(function () {
         $('#credits-overlay').fadeOut(200);
       }
     });
+
+	$("#showGauntlets").change(function() {
+		console.log("show gauntlets changed");
+		console.log($(".set-selector").val());
+		drawOppTrainers($(".set-selector").val(), $(".set-selector").hasClass('opposing'));
+	});
 });
 
 /* Click-to-copy function */
