@@ -566,7 +566,7 @@ function sortmons(a, b) {
 const GAUNTLETS = [
 	["Team Aqua Grunt Museum #1", "Team Aqua Grunt Museum #2"],
 	["Rich Boy Dawson", "School Kid Jerry & Johnson"],
-	["Winstrate Victor, Winstrate Victoria", "Winstrate Vivi", "Winstrate Vicky"],
+	["Winstrate Victor", "Winstrate Victoria", "Winstrate Vivi", "Winstrate Vicky"],
 	["Pokémaniac Steve", "Hiker Lucas", "Hiker Lenny", "Black Belt Nob", "Battle Girl Cyndy", "Psychic Marlene", "Collector Hector"],
 	["Triathlete Julio", "Camper Ethan", "Picnicker Diana"],
 	["Cool Trainer Gerald", "Kindler Keegan", "Kindler Axle"],
@@ -619,7 +619,7 @@ function createOppTrPokRow(setName) {
 }
 
 // takes jquery of the set selector
-function drawOppTrainers(fullSetName, isOpposing) {
+function drawTrainers(fullSetName, isOpposing) {
 	var trName = fullSetName.split('(')[1].slice(0, -1);
 	if (isOpposing) {		
 		topPokemonIcon(fullSetName, $("#p2mon")[0]);
@@ -627,13 +627,14 @@ function drawOppTrainers(fullSetName, isOpposing) {
 
 		var showGauntlets = $("#showGauntlets").is(':checked');
 		var gauntletKey = positionInTwoDList(trName, GAUNTLETS);
+		console.log(showGauntlets, gauntletKey, trName);
 		if (showGauntlets && gauntletKey != -1) {
 			for (var i = 0; i < GAUNTLETS[gauntletKey].length; i++) {
 				var trainer = GAUNTLETS[gauntletKey][i];
 				trpok_html += createOppTrPokRow('Mon (' + trainer + ')');
 			}
 		} else {
-			trpok_html = createOppTrPokRow(fullSetName);
+			trpok_html += createOppTrPokRow(fullSetName);
 		}
 	} else {
 		topPokemonIcon(fullSetName, $("#p1mon")[0])
@@ -647,7 +648,7 @@ $(".set-selector").change(function () {
 	window.NO_CALC = true;
 	var fullSetName = $(this).val();
 
-	drawOppTrainers(fullSetName, $(this).hasClass('opposing'));
+	drawTrainers(fullSetName, $(this).hasClass('opposing'));
 
 	var setIndex = $(this).prop('title');
 	var pokemonName = fullSetName.substring(0, fullSetName.indexOf(" ("));
@@ -2020,15 +2021,18 @@ function selectTrainer(value) {
 }
 
 function nextTrainer() {
-	string = ($(".trainer-pok-list-opposing")).html()
-	initialSplit = string.split("[")
-	value = parseInt(initialSplit[initialSplit.length - 2].split("]")[0]) + 1
+	var string = ($(".trainer-pok-list-opposing")).html()
+	var initialSplit = string.split("[")
+	if (initialSplit.length < 2) return
+	var value = parseInt(initialSplit[initialSplit.length - 2].split("]")[0]) + 1
 	selectTrainer(value)
 }
 
 function previousTrainer() {
-	string = ($(".trainer-pok-list-opposing")).html();
-	value = parseInt(string.split("]")[0].split("[")[1]) - 1;
+	var string = ($(".trainer-pok-list-opposing")).html();
+	var initialSplit = string.split("[");
+	if (initialSplit.length < 2) return;
+	var value = parseInt(initialSplit[0].split("]")[0]) - 1;
 	selectTrainer(value)
 }
 
@@ -2507,9 +2511,8 @@ $(document).ready(function () {
     });
 
 	$("#showGauntlets").change(function() {
-		console.log("show gauntlets changed");
-		console.log($(".set-selector").val());
-		drawOppTrainers($(".set-selector").val(), $(".set-selector").hasClass('opposing'));
+		var $oppSel = $(".set-selector.opposing");
+		drawTrainers($oppSel.val(), true);
 	});
 });
 
