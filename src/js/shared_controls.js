@@ -2450,6 +2450,16 @@ $(document).ready(function () {
 		dropzone.ondrop=drop;
 		dropzone.ondragover=allowDrop;
 	}
+
+	// right-click a mon to toggle between team and box
+	$(document).on('contextmenu', '.trainer-pok.left-side', function (e) {
+		e.preventDefault();
+		var $target = $(this);
+		var toBox = $target.parent().is('#team-poke-list') || $target.parent().is("#trash-box");
+		var targetId = toBox ? '#box-poke-list' : '#team-poke-list';
+		$target.detach().appendTo(targetId);
+	});
+
 	//select last trainer
 	let last = localStorage.getItem("lasttimetrainer");
 	if (last != "") {
