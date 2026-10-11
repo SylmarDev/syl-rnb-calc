@@ -121,7 +121,7 @@ function hideAiPercentages() {
 
 var damageResults;
 function performCalculations() {
-	console.log("perform calcs called"); // DEBUG
+	// console.log("perform calcs called"); // DEBUG
 	var p1info = $("#p1");
 	var p2info = $("#p2");
 	var p1 = createPokemon(p1info);

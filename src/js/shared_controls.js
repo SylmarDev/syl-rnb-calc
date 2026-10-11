@@ -627,7 +627,6 @@ function drawTrainers(fullSetName, isOpposing) {
 
 		var showGauntlets = $("#showGauntlets").is(':checked');
 		var gauntletKey = positionInTwoDList(trName, GAUNTLETS);
-		console.log(showGauntlets, gauntletKey, trName);
 		if (showGauntlets && gauntletKey != -1) {
 			for (var i = 0; i < GAUNTLETS[gauntletKey].length; i++) {
 				var trainer = GAUNTLETS[gauntletKey][i];
