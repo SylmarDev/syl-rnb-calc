@@ -570,7 +570,7 @@ const GAUNTLETS = [
 	["Pokémaniac Steve", "Hiker Lucas", "Hiker Lenny", "Black Belt Nob", "Battle Girl Cyndy", "Psychic Marlene", "Collector Hector"],
 	["Triathlete Julio", "Camper Ethan", "Picnicker Diana"],
 	["Cool Trainer Gerald", "Kindler Keegan", "Kindler Axle"],
-	["Team Aqua Grunt Mt Pyre #1", "Team Aqua Grunt Mt Pyre #2"],
+	["Psychic Kayla", "Black Belt Zander", "Team Aqua Grunt Mt Pyre #1", "Team Aqua Grunt Mt Pyre #2"],
 	["Leader Tate", "Leader Liza"],
 	["Team Magma Grunt Space Center #5", "Team Magma Grunt Space Center #6", "Team Magma Grunt Space Center #7"],
 	["Team Aqua Grunt Seafloor Cavern #3", "Team Aqua Grunt Seafloor Cavern #4"],
@@ -647,6 +647,7 @@ function drawTrainers(fullSetName, isOpposing) {
 
 // auto-update set details on select
 $(".set-selector").change(function () {
+	var prevNoCalc = window.NO_CALC;
 	window.NO_CALC = true;
 	var fullSetName = $(this).val();
 
@@ -840,7 +841,7 @@ $(".set-selector").change(function () {
 			pokeObj.find(".gender").val("");
 		} else pokeObj.find(".gender").parent().show();
 	}
-	window.NO_CALC = false;
+	window.NO_CALC = prevNoCalc;
 });
 
 function formatMovePool(moves) {
@@ -1939,6 +1940,8 @@ function setDisclaimVisibility(moveNames) {
 }
 
 $(document).on('click', '.right-side', function () {
+	var prevNoCalc = window.NO_CALC;
+	window.NO_CALC = true;
 	var set = $(this).attr('data-id');
 	var baseName = $(this).attr('data-base-name');
 	$('.opposing').val(set);
@@ -1970,6 +1973,8 @@ $(document).on('click', '.right-side', function () {
 			|| "";
 		pokeObj.find(".ability").val(baseAbility).keyup();
 	}
+	window.NO_CALC = prevNoCalc;
+	if (!prevNoCalc && typeof performCalculations === 'function') performCalculations();
 })
 
 $(document).on('click', '.left-side', function () {
@@ -2004,6 +2009,9 @@ function selectTrainer(value) {
 	localStorage.setItem("lasttimetrainer", value);
 	all_poks = SETDEX_SS;
 
+	var prevNoCalc = window.NO_CALC;
+	window.NO_CALC = true;
+
 	// if ai option for display 
 
 	for (const [pok_name, poks] of Object.entries(all_poks)) {
@@ -2020,6 +2028,8 @@ function selectTrainer(value) {
 			}
 		}
 	}
+	window.NO_CALC = prevNoCalc;
+	if (!prevNoCalc && typeof performCalculations === 'function') performCalculations();
 }
 
 function nextTrainer() {
