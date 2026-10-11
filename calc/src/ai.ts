@@ -1044,6 +1044,14 @@ export function generateMoveDist(damageResults: any[], aiOptions: {[key: string]
             // TODO: Need to go through and add anyValidDamageRolls to a lot of these checks
             // TODO: This function can probably use continues, so I probably should do that for performance lol
 
+            if (!moveIsStatus && !anyValidDamageRolls) {
+                moveStringsToAdd.push({
+                    move: moveName,
+                    score: -10,
+                    rate: 1
+                });
+            }
+
             // console.log(move);
 
             // Damaging Priority moves
