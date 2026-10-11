@@ -2029,9 +2029,8 @@ function nextTrainer() {
 
 function previousTrainer() {
 	var string = ($(".trainer-pok-list-opposing")).html();
-	var initialSplit = string.split("[");
-	if (initialSplit.length < 2) return;
-	var value = parseInt(initialSplit[0].split("]")[0]) - 1;
+	if (!string.includes("[")) return;
+	var value = parseInt(string.split("]")[0].split("[")[1]) - 1;
 	selectTrainer(value)
 }
 
