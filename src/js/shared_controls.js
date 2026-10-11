@@ -572,7 +572,8 @@ const GAUNTLETS = [
 	["Cool Trainer Gerald", "Kindler Keegan", "Kindler Axle"],
 	["Team Aqua Grunt Mt Pyre #1", "Team Aqua Grunt Mt Pyre #2"],
 	["Team Aqua Grunt Seafloor Cavern #3", "Team Aqua Grunt Seafloor Cavern #4"],
-	["Lady Brianna", "Lass Pearl"]
+	["Lady Brianna", "Lass Pearl"],
+	["Lass Andrea & Connie", "Beauty Bridget"]
 ];
 
 function positionInTwoDList(cri, li) {
