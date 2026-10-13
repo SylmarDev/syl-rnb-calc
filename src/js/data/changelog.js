@@ -65,5 +65,6 @@ const CHANGELOG = [
     new ChangelogLine(3, 2, 0, 'Added Base Stat Override functionality for the fans/challenge runners that change BSTs, fixed Player Grounded checkbox from "Skitter Smack" to Smack Down'),
     new ChangelogLine(3, 3, 0, 'Gauntlets display together, useless moves no longer show a chance of being selected'),
     new ChangelogLine(3, 3, 1, 'Right click moves mon from team to box and vice versa, removed some double calculations for efficiency and speedup, added some gauntlets I missed'),
-    new ChangelogLine(3, 3, 2, "Fixed colors bug, current HP values auto select")
+    new ChangelogLine(3, 3, 2, "Fixed colors bug, current HP values auto select"),
+    new ChangelogLine(3, 3, 3, "Fixed Fake Out/First Impression being HDM after the first turn, rescinded 'speedup' changes that made it slower for everyone whoops")
 ];
