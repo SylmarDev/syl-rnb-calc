@@ -607,7 +607,7 @@ function updateMoveKVPWithMoveStrings(moveKVPs: KVP[], moveStringToAdd: { move: 
     return newKvps;
 }
 
-function calculateHighestDamage(moves: any[]): KVP[] {
+function calculateHighestDamage(moves: any[], firstTurnOut: boolean): KVP[] {
     // TODO: multi-hit moves (i.e. Pin Missile) need their damage calculations updated
     let p1CurrentHealth = moves[0].defender.curHP();
 
@@ -649,11 +649,13 @@ function calculateHighestDamage(moves: any[]): KVP[] {
 
     // console.log(allChoices); // debug
 
-    function considerForHighestDamage(move: Move): boolean {
+    function considerForHighestDamage(move: Move, firstTurnOut: boolean): boolean {
         return !(move.category === "Status" ||
             isNamed(move.name, "Explosion", "Final Gambit", "Rollout", "Misty Explosion",
             "Self-Destruct", "Relic Song", "Meteor Beam", "Future Sight", "Counter", "Mirror Coat") ||
-            isTrapping(move));
+            isTrapping(move) ||
+            (!firstTurnOut && isNamed(move.name, "Fake Out", "First Impression"))
+        );
     }
 
     for (let choice of allChoices) {
@@ -663,7 +665,7 @@ function calculateHighestDamage(moves: any[]): KVP[] {
        let keysForMaximumCheck = [1];
        let i = 0;
        for (const key of keys) {
-          if (!considerForHighestDamage(moves[i].move))
+          if (!considerForHighestDamage(moves[i].move, firstTurnOut))
             {
                 i++;
                 continue;
@@ -720,7 +722,7 @@ function calculateHighestDamage(moves: any[]): KVP[] {
            }
 
            // Track all HDM to highestDamageIndexes
-           if (key === maximumKey && considerForHighestDamage(moves[i].move)) {
+           if (key === maximumKey && considerForHighestDamage(moves[i].move, firstTurnOut)) {
                highestDamageIndexes.push(i);
            }
 
@@ -913,8 +915,6 @@ export function generateMoveDist(damageResults: any[], aiOptions: {[key: string]
 
     //console.log(moves); // DEBUG
 
-    let damagingMoveDist = calculateHighestDamage(moves);
-
     // iterate through player moves, get highest damaging roll
     // TODO: need to half explosion damage here
     let playerHighestRoll = 0;
@@ -1007,6 +1007,8 @@ export function generateMoveDist(damageResults: any[], aiOptions: {[key: string]
     const debugLogging = aiOptions["enableDebugLogging"];
 
     let postBoostsMoveDist: KVP[] = [];
+
+    let damagingMoveDist = calculateHighestDamage(moves, firstTurnOut);
 
     // flat bonsues
     // key - "Move1:X/Move2:Y/Move3:Z/Move4:A"
