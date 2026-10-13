@@ -549,12 +549,12 @@ $(document).ready(function () {
 			This prevents like 8 performCalculations out of 8 that were useless
 			without causing bugs (so far)
 		*/
-		if (document.getElementById("cc-auto-refr").checked) {
-			window.refreshColorCode();
-		}
-
 		if (window.NO_CALC) {
 			return;
+		}
+		
+		if (document.getElementById("cc-auto-refr").checked) {
+			window.refreshColorCode();
 		}
 				
 		performCalculations();

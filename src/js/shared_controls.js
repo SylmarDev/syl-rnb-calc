@@ -647,7 +647,6 @@ function drawTrainers(fullSetName, isOpposing) {
 
 // auto-update set details on select
 $(".set-selector").change(function () {
-	var prevNoCalc = window.NO_CALC;
 	window.NO_CALC = true;
 	var fullSetName = $(this).val();
 
@@ -841,7 +840,7 @@ $(".set-selector").change(function () {
 			pokeObj.find(".gender").val("");
 		} else pokeObj.find(".gender").parent().show();
 	}
-	window.NO_CALC = prevNoCalc;
+	window.NO_CALC = false;
 });
 
 function formatMovePool(moves) {
