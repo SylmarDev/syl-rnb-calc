@@ -552,10 +552,11 @@ $(document).ready(function () {
 		if (window.NO_CALC) {
 			return;
 		}
+		
 		if (document.getElementById("cc-auto-refr").checked) {
 			window.refreshColorCode();
 		}
-		
+				
 		performCalculations();
 	});
 

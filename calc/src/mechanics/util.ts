@@ -225,7 +225,7 @@ export function checkIntimidate(gen: Generation, source: Pokemon, target: Pokemo
 }
 
 export function checkDownload(source: Pokemon, target: Pokemon, wonderRoomActive?: boolean) {
-  if (source.hasAbility('Download')) {
+  if (source.hasAbility('Download') && source.abilityOn) {
     let def = target.stats.def;
     let spd = target.stats.spd;
     // We swap the defense stats again here since Download ignores Wonder Room

@@ -9,3 +9,4 @@ dist/
 scripts/__pycache__
 .vscode
 .env
+.scratch/

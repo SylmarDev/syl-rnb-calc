@@ -217,13 +217,13 @@ function drawHealthBar(poke, max, current) {
 	healthbar.css("background", "linear-gradient(to right, " + fillColor + " " + fillPercent + "%, white 0%");
 }
 // TODO: these HP inputs should really be input type=number with min=0, step=1, constrained by max=maxHP or 100
-$(".current-hp").keyup(function () {
+$(".current-hp").on("focus", function () { $(this).select(); }).keyup(function () {
 	var max = $(this).parent().children(".max-hp").text();
 	validate($(this), 0, max);
 	var current = $(this).val();
 	calcPercentHP($(this).parent(), max, current);
 });
-$(".percent-hp").keyup(function () {
+$(".percent-hp").on("focus", function () { $(this).select(); }).keyup(function () {
 	var max = $(this).parent().children(".max-hp").text();
 	validate($(this), 0, 100);
 	var percent = $(this).val();
@@ -235,7 +235,7 @@ $(".ability").bind("keyup change", function () {
 
 	var ability = $(this).closest(".poke-info").find(".ability").val();
 
-	var TOGGLE_ABILITIES = ['Flash Fire', 'Intimidate', 'Minus', 'Plus', 'Slow Start', 'Unburden', 'Stakeout'];
+	var TOGGLE_ABILITIES = ['Flash Fire', 'Intimidate', 'Minus', 'Plus', 'Slow Start', 'Unburden', 'Stakeout', 'Download'];
 
 	if (TOGGLE_ABILITIES.indexOf(ability) >= 0) {
 		$(this).closest(".poke-info").find(".abilityToggle").show();
@@ -249,6 +249,10 @@ $(".ability").bind("keyup change", function () {
 		$(this).closest(".poke-info").find(".alliesFainted").val('0');
 		$(this).closest(".poke-info").find(".alliesFainted").hide();
 	}
+
+	// TODO: Experimental ability change qol ?
+	// thought about making download set +1 by changing your levers but decided against it, 
+	// just adding download to existing calc ability toggles above.
 });
 
 $("#p1 .ability").bind("keyup change", function () {
@@ -558,42 +562,96 @@ function sortmons(a, b) {
 	return parseInt(a.split("[")[1].split("]")[0]) - parseInt(b.split("[")[1].split("]")[0])
 }
 
-// auto-update set details on select
-$(".set-selector").change(function () {
-	window.NO_CALC = true;
-	var fullSetName = $(this).val();
-	if ($(this).hasClass('opposing')) {
-		topPokemonIcon(fullSetName, $("#p2mon")[0]);
-		CURRENT_TRAINER_POKS = get_trainer_poks(fullSetName);
-		var next_poks = CURRENT_TRAINER_POKS.sort(sortmons);
+// GAUNTLETS
+const GAUNTLETS = [
+	["Team Aqua Grunt Museum #1", "Team Aqua Grunt Museum #2"],
+	["Rich Boy Dawson", "School Kid Jerry & Johnson"],
+	["Winstrate Victor", "Winstrate Victoria", "Winstrate Vivi", "Winstrate Vicky"],
+	["Pokémaniac Steve", "Hiker Lucas", "Hiker Lenny", "Black Belt Nob", "Battle Girl Cyndy", "Psychic Marlene", "Collector Hector"],
+	["Triathlete Julio", "Camper Ethan", "Picnicker Diana"],
+	["Cool Trainer Gerald", "Kindler Keegan", "Kindler Axle"],
+	["Psychic Kayla", "Black Belt Zander", "Team Aqua Grunt Mt Pyre #1", "Team Aqua Grunt Mt Pyre #2"],
+	["Leader Tate", "Leader Liza"],
+	["Team Magma Grunt Space Center #5", "Team Magma Grunt Space Center #6", "Team Magma Grunt Space Center #7"],
+	["Team Aqua Grunt Seafloor Cavern #3", "Team Aqua Grunt Seafloor Cavern #4"],
+	["Lady Brianna", "Lass Pearl"],
+	["Lass Andrea & Connie", "Beauty Bridget"]
+];
 
-		var trpok_html = ""
-		for (i in next_poks) {
-			if (next_poks[i][0].includes($('input.opposing').val())) {
-				continue
+function positionInTwoDList(cri, li) {
+	for (var i = 0; i < li.length; i++) {
+		for (var s = 0; s < li[i].length; s++) {
+			if (li[i][s] === cri) {
+				return i;
 			}
-			var pok_name = next_poks[i].split("]")[1].split(" (")[0]
-			if (pok_name == "Zygarde-10%") {
-				pok_name = "Zygarde-10%25"
+		}
+	}
+	return -1;
+}
+
+function createOppTrPokRow(setName) {
+	CURRENT_TRAINER_POKS = get_trainer_poks(setName);
+	var next_poks = CURRENT_TRAINER_POKS.sort(sortmons);
+
+	var trpok_html = '<div class="trainer-pok-list-opposing">';
+	for (i in next_poks) {
+		if (next_poks[i][0].includes($('input.opposing').val())) {
+			continue;
+		}
+		var pok_name = next_poks[i].split("]")[1].split(" (")[0]
+		if (pok_name == "Zygarde-10%") {
+			pok_name = "Zygarde-10%25";
+		}
+		if (pok_name.includes("Vivillon")) {
+			pok_name = "Vivillon";
+		}
+		
+		// this ruined my day
+		if (pok_name.includes("-Mega")) {
+			var base_name = pok_name.split("-Mega")[0];
+			var mega_data_id = CURRENT_TRAINER_POKS[i].split("]")[1];
+			trpok_html += `<img class="trainer-pok right-side" src="https://raw.githubusercontent.com/May8th1995/sprites/master/${base_name}.png" data-id="${mega_data_id}" data-base-name="${base_name}" title="${next_poks[i]}, ${next_poks[i]} BP">`
+		}
+		var pok = `<img class="trainer-pok right-side" src="https://raw.githubusercontent.com/May8th1995/sprites/master/${pok_name}.png" data-id="${CURRENT_TRAINER_POKS[i].split("]")[1]}" title="${next_poks[i]}, ${next_poks[i]} BP">`
+		trpok_html += pok;
+	}
+
+	trpok_html += '</div>';
+
+	return trpok_html;
+}
+
+// takes jquery of the set selector
+function drawTrainers(fullSetName, isOpposing) {
+	var trName = fullSetName.split('(')[1].slice(0, -1);
+	if (isOpposing) {		
+		topPokemonIcon(fullSetName, $("#p2mon")[0]);
+		var trpok_html = "";
+
+		var showGauntlets = $("#showGauntlets").is(':checked');
+		var gauntletKey = positionInTwoDList(trName, GAUNTLETS);
+		if (showGauntlets && gauntletKey != -1) {
+			for (var i = 0; i < GAUNTLETS[gauntletKey].length; i++) {
+				var trainer = GAUNTLETS[gauntletKey][i];
+				trpok_html += createOppTrPokRow('Mon (' + trainer + ')');
 			}
-			if (pok_name.includes("Vivillon")) {
-				pok_name = "Vivillon";
-			}
-			
-			// this ruined my day
-			if (pok_name.includes("-Mega")) {
-				var base_name = pok_name.split("-Mega")[0]
-				var mega_data_id = CURRENT_TRAINER_POKS[i].split("]")[1]
-				trpok_html += `<img class="trainer-pok right-side" src="https://raw.githubusercontent.com/May8th1995/sprites/master/${base_name}.png" data-id="${mega_data_id}" data-base-name="${base_name}" title="${next_poks[i]}, ${next_poks[i]} BP">`
-			}
-			var pok = `<img class="trainer-pok right-side" src="https://raw.githubusercontent.com/May8th1995/sprites/master/${pok_name}.png" data-id="${CURRENT_TRAINER_POKS[i].split("]")[1]}" title="${next_poks[i]}, ${next_poks[i]} BP">`
-			trpok_html += pok
+		} else {
+			trpok_html += createOppTrPokRow(fullSetName);
 		}
 	} else {
 		topPokemonIcon(fullSetName, $("#p1mon")[0])
 	}
 
 	$('.trainer-pok-list-opposing').html(trpok_html);
+}
+
+// auto-update set details on select
+$(".set-selector").change(function () {
+	window.NO_CALC = true;
+	var fullSetName = $(this).val();
+
+	drawTrainers(fullSetName, $(this).hasClass('opposing'));
+
 	var setIndex = $(this).prop('title');
 	var pokemonName = fullSetName.substring(0, fullSetName.indexOf(" ("));
 	var setName = fullSetName.substring(fullSetName.indexOf("(") + 1, fullSetName.lastIndexOf(")"));
@@ -736,6 +794,23 @@ $(".set-selector").change(function () {
 				$(this).closest('.poke-info').find(".move-pool").hide();
 			}
 		}
+		if (!$(this).hasClass('opposing')) {
+			var ov = getOverrides()[pokemonName];
+			if (ov) {
+				if (ov.bs) {
+					pokeObj.find(".hp .base").val(ov.bs.hp !== undefined ? ov.bs.hp : pokemon.bs.hp);
+					for (i = 0; i < LEGACY_STATS_GSC.length; i++) {
+						pokeObj.find("." + LEGACY_STATS_GSC[i] + " .base").val(
+							ov.bs[LEGACY_STATS_GSC[i]] !== undefined ? ov.bs[LEGACY_STATS_GSC[i]] : pokemon.bs[LEGACY_STATS_GSC[i]]);
+					}
+				}
+				if (ov.types) {
+					pokeObj.find(".type1").val(ov.types[0] || "");
+					pokeObj.find(".type2").val(ov.types[1] || "");
+				}
+			}
+			overrideButtonVisibility();
+		}
 		if (typeof getSelectedTiers === "function") {
 			var format = getSelectedTiers()[0];
 			var is50lvl = startsWith(format, "VGC") || startsWith(format, "Battle Spot");
@@ -871,7 +946,21 @@ $(".forme").change(function () {
 
 $("#p2 .forme").change(function(e) {
 	if (!e.originalEvent) { return; }
-	topPokemonIcon($(this).val(), $("#p2mon")[0]);
+	// jump to forme by clicking its icon
+	var formeVal = $(this).val();
+	var rosterIcon = $(".trainer-pok-list-opposing .right-side").filter(function () {
+		return !$(this).attr("data-base-name") && $(this).attr("data-id").split(" (")[0] === formeVal;
+	}).first();
+	if (!rosterIcon.length) {
+		rosterIcon = $(".trainer-pok-list-opposing .right-side").filter(function () {
+			return $(this).attr("data-base-name") === formeVal;
+		}).first();
+	}
+	if (rosterIcon.length) {
+		rosterIcon.click();
+		return;
+	}
+	topPokemonIcon(formeVal, $("#p2mon")[0]);
 	var altForme = pokedex[$(this).val()];
 	const container = $(this).closest(".info-group").siblings();
 	const fullSetName = container.find(".select2-chosen").first().text();
@@ -1850,6 +1939,8 @@ function setDisclaimVisibility(moveNames) {
 }
 
 $(document).on('click', '.right-side', function () {
+	var prevNoCalc = window.NO_CALC;
+	window.NO_CALC = true;
 	var set = $(this).attr('data-id');
 	var baseName = $(this).attr('data-base-name');
 	$('.opposing').val(set);
@@ -1857,7 +1948,7 @@ $(document).on('click', '.right-side', function () {
 	$('.opposing').change();
 	topPokemonIcon(baseName ? baseName + " (" + set.substring(set.indexOf("(") + 1) : set, $("#p2mon")[0])
 	var displayName = baseName ? baseName + " (" + set.substring(set.indexOf("(") + 1) : set;
-	$('.opposing .select2-chosen').text(displayName);
+	$('.opposing').siblings('.select2-container').find('.select2-chosen').text(displayName);
 	setAiOptionAndDisclaimVisibility('p2');
 	if (baseName) {
 		var basePokemon = pokedex[baseName];
@@ -1881,6 +1972,8 @@ $(document).on('click', '.right-side', function () {
 			|| "";
 		pokeObj.find(".ability").val(baseAbility).keyup();
 	}
+	window.NO_CALC = prevNoCalc;
+	if (!prevNoCalc && typeof performCalculations === 'function') performCalculations();
 })
 
 $(document).on('click', '.left-side', function () {
@@ -1900,6 +1993,9 @@ $(document).on('change', '#p1, #fieldInfo, #p2', function() {
 })
 
 //select first mon of the box when loading
+
+
+
 function selectFirstMon() {
 	var pMons = document.getElementsByClassName("trainer-pok left-side");
 	let set = pMons[i].getAttribute("data-id");
@@ -1910,13 +2006,18 @@ function selectFirstMon() {
 
 function selectTrainer(value) {
 	localStorage.setItem("lasttimetrainer", value);
-	all_poks = SETDEX_SS
+	all_poks = SETDEX_SS;
+
+	var prevNoCalc = window.NO_CALC;
+	window.NO_CALC = true;
+
+	// if ai option for display 
+
 	for (const [pok_name, poks] of Object.entries(all_poks)) {
 		var pok_tr_names = Object.keys(poks)
 		var monName = pok_name;
 		if (pok_name.includes("Vivillon")) { monName = "Vivillon"; }
 		for (i in pok_tr_names) {
-
 			var index = (poks[pok_tr_names[i]]["index"])
 			if (index == value) {
 				var set = `${monName} (${pok_tr_names[i]})`;
@@ -1926,18 +2027,22 @@ function selectTrainer(value) {
 			}
 		}
 	}
+	window.NO_CALC = prevNoCalc;
+	if (!prevNoCalc && typeof performCalculations === 'function') performCalculations();
 }
 
 function nextTrainer() {
-	string = ($(".trainer-pok-list-opposing")).html()
-	initialSplit = string.split("[")
-	value = parseInt(initialSplit[initialSplit.length - 2].split("]")[0]) + 1
+	var string = ($(".trainer-pok-list-opposing")).html()
+	var initialSplit = string.split("[")
+	if (initialSplit.length < 2) return
+	var value = parseInt(initialSplit[initialSplit.length - 2].split("]")[0]) + 1
 	selectTrainer(value)
 }
 
 function previousTrainer() {
-	string = ($(".trainer-pok-list-opposing")).html();
-	value = parseInt(string.split("]")[0].split("[")[1]) - 1;
+	var string = ($(".trainer-pok-list-opposing")).html();
+	if (!string.includes("[")) return;
+	var value = parseInt(string.split("]")[0].split("[")[1]) - 1;
 	selectTrainer(value)
 }
 
@@ -2293,6 +2398,9 @@ function showMassExport() {
 	$('#massExport-overlay').fadeIn(200);
 }
 
+// Stack gauntlet fights
+
+
 $(document).ready(function () {
 	var params = new URLSearchParams(window.location.search);
 	var g = GENERATION[params.get('gen')] || 8;
@@ -2341,6 +2449,16 @@ $(document).ready(function () {
 		dropzone.ondrop=drop;
 		dropzone.ondragover=allowDrop;
 	}
+
+	// right-click a mon to toggle between team and box
+	$(document).on('contextmenu', '.trainer-pok.left-side', function (e) {
+		e.preventDefault();
+		var $target = $(this);
+		var toBox = $target.parent().is('#team-poke-list') || $target.parent().is("#trash-box");
+		var targetId = toBox ? '#box-poke-list' : '#team-poke-list';
+		$target.detach().appendTo(targetId);
+	});
+
 	//select last trainer
 	let last = localStorage.getItem("lasttimetrainer");
 	if (last != "") {
@@ -2411,6 +2529,11 @@ $(document).ready(function () {
         $('#credits-overlay').fadeOut(200);
       }
     });
+
+	$("#showGauntlets").change(function() {
+		var $oppSel = $(".set-selector.opposing");
+		drawTrainers($oppSel.val(), true);
+	});
 });
 
 /* Click-to-copy function */

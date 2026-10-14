@@ -59,4 +59,12 @@ const CHANGELOG = [
     new ChangelogLine(2, 7, 4, "Fix HDM tie behavior, overlapping rolls for highest damage no longer default to move order and now split as they do in the game"),
 	new ChangelogLine(2, 7, 5, "Fixed Double Team bug introduced in 2.7.3. Endeavor now calculates damage, Super Fang and Nature's Madness now deal 1 minimum dmg to match in game behavior"),
     new ChangelogLine(2, 7, 6, "AI now sees always crit moves for the player as always critting, and considers that in its check for if it is dead to player this turn. Added Metal Burst"),
+    new ChangelogLine(3, 0, 0, "Upload save files, megas display alongside and can now change from party list or forme dropdown seamlessly, color coding on top mon, fix some trick room speed edge cases"),
+    new ChangelogLine(3, 1, 0, "Added ability toggle to Download, Magma Armor doesn't allow crits, fix Future Sight and Acid Spray being clickable against immune types"),
+    new ChangelogLine(3, 1, 1, "Upload save accepts .srm (may not 100% work, haven't tested, it just accepts the file extension now)"),
+    new ChangelogLine(3, 2, 0, 'Added Base Stat Override functionality for the fans/challenge runners that change BSTs, fixed Player Grounded checkbox from "Skitter Smack" to Smack Down'),
+    new ChangelogLine(3, 3, 0, 'Gauntlets display together, useless moves no longer show a chance of being selected'),
+    new ChangelogLine(3, 3, 1, 'Right click moves mon from team to box and vice versa, removed some double calculations for efficiency and speedup, added some gauntlets I missed'),
+    new ChangelogLine(3, 3, 2, "Fixed colors bug, current HP values auto select"),
+    new ChangelogLine(3, 3, 3, "Fixed Fake Out/First Impression being HDM after the first turn, rescinded 'speedup' changes that made it slower for everyone whoops")
 ];
