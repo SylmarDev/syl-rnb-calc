@@ -43,39 +43,32 @@ function setdexMaxHP(dataId) {
 }
 
 // Teammates on the slot's own side with Wish -> truncated 1/2 of their max HP
-// L-side sees left team + box lists, R-side opposing roster only.
-function wishTeammateMaxHP(side) {
-	var maxes = [];
-	if (side === 'p1') {
-		$('#team-poke-list img, #box-poke-list img, #box-poke-list2 img').each(function () {
-			var hp = setdexMaxHP($(this).attr("data-id") || "");
-			if (hp) {
-				maxes.push(hp);
-			}
-		});
-	} else {
-		$('#opp-trainer-mons img.trainer-pok.right-side').each(function () {
-			var hp = setdexMaxHP($(this).attr("data-id") || "");
-			if (hp) {
-				maxes.push(hp);
-			}
-		});
-	}
-	return maxes.length ? Math.max.apply(null, maxes) : null;
+// Returns an array of { name, maxHP } for each teammate whose set has Wish.
+function wishTeammates(side) {
+	var results = [];
+	var selector = side === 'p1'
+		? '#team-poke-list img.trainer-pok, #box-poke-list img.trainer-pok, #box-poke-list2 img.trainer-pok'
+		: '#opp-trainer-mons img.trainer-pok.right-side';
+	$(selector).each(function () {
+		var hp = setdexMaxHP($(this).attr("data-id") || "");
+		if (hp) {
+			var name = $(this).attr("data-base-name") || $(this).attr("title") || "Wish";
+			results.push({ name: name, maxHP: hp });
+		}
+	});
+	return results;
 }
 
-function healSource(side) {
+function healSources(side) {
 	var moves = getSlotMovesets(side);
 	for (var i = 0; i < moves.length; i++) {
 		if (HALF_HEAL_MOVES.indexOf(moves[i]) >= 0) {
-			return { kind: 'move', moveName: moves[i] };
+			return [{ kind: 'move', moveName: moves[i] }];
 		}
 	}
-	var wishMax = wishTeammateMaxHP(side);
-	if (wishMax) {
-		return { kind: 'wish', wishMax: wishMax };
-	}
-	return null;
+	return wishTeammates(side).map(function (t) {
+		return { kind: 'wish', wishName: t.name, wishMax: t.maxHP };
+	});
 }
 
 function monKey(side) {
@@ -102,14 +95,16 @@ function buildActionButtons(side) {
 	var mode = labelMode();
 	var box = [];
 
-	var heal = healSource(side);
-	if (heal) {
+	var heals = healSources(side);
+	for (var h = 0; h < heals.length; h++) {
+		var heal = heals[h];
 		var healAmount = heal.kind === 'move'
 			? getHpActionAmount(max, 1, 2)
 			: getHpActionAmount(heal.wishMax, 1, 2);
-		var healName = heal.kind === 'move' ? heal.moveName : 'Wish';
+		var healName = heal.kind === 'move' ? heal.moveName : heal.wishName;
 		var healLabel = mode === 'images' ? '+' + healAmount : (mode === 'numbers' ? '+1/2' : healName);
-		box.push('<button type="button" class="hp-action hp-heal" data-kind="heal" title="' + healName + ' (+' + healAmount + ' HP)">'
+		var wishAttr = heal.kind === 'wish' ? ' data-wish-max="' + heal.wishMax + '"' : '';
+		box.push('<button type="button" class="hp-action hp-heal" data-kind="heal"' + wishAttr + ' title="' + healName + ' (+' + healAmount + ' HP)">'
 			+ healLabel + '</button>');
 	}
 
@@ -214,13 +209,12 @@ $(document).on('click', '.hp-action', function () {
 		amount = getHpActionAmount(max, -tick, 16);
 		toxicState[side].n = tick;
 	} else if (kind === 'heal') {
-		var source = healSource(side);
-		if (!source) {
-			return;
+		var raw = $(this).attr("data-wish-max");
+		if (raw) {
+			amount = getHpActionAmount(Number(raw), 1, 2);
+		} else {
+			amount = getHpActionAmount(max, 1, 2);
 		}
-		amount = source.kind === 'move'
-			? getHpActionAmount(max, 1, 2)
-			: getHpActionAmount(source.wishMax, 1, 2);
 	} else {
 		amount = getHpActionAmount(max, Number($(this).attr("data-num")), Number($(this).attr("data-den")));
 	}
