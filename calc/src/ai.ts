@@ -654,7 +654,8 @@ function calculateHighestDamage(moves: any[], firstTurnOut: boolean): KVP[] {
             isNamed(move.name, "Explosion", "Final Gambit", "Rollout", "Misty Explosion",
             "Self-Destruct", "Relic Song", "Meteor Beam", "Future Sight", "Counter", "Mirror Coat") ||
             isTrapping(move) ||
-            (!firstTurnOut && isNamed(move.name, "Fake Out", "First Impression"))
+            (!firstTurnOut && isNamed(move.name, "Fake Out", "First Impression")) ||
+            (!moves[0].attacker.types.includes("Fire") && isNamed(move.name, "Burn Up"))
         );
     }
 
@@ -955,6 +956,7 @@ export function generateMoveDist(damageResults: any[], aiOptions: {[key: string]
     const aiStatusCond = moves[0].attacker.status ?? "";
     const playerTypes: string[] = playerMon.types;
     const playerAbility = moves[0].defender.moves[0].ability; // ugly but works
+    const aiTypes: string[] = moves[0].attacker.types;
     const aiAbility = moves[0].move.ability;
     const playerHealthPercentage = Math.trunc((moves[0].defender.originalCurHP / moves[0].defender.stats.hp) * 100);
     const aiHealthPercentage = Math.trunc((moves[0].attacker.originalCurHP / moves[0].attacker.stats.hp) * 100);
@@ -2673,14 +2675,23 @@ export function generateMoveDist(damageResults: any[], aiOptions: {[key: string]
                     rate: 1
                 });
             }
-          // Metal Burst +6
-          if (moveName == "Metal Burst") {
-              moveStringsToAdd.push({
-                  move: moveName,
-                  score: 6,
-                  rate: 1
-              });
-          }
+
+            // Metal Burst +6
+            if (moveName == "Metal Burst") {
+                moveStringsToAdd.push({
+                    move: moveName,
+                    score: 6,
+                    rate: 1
+                });
+            }
+
+            if (moveName == "Burn Up" && !aiTypes.includes("Fire")) {
+                moveStringsToAdd.push({
+                    move: moveName,
+                    score: -20,
+                    rate: 1
+                });
+            }
             // end of the hell loop
         });
 
