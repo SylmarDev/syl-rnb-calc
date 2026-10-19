@@ -654,8 +654,7 @@ function calculateHighestDamage(moves: any[], firstTurnOut: boolean): KVP[] {
             isNamed(move.name, "Explosion", "Final Gambit", "Rollout", "Misty Explosion",
             "Self-Destruct", "Relic Song", "Meteor Beam", "Future Sight", "Counter", "Mirror Coat") ||
             isTrapping(move) ||
-            (!firstTurnOut && isNamed(move.name, "Fake Out", "First Impression")) ||
-            (!moves[0].attacker.types.includes("Fire") && isNamed(move.name, "Burn Up"))
+            (!firstTurnOut && isNamed(move.name, "Fake Out", "First Impression"))
         );
     }
 
