@@ -67,5 +67,6 @@ const CHANGELOG = [
     new ChangelogLine(3, 3, 1, 'Right click moves mon from team to box and vice versa, removed some double calculations for efficiency and speedup, added some gauntlets I missed'),
     new ChangelogLine(3, 3, 2, "Fixed colors bug, current HP values auto select"),
     new ChangelogLine(3, 3, 3, "Fixed Fake Out/First Impression being HDM after the first turn, rescinded 'speedup' changes that made it slower for everyone whoops"),
-    new ChangelogLine(3, 3, 4, "Burn Up fixed to not be considered when user not a fire type")
+    new ChangelogLine(3, 3, 4, "Burn Up fixed to not be considered when user not a fire type"),
+    new ChangelogLine(3, 3, 5, "Fixed Counter/Mirror Coat considering focus sash/sturdy for some checks but not others, and getting seen as status moves with no damage rolls. Fixed Grassy Glide not getting fast kill bonuses in HDM/Kill bonus checks, only the +11 from Prio when dead to player")
 ];

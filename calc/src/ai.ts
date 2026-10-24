@@ -1052,7 +1052,8 @@ export function generateMoveDist(damageResults: any[], aiOptions: {[key: string]
             // TODO: Need to go through and add anyValidDamageRolls to a lot of these checks
             // TODO: This function can probably use continues, so I probably should do that for performance lol
 
-            if (!moveIsStatus && !anyValidDamageRolls) {
+            if (!moveIsStatus && !anyValidDamageRolls &&
+                 !["Counter", "Mirror Coat"].includes(moveName)) {
                 moveStringsToAdd.push({
                     move: moveName,
                     score: -10,
@@ -2450,12 +2451,13 @@ export function generateMoveDist(damageResults: any[], aiOptions: {[key: string]
                 const playerImmune = (moveName == "Counter" && playerTypes.includes("Ghost")) ||
                 (moveName == "Mirror Coat" && playerTypes.includes("Dark"));
 
+                const playerSeesKill = playerHighestRoll >= moves[0].attacker.originalCurHP;
                 const aiSturdyAndFullHP = (aiAbility == "Sturdy" || aiItem == "Focus Sash") && aiHealthPercentage == 100;
-                const correspondingMoveSplit = moveName == "Counter" ? "Physical": "Special";
+                const correspondingMoveSplit = moveName == "Counter" ? "Physical" : "Special";
                 const playerOnlyHasMovesOfCorrespondingSplit = playerMoves.every(x => x.move.category == correspondingMoveSplit && x.move.bp > 0);
                 const playerNoMovesOfCorrespondingSplit = playerMoves.every(x => x.move.category != correspondingMoveSplit || x.move.bp == 0);
 
-                if ((aiDeadToPlayer && !aiSturdyAndFullHP) ||
+                if ((playerSeesKill && !aiSturdyAndFullHP) ||
                     playerImmune ||
                     playerNoMovesOfCorrespondingSplit) {
                     moveStringsToAdd.push({
@@ -2466,7 +2468,7 @@ export function generateMoveDist(damageResults: any[], aiOptions: {[key: string]
                 } else {
                     let counterScore = 6;
 
-                    if (playerHighestRoll >= moves[0].attacker.originalCurHP &&
+                    if (playerSeesKill &&
                        (aiAbility == "Sturdy" || aiItem == "Focus Sash") &&
                         aiHealthPercentage == 100 &&
                         playerOnlyHasMovesOfCorrespondingSplit) {
@@ -2672,7 +2674,7 @@ export function generateMoveDist(damageResults: any[], aiOptions: {[key: string]
             }
 
             // undocumented -20 to dragon tail and counter (and maybe others) if player sees kill
-            if ((moveName == "Counter" || moveName == "Dragon Tail") && aiDeadToPlayer) {
+            if (moveName == "Dragon Tail" && aiDeadToPlayer) {
                 moveStringsToAdd.push({
                     move: moveName,
                     score: -20,
