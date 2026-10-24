@@ -688,6 +688,11 @@ function calculateHighestDamage(moves: any[], firstTurnOut: boolean): KVP[] {
            let moveBonus = 0;
            let moveName = moves[i].move.name;
 
+           // grassy glide doesn't see as priority in grassy terrain
+           if (moveName == "Grassy Glide" && moves[i].field.terrain == "Grassy") {
+               moves[i].move.priority = 1;
+           }
+
            // if damaging move kills, calculate kill bonus
            if (key >= p1CurrentHealth) {
                if (aiFaster || moves[i].move.priority > 0) {
